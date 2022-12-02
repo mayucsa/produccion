@@ -15,8 +15,12 @@ class Datos_usuario{
 	var $vista_laboratorio;
 
 	var $vista_besser;
+	var $captura_besser;
+	var $edit_besser;
 
 	var $vista_vibro;
+	var $captura_vibro;
+	var $edit_vibro;
 
 	var $vista_almacenistas;
 
@@ -96,13 +100,13 @@ class Datos_usuario{
             return $this->vista_laboratorio;
 	}
 
-	/*Permisos Besser*/
-	function set_vista_besser($vista_besser){
-            $this->vista_besser = $vista_besser;
-	}
-	function get_vista_besser(){
-            return $this->vista_besser;
-	}
+	// /*Permisos Besser*/
+	// function set_vista_besser($vista_besser){
+ //            $this->vista_besser = $vista_besser;
+	// }
+	// function get_vista_besser(){
+ //            return $this->vista_besser;
+	// }
 
 	/*Permisos Vibro*/
 	function set_vista_vibro($vista_vibro){
@@ -110,6 +114,18 @@ class Datos_usuario{
 	}
 	function get_vista_vibro(){
             return $this->vista_vibro;
+	}
+	function set_captura_vibro($captura_vibro){
+            $this->captura_vibro = $captura_vibro;
+	}
+	function get_captura_vibro(){
+            return $this->captura_vibro;
+	}
+	function set_edit_vibro($edit_vibro){
+            $this->edit_vibro = $edit_vibro;
+	}
+	function get_edit_vibro(){
+            return $this->edit_vibro;
 	}
 
 	/*Permisos Almacenistas*/
@@ -161,7 +177,26 @@ class Datos_usuario{
 	function get_delete_morteros(){
             return $this->delete_morteros;
 	}
-	
+
+	/*Permisos Besser*/
+	function set_vista_besser($vista_besser){
+            $this->vista_besser = $vista_besser;
+	}
+	function get_vista_besser(){
+            return $this->vista_besser;
+	}
+	function set_captura_besser($captura_besser){
+            $this->captura_besser = $captura_besser;
+	}
+	function get_captura_besser(){
+            return $this->captura_besser;
+	}
+	function set_edit_besser($edit_besser){
+            $this->edit_besser = $edit_besser;
+	}
+	function get_edit_besser(){
+            return $this->edit_besser;
+	}
 
 }
 ?>

@@ -186,7 +186,7 @@
                     <div class="row form-group form-group-sm border-top">
                         <div class="col-sm-12" align="center" >
                             <?php
-                                 if ($clave == 1 || $clave == 8) {
+                                 if ($captura_besser == 1) {
                             ?>
                                     <input type="submit" value="Guardar" href="#" onclick="validacionDatos()" class="btn btn-primary" style="margin-bottom: -25px !important">
                             <?php

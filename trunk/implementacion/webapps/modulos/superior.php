@@ -11,7 +11,7 @@
     <meta name="author" content="Ing. Alfredo Fidel Chan Chuc">
     <link rel="icon" href="../../../includes/imagenes/favicon.png">
     <!-- <meta name="theme-color" content="E5CA00"> -->
-    <title>Mayucsa</title>
+    <title>Produccion</title>
 
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="../../../includees/css/main.css">

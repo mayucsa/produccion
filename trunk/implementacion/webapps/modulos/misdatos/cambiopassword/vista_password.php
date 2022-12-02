@@ -4,6 +4,7 @@
     // include_once "modelo_entradas.php";
 ?>        
         <head>
+        <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
             <title>Entradas</title>
 
             <style type="text/css">
@@ -45,50 +46,76 @@
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="vista_entradas.php">Cambio de Contrase&ntilde;a</a></li>
+          <li class="breadcrumb-item"><a href="vista_password.php">Cambio de Contrase&ntilde;a</a></li>
         </ul>
       </div>
 
-      <div class="row">
+      <div class="row" ng-controller="cambioPssCtrl">
         <div class="col-md-12">
-          <div class="tile">
-            <div class="card">
-                <div class="card-header">
-                    <div align="right" class="form-group form-group-sm" style="margin-bottom: 0px !important">
-                        <button id="btnsave" type="button" class="btn btn-warning" onclick="validacion()"><span class="fas fa-edit"></span> Guardar cambios</button>
-                        <!-- <input type="submit" value="Guardar cambios" href="#" onclick="comprobacion()" class="btn btn-warning" style="margin-bottom: -25px !important"> -->
+            <div class="tile">
+                <div class="card">
+                    <div class="card-header">
+                        <div align="right" class="form-group form-group-sm" style="margin-bottom: 0px !important">
+                            <button id="btnsave" type="button" class="btn btn-info" ng-click="validacion()" ng-disabled="bloquear">
+                                <span class="fas fa-save"></span> Guardar cambios 
+                            </button></div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="row form-group form-group-sm">
+                            <div class="col-lg-4 col-md-4">
+                                <div class="form-floating mx-1">
+                                    <div class="row">
+                                        <div class="col-md-10 col-lg-10">
+                                            <label>Nueva Contrase&ntilde;a</label>
+                                        </div>
+                                        <div class="col-md-1 col-lg-2">
+                                            <a href="javascript:void(0)" ng-click="fnPassword('inputnueva')">
+                                                <i id="i_inputnueva" class="fa fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <input type="password" id="inputnueva" ng-model="inputnueva" ng-keyup="getInputNueva()" class="form-control form-control-md">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 offset-lg-2 offset-md-2 col-md-4">
+                                <div class="form-floating mx-1">
+                                    <div class="row">
+                                        <div class="col-md-10 col-lg-10">
+                                            <label>Confirmar Contrase&ntilde;a</label>
+                                        </div>
+                                        <div class="col-md-1 col-lg-2" ng-show="inputnueva != ''">
+                                            <a href="javascript:void(0)" ng-click="fnPassword('inputconfirmar')">
+                                                <i id="i_inputconfirmar" class="fa fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <input type="password" id="inputconfirmar" ng-model="inputconfirmar" class="form-control form-control-md" ng-keyup="comparaPasswords()" ng-disabled="inputnueva == ''">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 p-2 ml-4" ng-show="msj != []">
+                                <span style="color: {{msj.code=='200'?'green':'red';}}">{{msj.msj}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span hidden id="spaniduser" name="spaniduser" class="form-control" style="background-color: #E9ECEF;"><?php echo $id?></span>
+                    <span hidden id="spanuser" name="spanuser" class="form-control" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
+                    </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row form-group form-group-sm" align="center">
-                        <label for="nuevo_password" class="col-sm-2 text-right" style="font-size:13px">Nueva Contrase&ntilde;a</label>
-                        <div class="col-sm-2 text-left">
-                            <input type="text" id="inputnueva" name="inputnueva" class="form-control form-control-md">
-                        </div>
-                        <label for="confirm_nvo_password" class="col-sm-2 text-right" style="font-size:13px">Confirmar contrase&ntilde;a</label>
-                        <div class="col-sm-2 text-left">
-                            <input type="text" id="inputconfirmar" name="inputconfirmar" class="form-control form-control-md">
-                        </div>
-                    </div>
-                    <div class="row form-group form-group-sm">
-                        <div class="col-sm-2 text-left">
-                            <span  id="spanuser" name="spanuser" class="form-control" style="background-color: #E9ECEF;"><?php echo $clave?></span>
-                        </div>
-                        <div class="col-sm-2 text-left">
-                            <span  id="spanuser" name="spanuser" class="form-control" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
           </div>
         </div>
       </div>
       <?php include_once "../../footer.php" ?>
     </main>
 
+    <script src="../../../includes/js/adminlte.min.js"></script>
 
-    <script src="vista_password.js"></script>
+    <script src="../../../includes/js/jquery351.min.js"></script>
+
+    <script src="vista_password_anjs.js"></script>
 
 <?php include_once "../../inferior.php" ?>
 
@@ -99,8 +126,30 @@
     <script src="../../../includes/js/sweetalert2.min.js"></script>
 
     <script src="../../../includes/bootstrap/js/bootstrap.js"></script>
+
     <script src="../../../includes/bootstrap/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../../../includes/css/datatables.min.css"/>
 
     <script type="text/javascript" src="../../../includes/js/datatables.min.js"></script>
+<script>
+$(document).ready(function () {
+  $('#mostrar_contrasena').click(function () {
+    if ($('#mostrar_contrasena').is(':checked')) {
+      $('#inputnueva').attr('type', 'text');
+    } else {
+      $('#inputnueva').attr('type', 'password');
+    }
+  });
+});
+
+$(document).ready(function () {
+  $('#mostrar_contrasenados').click(function () {
+    if ($('#mostrar_contrasenados').is(':checked')) {
+      $('#inputconfirmar').attr('type', 'text');
+    } else {
+      $('#inputconfirmar').attr('type', 'password');
+    }
+  });
+});
+</script>

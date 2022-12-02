@@ -227,8 +227,96 @@ function validacionDatos(){
         $('#modalMensajes').modal('toggle');
 
     } else{
-    	capturaProduccion();
+    	existenciaCemento();
     }
+}
+
+function existenciaCemento(){
+    var cemento = $('#spConsumoCemento').val();
+    var msj = "";
+
+    var datos   = new FormData();
+
+    datos.append('cemento', $('#spConsumoCemento').val());
+
+        $.ajax({
+                type:"POST",
+                url:"modelo_besser.php?accion=consultarC&cemento=" + cemento,
+                data: cemento,
+                processData:false,
+                contentType:false,
+        success:function(data){
+
+                    // console.log(data);
+                    // $('#myLoading').modal('show');
+                    // mostrar();
+                    // consultar();
+                    // limpiarCampos();
+                    // consultarDatos();
+                    // cerrarModal();
+                    // $('#modalMatPrima').modal('hide');
+                    if (data == 'correcto') {
+                        // validacionCampos();
+                    existenciaAditivo();
+
+                    }else{
+                        Swal.fire({
+                                        icon: 'info',
+                                        // iconColor: '#FF0000',
+                                        title: '¡Error!',
+                                        text: 'Sin existencia de cemento',
+                                        footer: 'Revisar las existencias de Tarimas',
+                                        confirmButtonColor: '#1A4672'
+                                    })
+                        }
+                    }
+
+
+            })
+}
+
+function existenciaAditivo(){
+    var aditivo = $('#inputaditivo').val();
+    var msj = "";
+
+    var datos   = new FormData();
+
+    datos.append('aditivo', $('#inputaditivo').val());
+
+        $.ajax({
+                type:"POST",
+                url:"modelo_besser.php?accion=consultarA&aditivo=" + aditivo,
+                data: aditivo,
+                processData:false,
+                contentType:false,
+        success:function(data){
+
+                    // console.log(data);
+                    // $('#myLoading').modal('show');
+                    // mostrar();
+                    // consultar();
+                    // limpiarCampos();
+                    // consultarDatos();
+                    // cerrarModal();
+                    // $('#modalMatPrima').modal('hide');
+                    if (data == 'correcto') {
+                        // validacionCampos();
+                    capturaProduccion();
+
+                    }else{
+                        Swal.fire({
+                                        icon: 'info',
+                                        // iconColor: '#FF0000',
+                                        title: '¡Error!',
+                                        text: 'Sin existencia de Aditivo',
+                                        footer: 'Revisar las existencias de Tarimas',
+                                        confirmButtonColor: '#1A4672'
+                                    })
+                        }
+                    }
+
+
+            })
 }
 
 function capturaProduccion(){

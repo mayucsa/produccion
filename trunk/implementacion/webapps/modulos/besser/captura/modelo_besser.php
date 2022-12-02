@@ -124,4 +124,50 @@ if ( isset($_GET['accion']) == "insertar") {
 
 }
 
+if (isset($_GET["accion"]) == "consultarC") {
+	// die (json_encode($_REQUEST));
+	$cemento = $_REQUEST["cemento"];
+
+	$sql	= "	SELECT cantidad_materia_prima 
+					FROM seg_mp_bloquera 
+					WHERE area = 'Besser' AND nombre_materia_prima = 'Cemento'";
+	// $sql	= "	SELECT * FROM seg_entradas ORDER BY fecha_registro DESC";
+
+	$vquery = Conexion::conectar()->prepare($sql);
+	$vquery ->execute();
+	$lista = $vquery->fetchAll(PDO::FETCH_ASSOC);
+	// echo json_encode($lista);
+	$stock = $lista[0]['cantidad_materia_prima'];
+	if (intval($cemento) <= intval($stock)) {
+		echo "correcto";
+	}else{
+		echo "error";
+	}
+	exit();
+
+}
+
+if (isset($_GET["accion"]) && $_GET['accion'] == "consultarA") {
+	// die (json_encode($_REQUEST));
+	$aditivo = $_REQUEST["aditivo"];
+
+	$sql	= "	SELECT cantidad_materia_prima 
+					FROM seg_mp_bloquera 
+					WHERE area = 'Besser' AND nombre_materia_prima = 'aditivo'";
+	// $sql	= "	SELECT * FROM seg_entradas ORDER BY fecha_registro DESC";
+
+	$vquery = Conexion::conectar()->prepare($sql);
+	$vquery ->execute();
+	$lista = $vquery->fetchAll(PDO::FETCH_ASSOC);
+	// echo json_encode($lista);
+	$stock = $lista[0]['cantidad_materia_prima'];
+	if (intval($aditivo) <= intval($stock)) {
+		echo "correcto";
+	}else{
+		echo "error";
+	}
+	exit();
+
+}
+
  ?>

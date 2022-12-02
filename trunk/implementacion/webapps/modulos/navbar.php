@@ -16,6 +16,7 @@
         $apellido = $objeto->apellido_persona;
         $puesto = $objeto->puesto_persona;
         $clave  = $objeto->rol_persona;
+        $id  = $objeto->clave_usuario;
 
         $vista_dashboard  = $objeto->vista_dashboard;
 
@@ -29,8 +30,12 @@
         $vista_laboratorio  = $objeto->vista_vibro;
 
         $vista_besser = $objeto->vista_besser;
+        $captura_besser  = $objeto->captura_besser;
+        $edit_besser  = $objeto->edit_besser;
 
         $vista_vibro  = $objeto->vista_vibro;
+        $captura_vibro   = $objeto->captura_vibro;
+        $edit_vibro   = $objeto->edit_vibro;
 
         $vista_almacenistas  = $objeto->vista_almacenistas;
 
@@ -72,25 +77,10 @@
             <ul class="treeview-menu">
               <li><a class="treeview-item" href="../../inventario/morteros/inventario_morteros.php"><i class="icon fa fa-circle-o"></i> Morteros</a></li>
 
-              <li><a class="treeview-item" href="../../inventario/bloquera/inventario_bloquera.php"><i class="icon fa fa-circle-o"></i> Bloquera</a></li>
+              <li><a class="treeview-item" href="../../inventario/bloquera/inventario_bloquera.php"><i class="icon fa fa-circle-o"></i> Bloqueras</a></li>
 
             </ul>
           </li>';
-
-        // $inventarioPadre = '';
-        // $inventarioPadre .= '
-        //   <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fas fa-people-carry"></i><span class="app-menu__label">Inventario</span><i class="treeview-indicator fas fa-angle-right"></i></a>
-        //     <ul class="treeview-menu">';
-        // $inventarioM = '';
-        // $inventarioM .= '<li><a class="treeview-item" href="../../inventario/morteros/inventario_morteros.php"><i class="icon fa fa-circle-o"></i> Morteros</a></li>';
-
-        // $inventarioB = '';
-        // $inventarioB .= '<li><a class="treeview-item" href="../../inventario/bloquera/inventario_bloquera.php"><i class="icon fa fa-circle-o"></i> Bloquera</a></li>';
-
-        // $inventarioHijo = '';
-        // $inventarioHijo .= '
-        //   </ul>
-        // </li>';
 
 
         $morteros = '';
@@ -134,6 +124,8 @@
               <li><a class="treeview-item" href="../../besser/entradas/vista_entradas.php"><i class="icon fa fa-circle-o"></i> Entradas</a></li>
             
               <li><a class="treeview-item" href="../../besser/desalojo/vista_desalojo.php"><i class="icon fa fa-circle-o"></i> Desalojos</a></li>
+
+              <li><a class="treeview-item" href="../../besser/tiempoperdido/vista_tiempoperdido.php"><i class="icon fa fa-circle-o"></i> Tiempos pérdidos</a></li>
             </ul>
           </li>';
 
@@ -148,6 +140,8 @@
               <li><a class="treeview-item" href="../../vibro/entradas/vista_entradas.php"><i class="icon fa fa-circle-o"></i> Entradas</a></li>
             
               <li><a class="treeview-item" href="../../vibro/desalojo/vista_desalojo.php"><i class="icon fa fa-circle-o"></i> Desalojos</a></li>
+
+              <li><a class="treeview-item" href="../../vibro/tiempoperdido/vista_tiempoperdido.php"><i class="icon fa fa-circle-o"></i> Tiempos pérdidos</a></li>
             </ul>
           </li>';
 

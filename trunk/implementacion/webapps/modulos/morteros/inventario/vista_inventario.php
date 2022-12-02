@@ -1,20 +1,10 @@
 <?php
     include_once "../../superior.php";
     include_once "../../../dbconexion/conexion.php";
-    // include_once "ctrl_inventario.php";    
 ?>
          <head>
-            <title>Inventario de Producto</title>
+            <title>Inventario de Morteros</title>
 
-<!--             <style type="text/css">
-                body{
-                    background-color: #f7f6f6;
-                }
-                table thead{
-                    background-color: #1A4672;
-                    color:  white;
-                }
-            </style> -->
             <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">

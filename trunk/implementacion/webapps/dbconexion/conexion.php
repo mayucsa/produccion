@@ -28,8 +28,8 @@
 
 
 	class Conexion{
-		// public static function conectar(){
-		public function conectar(){
+		public static function conectar(){
+		// public function conectar(){
 		 	// $host			='mysql:dbname=produccionmayucsa;host=localhost';
 			// $usuario		='root';
 			// $contrasenia	='';

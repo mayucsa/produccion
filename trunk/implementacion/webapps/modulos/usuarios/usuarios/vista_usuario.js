@@ -63,27 +63,23 @@ function consultarUsuario(){
 
 function limpiarCampos(){
     $('#inputusuario').val("");
-    $('#inputpassword').val("");
     $('#inputnombre').val("");
     $('#inputapellido').val("");
     $('#inputpuesto').val("");
-    $('#selectrol').val("0");
+    $('#inputcorreo').val("");
 }
 
 function insertUsuario(){
     var usuario     = $('#inputusuario').val();
-    var contrasenia = $('#inputpassword').val();
     var nombre      = $('#inputnombre').val();
     var apellido    = $('#inputapellido').val();
     var puesto      = $('#inputpuesto').val();
-    var cve_rol     = $('#selectrol').val();
+    var correo      = $('#inputcorreo').val();
+    // var cve_rol     = $('#selectrol').val();
     var msj = "";
 
     if (usuario == "") {
         msj += '<li>Usuario</li>';
-    }
-    if (contrasenia == "") {
-        msj += '<li>Contraseña</li>';
     }
     if (nombre == "") {
         msj += '<li>Nombre</li>';
@@ -94,9 +90,12 @@ function insertUsuario(){
     if (puesto == "") {
         msj += '<li>Puesto</li>';
     }
-    if (cve_rol == 0) {
-        msj += '<li>Rol</li>';
+    if (correo == "") {
+        msj += '<li>Correo</li>';
     }
+    // if (cve_rol == 0) {
+    //     msj += '<li>Rol</li>';
+    // }
     if (msj.length != 0) {
         $('#encabezadoModal').html('Validación de datos');
         $('#cuerpoModal').html('Los siguientes campos son obligatorios:<ul>'+msj+'</ul>');
@@ -106,24 +105,22 @@ function insertUsuario(){
         var datos = new FormData();
 
         datos.append('usuario',     $('#inputusuario').val());
-        datos.append('contrasenia', $('#inputpassword').val());
         datos.append('nombre',      $('#inputnombre').val());
         datos.append('apellido',    $('#inputapellido').val());
         datos.append('puesto',      $('#inputpuesto').val());
-        datos.append('cve_rol',     $('#selectrol').val());
+        datos.append('correo',      $('#inputcorreo').val());
 
         // console.log(datos.get('usuario'));
-        // console.log(datos.get('contrasenia'));
         // console.log(datos.get('nombre'));
         // console.log(datos.get('apellido'));
         // console.log(datos.get('puesto'));
-        // console.log(datos.get('cve_rol'));
+        // console.log(datos.get('correo'));
 
     Swal.fire({
                 title: '¿Los datos son correctos?',
-                html:   'Nombre: <b>' + datos.get('nombre') +
-                        '</b><br> Apellido: <b>' + datos.get('apellido') +
-                        '</b><br> Puesto: <b>' + datos.get('puesto'),
+                html:   'Usuario: <b>' + datos.get('usuario') +
+                        '</b><br> Nombre: <b>' + datos.get('nombre') +
+                        '</b><br> Apellido: <b>' + datos.get('apellido'),
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
