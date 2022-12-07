@@ -54,17 +54,17 @@
     <script>
         $(function(){
 
-  $('.validanumericos').keypress(function(e) {
-    if(isNaN(this.value + String.fromCharCode(e.charCode))) 
-     return false;
-  })
-  .on("cut copy paste",function(e){
-    e.preventDefault();
-  });
+      $('.validanumericos').keypress(function(e) {
+        if(isNaN(this.value + String.fromCharCode(e.charCode))) 
+         return false;
+      })
+      .on("cut copy paste",function(e){
+        e.preventDefault();
+      });
 
-});
+    });
 
-</script> <!-- Script para aceptar solo números-->
+    </script> <!-- Script para aceptar solo números-->
 
     <!-- JavaScript Alertify JS-->
 <script src="../../../includes/js/alertify.min.js"></script>
@@ -84,16 +84,29 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
-<script>
-     $(document).ready( function () {
-        // $(".UpperCase").on("keypress", function () {
-        $(".UpperCase").on("blur", function () {
-       $input=$(this);
-       setTimeout(function () {
-        $input.val($input.val().toUpperCase());
-       },50);
-      })
-     })
+    <script>
+        app.controller('AngularCtrler', function(BASEURL, ID, $scope, $http){
+            // funciones generales
+            $http.post('../../../modulos/seguridad/datos_usuario.php',{
+                'task': 'getUserPerfil',
+                'id': ID
+            }).then(function (response) {
+                // response = response.data.data;
+                $scope.perfilUsu = response.data;
+                console.log('response perfilUsu', $scope.perfilUsu);
+            }, function(error){
+                console.log('error', error);
+            });
+        })
+        $(document).ready( function () {
+            // $(".UpperCase").on("keypress", function () {
+            $(".UpperCase").on("blur", function () {
+                $input=$(this);
+                setTimeout(function () {
+                    $input.val($input.val().toUpperCase());
+                },50);
+            })
+        })
 </script> <!-- Script convierte Minusculas a Mayúsculas-->
 
 <!-- <script type="text/javascript">
@@ -156,7 +169,7 @@ udateTime();
  
 setInterval(udateTime, 1000);
 </script> -->
-
+    </div>
 </body>
 
 </html>
