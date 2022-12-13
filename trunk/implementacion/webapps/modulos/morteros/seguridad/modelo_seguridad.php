@@ -1,6 +1,6 @@
 <?php
 include_once "../../../dbconexion/conexion.php";
-
+include_once "../../../dbconexion/conn.php";
 class ModeloProducto{
 	function showPresentacion(){
 		$sql = "	SELECT valor_presentacion 
@@ -63,7 +63,7 @@ if ( isset($_GET['accion']) == "insertar") {
 if (isset($_GET["consultar"])) {
 	$cve_producto = $_GET["consultar"];
 
-	$sql	= "	SELECT P.nombre_producto AS Producto, M.nombre_materia_prima AS MateriaPrima, C.cantidad AS Cantidad 
+	$sql	= "	SELECT P.nombre_producto AS Producto, M.nombre_materia_prima AS MateriaPrima, C.cantidad AS Cantidad, M.cve_materia_prima 
 				FROM `seg_mprimapor_producto` C 
 				INNER JOIN cat_productos P ON P.cve_producto = C.cve_producto 
 				INNER JOIN cat_materia_prima M ON M.cve_materia_prima = C.cve_materia_prima 
@@ -100,5 +100,25 @@ if (isset($_GET["accion"]) && $_GET['accion'] == "consultarProducto") {
 	exit();
 
 }
-
+if (isset($_GET['editarMPrima']) && $_GET['editarMPrima'] == 'update') {
+	$cantidad = $_REQUEST['cantidad'];
+	$cve_materia_prima = $_REQUEST['cve_materia_prima'];
+	$cve_producto = $_REQUEST['cve_producto'];
+	$dbcon	= 	new MysqlConn;
+	$sql = "UPDATE seg_mprimapor_producto SET cantidad = ".$cantidad." WHERE cve_producto = ".$cve_producto." AND cve_materia_prima = ".$cve_materia_prima;
+	// echo $cantidad;
+	echo json_encode($dbcon->qBuilder($dbcon->conn(), 'do', $sql));
+}
+if (isset($_GET['eliminamPrima']) && $_GET['eliminamPrima'] == 'delete') {
+	$cve_materia_prima = $_REQUEST['cve_materia_prima'];
+	$cve_producto = $_REQUEST['cve_producto'];
+	$dbcon	= 	new MysqlConn;
+	$sql = "DELETE FROM seg_mprimapor_producto WHERE cve_producto = ".$cve_producto." AND cve_materia_prima = ".$cve_materia_prima;
+	// echo $cantidad;
+	if ($dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+		echo true;
+	}else{
+		echo $sql;
+	}
+}
 ?>

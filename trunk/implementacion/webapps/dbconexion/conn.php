@@ -2,8 +2,8 @@
 
 class MysqlConn{
 	public static function conn(){
-		// $servername = 'mayucsa.synology.me';
-		$servername = '192.168.1.6';
+		// $servername = '192.168.1.6';
+		$servername = 'mayucsa.synology.me';
 		$username = 'ismael';
 		$password = 'Sistemas$1';
 		$db = "produccionmayucsa";

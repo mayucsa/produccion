@@ -19,8 +19,8 @@ $sql_details = array(
     'user' => 'alfredochaan',
     'pass' => '$oporteMys#1',
     'db'   => 'produccionmayucsa',
-    'host' => '192.168.1.6'
-    // 'host' => 'mayucsa.synology.me'
+    // 'host' => '192.168.1.6'
+    'host' => 'mayucsa.synology.me'
 );
 
 // $sql_details = array(

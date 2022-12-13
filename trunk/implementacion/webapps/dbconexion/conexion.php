@@ -36,8 +36,8 @@
 		 	// $host			='mysql:dbname=mayucsac_produccionmayucsa;host=162.241.62.122';
 			// $usuario		='mayucsac_root';
 			// $contrasenia	='$oportemys#1';
-			$host			='mysql:dbname=produccionmayucsa;host=192.168.1.6';
-			// $host			='mysql:dbname=produccionmayucsa;host=mayucsa.synology.me';
+			// $host			='mysql:dbname=produccionmayucsa;host=192.168.1.6';
+			$host			='mysql:dbname=produccionmayucsa;host=mayucsa.synology.me';
 			$usuario		='alfredochaan';
 			$contrasenia	='$oporteMys#1';
 			// $dbname			='produccionmayucsa';
