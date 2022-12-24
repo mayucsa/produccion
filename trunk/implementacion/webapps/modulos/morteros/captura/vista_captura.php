@@ -10,7 +10,7 @@
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
             <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"> -->
         </head>
-
+<div ng-controller="vistaProduccionMorteros">
 <div class="modal fade" id="modalMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top:10%; overflow-y:visible;" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -43,9 +43,9 @@
     <div class="row">
         <div class="col-md-12">
           <div class="tile">
-            <div class="card card-info">
+            <div class="card card-info" ng-show="perfilUsu.produccion_morteros_captura == 1">
                 <div class="card-header">
-                     <h3 class="card-title">CAPTURA DE DATOS</h3>
+                     <h3 class="card-title">CAPTURA DE PRODUCCI&Oacute;N</h3>
                      <div class="card-tools">
                          <button type="button" class="btn btn-tool" data-card-widget="collapse">
                              <i class="fas fa-minus"></i>
@@ -142,27 +142,15 @@
 
                                 <div class="row form-group form-group-sm border-top">
                                     <div class="col-sm-12" align="center">
-                                    <?php
-                                        if ($captura_mortero == 1) {
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }else{
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }
-                                    ?>
-                                        <!-- <input type="submit" value="Guardar" href="#" onclick="insertCaptura()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
+                                        <input type="submit" value="Generar produccion" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
+                                        <!-- <input type="submit" value="Generar produccion" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important" ng-show="perfilUsu.produccion_morteros_captura == 1"> -->
+                                        <!-- <input type="submit" value="Generar produccion" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important" ng-show="perfilUsu.produccion_morteros_captura == 0"> -->
+
                                         <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                                     </div>
                                 </div>
                             </form>
                         </div>
-
-                        <!-- <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"> -->
-                                
-                        <!-- </div> -->
 
                         <!-- PANEL DE CAPTURA DE REPROCESO -->
                         <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
@@ -224,18 +212,10 @@
                                 </div>
                                 <div class="row form-group form-group-sm border-top">
                                     <div class="col-sm-12" align="center">
-                                    <?php
-                                        if ($captura_mortero == 1) {
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }else{
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }
-                                    ?>
-                                        <!-- <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
+                                        <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
+                                        <!-- <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important" ng-show="perfilUsu.produccion_morteros_captura == 1"> -->
+                                        <!-- <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important" ng-show="perfilUsu.produccion_morteros_captura == 0"> -->
+
                                         <input type="submit" value="Limpiar" href="#" onclick="limpiarCamposReproceso()" class="btn btn-warning" style="margin-bottom: -25px !important">
                                     </div>
                                 </div>
@@ -247,14 +227,14 @@
 
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">CRITERIOS DE BÚSQUEDA</h3>
+                    <h3 class="card-title">PRODUCCIONES MORTEROS</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
                         </button>
                     </div>
                 </div>
-                <div class="card-body">
+<!--                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12 d-lg-flex" style="display: flex; justify-content: flex-end">
                             <div style="width: 20%;" class="form-floating mx-1">
@@ -281,22 +261,19 @@
                                         data-index="5">
                                 <label for="iptFecha">Fecha</label>
                             </div>
-<!--                             <div style="display: inline-flex;">
-                                <input type="submit" value="Limpiar" href="#" onclick="limpiarCriterios()" class="btn btn-warning">
-                            </div> -->
                         </div>
                     </div>
-                </div> <!-- ./ end card-body -->
-            </div> <!-- ./ end card-info -->
+                </div> -->
+            </div>
 
             <div class="card card-info">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaCapturap">
+                        <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaCapturap">
                             <thead>
                                 <tr>
+                                    <th class="text-center">Folio</th>
                                     <th class="text-center">Nombre</th>
-                                    <th class="text-center">Presentación</th>
                                     <th class="text-center">Cantidad de Barcadas</th>
                                     <th class="text-center">KG ingresado</th>
                                     <th class="text-center">Sacos utilizados</th>
@@ -314,18 +291,30 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
+                                <!-- <tr ng-repeat="(i, obj) in misProducciones track by i">
+                                    <td align="center"  width="5%">{{obj.cve_captura}}</td>
+                                    <td width="25%">{{obj.producto}}</td>
+                                    <td align="center"  width="10%">{{obj.num_barcadas}}</td>
+                                    <td align="center"  width="20%">{{obj.kg_real}}</td>
+                                    <td align="center"  width="20%">{{obj.sacos_totales}}</td>
+                                    <td align="center"  width="20%">{{obj.fecha}}</td>
+                                    <td>
+                                        <span class="btn btn-danger" ng-click="eliminarProduccion(obj.cve_captura)" title="Eliminar" ng-show="perfilUsu.produccion_morteros_edit == 1"><i class="fas fa-trash-alt"></i></span>
+                                        <span class="btn btn-danger" onclick="sinacceso()" title="Eliminar" ng-show="perfilUsu.produccion_morteros_edit == 0"><i class="fas fa-trash-alt"></i></span>
+                                    </td>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
-                </div> <!-- ./ end card-body -->
-            </div> <!-- ./ end card-info -->
+                </div>
+            </div>
 
           </div>
         </div>
     </div> <!--FIN DE DIV ROW--->
       <?php include_once "../../footer.php" ?>
     </main>
-
+</div>
 
 
 <!-- <script src="vista_captura.js"></script> -->
@@ -413,12 +402,13 @@
 
     <script src="../../../includes/js/jquery351.min.js"></script>
 
-    <script src="vista_captura.js"></script>
+    <!-- <script src="vista_captura.js"></script> -->
 
 <?php 
     include_once "../../inferior.php"; 
     include_once "modal_deleteproduccion.php"; 
 ?>
+    <script src="vista_captura_ajs.js"></script>
 
     <script src="vista_captura.js"></script>
 
@@ -434,13 +424,6 @@
 
     <script type="text/javascript" src="../../../includes/js/datatables.min.js"></script>
     
-<!--     <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script> -->
-
-
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
     <script src="../../../includes/js/data_tables_js/jquery.dataTables.min.js"></script>
     <script src="../../../includes/js/data_tables_js/dataTables.buttons.min.js"></script>
     <script src="../../../includes/js/data_tables_js/jszip.min.js"></script>
@@ -449,18 +432,9 @@
     <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
 
+
     <script type="text/javascript">
-    <?php
-    if ($delete_mortero == 1) {
-        ?>
-        consultar();
-    <?php
-    }else{
-        ?>
-        consult();
-        <?php
-    }
-     ?>
+            consultar();
     </script>
 
     <script>

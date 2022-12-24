@@ -17,7 +17,7 @@ set_time_limit(0); ?>
     <link rel="stylesheet" type="text/css" href="../../../includees/css/main.css">
 
     <script src="../../../includes/js/jquery351.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
     <!-- <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>  -->
     <script src="../../../includes/js/popper.js"></script>
     <script src="../../../includes/js/popper.min.js"></script>

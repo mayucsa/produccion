@@ -23,33 +23,39 @@
 					$objeto_datos_usuario->set_puesto_persona($d->puesto);
 					$objeto_datos_usuario->set_rol_persona($d->cve_rol);
 
-					$objeto_datos_usuario->set_vista_dashboard($d->dashboard_vista);
+					// $objeto_datos_usuario->set_vista_dashboard($d->dashboard_vista);
 
-					$objeto_datos_usuario->set_vista_inventario($d->inventario_vista);
+					// $objeto_datos_usuario->set_vista_inventario($d->inventario_vista);
 
-					$objeto_datos_usuario->set_vista_laboratorio($d->laboratorio_vista);
+					// $objeto_datos_usuario->set_vista_laboratorio($d->laboratorio_vista);
 
-					$objeto_datos_usuario->set_vista_besser($d->besser_vista);
-					$objeto_datos_usuario->set_captura_besser($d->besser_captura);
-					$objeto_datos_usuario->set_edit_besser($d->besser_edit);
+					// $objeto_datos_usuario->set_vista_besser($d->besser_vista);
+					// $objeto_datos_usuario->set_captura_besser($d->besser_captura);
+					// $objeto_datos_usuario->set_edit_besser($d->besser_edit);
 
-					$objeto_datos_usuario->set_vista_vibro($d->vibro_vista);
-					$objeto_datos_usuario->set_captura_vibro($d->vibro_captura);
-					$objeto_datos_usuario->set_edit_vibro($d->vibro_edit);
+					// $objeto_datos_usuario->set_vista_vibro($d->vibro_vista);
+					// $objeto_datos_usuario->set_captura_vibro($d->vibro_captura);
+					// $objeto_datos_usuario->set_edit_vibro($d->vibro_edit);
 
-					$objeto_datos_usuario->set_vista_almacenistas($d->almacenistas_vista);
+					// $objeto_datos_usuario->set_vista_almacenistas($d->almacenistas_vista);
 
-					$objeto_datos_usuario->set_vista_reportes($d->reportes_vista);
+					// $objeto_datos_usuario->set_vista_reportes($d->reportes_vista);
 
-					$objeto_datos_usuario->set_vista_usuarios($d->usuarios_vista);
+					// $objeto_datos_usuario->set_vista_usuarios($d->usuarios_vista);
 
 
-					$objeto_datos_usuario->set_vista_morteros($d->morteros_vista);
-					$objeto_datos_usuario->set_captura_morteros($d->morteros_captura);
-					$objeto_datos_usuario->set_edit_morteros($d->morteros_edit);
-					$objeto_datos_usuario->set_delete_morteros($d->morteros_delete);
+					// $objeto_datos_usuario->set_vista_morteros($d->morteros_vista);
+					// $objeto_datos_usuario->set_captura_morteros($d->morteros_captura);
+					// $objeto_datos_usuario->set_edit_morteros($d->morteros_edit);
+					// $objeto_datos_usuario->set_delete_morteros($d->morteros_delete);
+					$_SESSION['loggedin'] = true;
+					$_SESSION['id'] = $d->cve_usuario;
+					$_SESSION['produccion_morteros_edit'] = $d->produccion_morteros_edit;
+					$_SESSION['entradas_morteros_edit'] = $d->entradas_morteros_edit;
 
 					$_SESSION['usuario'] = serialize($objeto_datos_usuario);
+					$_SESSION['start'] = time();
+					$_SESSION['expire'] = $_SESSION['start'] + (2 * 3600);//expira en 2 horas
 					// $_SESSION['usuario'] = $objeto_datos_usuario;
 					// $_SESSION['usuario'] = $usuario;
 	                $response['success'] = TRUE;

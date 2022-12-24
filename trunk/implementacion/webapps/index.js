@@ -34,7 +34,7 @@ function validacionDatos(pusuario,ppassword){
     },function (data) {
         if(data.success){
             $('#myLoading').modal('show');
-            setTimeout(function(){location.href='modulos/inventario/morteros/inventario_morteros.php';},2000);
+            setTimeout(function(){location.href='modulos/bienvenida/bienvenida/bienvenida.php';},2000);
             // setTimeout(function(){location.href='modulos/inventario/bloquera/inventario_bloquera.php';},2000);
         } else {
             $('#encabezadoModal').html('Validación de datos');

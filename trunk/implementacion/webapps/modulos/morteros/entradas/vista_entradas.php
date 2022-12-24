@@ -10,26 +10,27 @@
                 <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
 
         </head>
-<div class="modal fade" id="myLoadingGral" tabindex="-3" data-backdrop="static" data-keyboard="false" style="padding-top:20%; overflow-y:visible;" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div align="center"><img src="../../../includes/imagenes/loading_gral.gif" width="140px"></div>
-    <div id="divtextloading" align="center" style="font-weight:bold; font-size:20px; color:#FFFFFF">Espere un momento...</div>
-</div>
-<div class="modal fade" id="modalMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top:10%; overflow-y:visible;" >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header modal-danger">
-                <h5 class="modal-title" id="encabezadoModal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="cuerpoModal"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+<div ng-controller="vistaEntradasMorteros">
+    <div class="modal fade" id="myLoadingGral" tabindex="-3" data-backdrop="static" data-keyboard="false" style="padding-top:20%; overflow-y:visible;" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div align="center"><img src="../../../includes/imagenes/loading_gral.gif" width="140px"></div>
+        <div id="divtextloading" align="center" style="font-weight:bold; font-size:20px; color:#FFFFFF">Espere un momento...</div>
+    </div>
+    <div class="modal fade" id="modalMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top:10%; overflow-y:visible;" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-danger">
+                    <h5 class="modal-title" id="encabezadoModal"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="cuerpoModal"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <main class="app-content">
         <div class="app-title">
@@ -47,23 +48,7 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="card">
-                <!-- <div class="card-body">
-                    <div align="right" class="form-group form-group-sm" style="margin-bottom: 0px !important">
-                        <?php
-                            //if ($captura_mortero == 1) //{
-                        ?>
-                                <button id="btnEntrada" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMatPrima" data-whatever="@getbootstrap"><span class="fas fa-plus-circle"></span> Materia Prima</button>
-                        <?php
-                            //}else{
-                        ?>
-                                <button id="btnEntrada" type="button" class="btn btn-primary" onclick="sinacceso()"><span class="fas fa-plus-circle"></span> Materia Prima</button>
-                        <?php
-                            //}
-                        ?>
-                    </div>
-                </div>-->
-
-                <div class="card card-info">
+                <div class="card card-info" ng-show="perfilUsu.entradas_morteros_captura == 1">
                     <div class="card-header">
                         <h3 class="card-title">CAPTURA DE ENTRADAS</h3>
                         <div class="card-tools">
@@ -75,7 +60,7 @@
                     <div class="card-body">
                         <div class="row form-group form-group-sm">
                             <div class="col-lg-12 d-lg-flex">
-                                <div style="width: 25%;" class="form-floating mx-1">
+                                <div style="width: 30%;" class="form-floating mx-1">
                                     <select required id="comb_mat_prima" name="comb_mat_prima" class="js-example-basic-single form-control">
                                         <option selected="selected" value="0">[Seleccione una opción..]</option>
                                         <?php   
@@ -91,26 +76,16 @@
                                     </select>
                                     <label for="iptCategoria">Producto</label>
                                 </div>
-                                <div style="width: 25%;" class="form-floating mx-1">
-                                    <input required type="text" class="form-control validanumericos" id="comb_cantidad" name="comb_cantidad">
+                                <div style="width: 30%;" class="form-floating mx-1">
+                                    <input required type="text" class="form-control validanumericos" ng-model="cantidad" id="comb_cantidad" name="comb_cantidad">
                                     <label for="iptCategoria">Cantidad</label>
                                 </div>
+                                <span hidden id="spanuser" name="spanuser" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $id?></span>
                             </div>
                         </div>
                         <div class="row form-group form-group-sm border-top">
                             <div class="col-sm-12" align="center">
-                            <?php
-                                if ($captura_mortero == 1) {
-                            ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }else{
-                            ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }
-                            ?>
-                                <!-- <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
+                                <input type="submit" value="Guardar" href="#" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
                                 <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                             </div>
                         </div>
@@ -154,6 +129,7 @@
                             <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tableMatPrima">
                                 <thead>
                                     <tr>
+                                        <th class="text-center">Folio</th>
                                         <th class="text-center">Nombre</th>
                                         <th class="text-center">Cantidad</th>
                                         <!-- <th class="text-center">Categoria</th> -->
@@ -163,6 +139,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <!-- <td></td> -->
@@ -180,6 +157,7 @@
       </div>
       <?php include_once "../../footer.php" ?>
     </main>
+</div>
 
 <script src="../../../includes/js/adminlte.min.js"></script>
 
@@ -188,12 +166,11 @@
 <script src="vista_entradas.js"></script>
 
 <?php 
-    include_once "modalInsertar.php" ?>
-<?php 
-    include_once "modalUpdate.php" ?>
-<?php 
-    include_once "../../inferior.php"
+    include_once "modalInsertar.php"; 
+    include_once "modalUpdate.php";
+    include_once "../../inferior.php";
 ?>
+    <script src="vista_entradas_ajs.js"></script>
 
     <script src="vista_entradas.js"></script>
 
@@ -222,15 +199,5 @@
 </script> -->
 
 <script type="text/javascript">
-    <?php
-    if ($edit_mortero == 1) {
-        ?>
         consultar();
-    <?php
-    }else{
-        ?>
-        consult();
-        <?php
-    }
-     ?>
 </script>

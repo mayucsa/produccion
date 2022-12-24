@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once "../../../dbconexion/conexion.php";
 // header('Content-Type: application/json');
 
@@ -14,8 +15,8 @@ $primaryKey = 'cve_captura';
 // indexes
 $var    = "estatus_registro = 'VIG'";
 $columns = array(
-    array( 'db' => 'cve_producto',          'dt' => 0 ),
-    array( 'db' => 'valor_presentacion',    'dt' => 1 ),
+    array( 'db' => 'cve_captura',          'dt' => 0 ),
+    array( 'db' => 'cve_producto',    'dt' => 1 ),
     array( 'db' => 'num_barcadas',          'dt' => 2),
     array( 'db' => 'kg_real',               'dt' => 3,
                     'formatter' => function( $d, $row ) {
@@ -34,7 +35,14 @@ $columns = array(
             return date( 'Y-m-d', strtotime($d));
         }
     ),
-    array( 'db' => 'cve_captura',       'dt' => 7),
+    array( 'db' => 'valor_presentacion',       'dt' => 6),
+    array( 'db' => 'cve_captura',       'dt' => 7, 'formatter' => function($d, $row){
+        if ($_SESSION['produccion_morteros_edit'] == 1 ) {
+            return '<span class= "btn btn-danger" onclick= "obtenerDatos('.$row[7].')" title="Eliminar" data-toggle="modal" data-target="#modalDeleteProduccion" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
+        }else{
+            return '<span class= "btn btn-danger" onclick= "sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>';
+        }
+    }),
     // array(
     //     'db'        => 'salary',
     //     'dt'        => 5,

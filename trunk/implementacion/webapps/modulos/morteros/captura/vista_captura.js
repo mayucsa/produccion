@@ -2,13 +2,13 @@ function consultar(){
         var table;
         $(document).ready(function() {
         table = $('#tablaCapturap').DataTable( {
-            "dom": 'Bfrtip',
-            "buttons": [
-                 {"extend": 'excel',"text": '<i class="far fa-file-excel"> Exportar en Excel</i>', "title": 'Producción Morteros'}, 
-                 {"extend": 'pdf', "text": '<i class="far fa-file-pdf"> Exportar en PDF</i>', "title": 'Producción Morteros'}, 
-                 {"extend": 'print', "text": '<i class="fas fa-print"> Imprimir</i>', "title": 'Producción Morteros'},
-                 "pageLength",
-            ],
+            // "dom": 'Bfrtip',
+            // "buttons": [
+            //      {"extend": 'excel',"text": '<i class="far fa-file-excel"> Exportar en Excel</i>', "title": 'Producción Morteros'}, 
+            //      {"extend": 'pdf', "text": '<i class="far fa-file-pdf"> Exportar en PDF</i>', "title": 'Producción Morteros'}, 
+            //      {"extend": 'print', "text": '<i class="fas fa-print"> Imprimir</i>', "title": 'Producción Morteros'},
+            //      "pageLength",
+            // ],
             "processing": true,
             "serverSide": true,
             "ajax": "serverSideproduccion.php",
@@ -18,7 +18,7 @@ function consultar(){
             // "destroy": true,
             "searching": true,
             // bSort: false,
-            // "paging": false,
+            // "paging": true,
             // "searching": false,
             "bDestroy": true,
             "columnDefs":[
@@ -27,35 +27,40 @@ function consultar(){
                                 "className": 'dt-body-center' /*alineacion al centro th de tbody de la table*/
                             },
                             {
+                                "targets": 1,
+                                "render": function (data, type, row, meta) {
+                                    return row[1] + ' - ' + row[6] + 'KG';
+                                }
+                            },
+                            {
                                 "targets": 6,
                                 "render": function(data, type, row, meta){
 
-                                    return '<span class= "btn btn-danger" onclick= "obtenerDatos('+row[7]+')" title="Eliminar" data-toggle="modal" data-target="#modalDeleteProduccion" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
+                                    return row[7];
                                 }
                             }
                         ],
+            "language": {
+                "buttons": {
+                            "pageLength": {
+                                '_': "Mostrar %d registros por página.",
+                            }
+                        },
+                 "lengthMenu": "Mostrar _MENU_ registros por página.",
+                 "zeroRecords": "No se encontró registro.",
+                 "info": "  _START_ de _END_ (_TOTAL_ registros totales).",
+                 "infoEmpty": "0 de 0 de 0 registros",
+                 "infoFiltered": "(Encontrado de _MAX_ registros)",
+                 "search": "Buscar: ",
+                 "processing": "Procesando...",
+                          "paginate": {
+                     "first": "Primero",
+                     "previous": "Anterior",
+                     "next": "Siguiente",
+                     "last": "Último"
+                }
 
-         "language": {
-            "buttons": {
-                        "pageLength": {
-                            '_': "Mostrar %d registros por página.",
-                        }
-                    },
-             "lengthMenu": "Mostrar _MENU_ registros por página.",
-             "zeroRecords": "No se encontró registro.",
-             "info": "  _START_ de _END_ (_TOTAL_ registros totales).",
-             "infoEmpty": "0 de 0 de 0 registros",
-             "infoFiltered": "(Encontrado de _MAX_ registros)",
-             "search": "Buscar: ",
-             "processing": "Procesando...",
-                      "paginate": {
-                 "first": "Primero",
-                 "previous": "Anterior",
-                 "next": "Siguiente",
-                 "last": "Último"
              }
-
-         }
 
             } );
         } );
@@ -154,7 +159,7 @@ function consult(){
 
 function obtenerDatos(cve_captura) {
     $.getJSON("modelo_captura.php?obtenerDatos="+cve_captura, function(registros){
-        // console.log(registros);
+        console.log(registros);
 
         $('#comb_id').val(registros[0]['cve_captura']);
         $('#comb_nombre').val(registros[0]['cve_producto']);
@@ -175,7 +180,7 @@ function eliminarCaptura(){
     var mgs = "";
     var producto        = $('#comb_nombre').val();
     var presentacion    = $('#comb_presentacion').val();
-    var cantidad    = $('#comb_kg').val();
+    var cantidad        = $('#comb_kg').val();
     // var cantidad    = $('#selectproducto').find('option:selected').text()
 
     datos.append('producto', $('#comb_id').val());
@@ -207,7 +212,7 @@ function eliminarCaptura(){
     }).then((result) => {
 
     if (result.isConfirmed) {    
-
+        jsShowWindowLoad('Capturando producción...');
         $.ajax({
                 type:"POST",
                 url:"modelo_captura.php?accion=eliminarCaptura",
@@ -217,21 +222,18 @@ function eliminarCaptura(){
         success:function(data){
             // $('#myLoading').modal('show');
                     // mostrar();
+            // console.log(datos);
+                    jsRemoveWindowLoad();
+                    // location.reload();
                     consultar();
                     // limpiarCampos();
                     // consultarDatos();
                     cerrarModal();
-                    // $('#modalMatPrima').modal('hide');
-                    // Swal.fire(
-                    //             'Eliminado!',
-                    //             'Usted ha eliminado la producción de manera Exitosa !!',
-                    //             'success'
-                    //         )
                     Swal.fire({
                                     icon: 'info',
                                     iconColor: '#FF0000',
-                                    title: 'Eliminado!',
-                                    text: 'Usted ha eliminado la producción de manera Exitosa',
+                                    title: '¡Éxito!',
+                                    text: 'Usted ha eliminado la producción',
                                     // footer: 'Revisar las existencias de Tarimas',
                                     confirmButtonColor: '#1A4672'
                                 })
@@ -242,6 +244,46 @@ function eliminarCaptura(){
         }
     });
 
+}
+function eliminarCap(cve_captura){
+        $.getJSON("modelo_captura.php?obtenerDatos="+cve_captura, function(registros){
+            console.log(registros);
+
+            cve_producto = registros[0]['cve_producto'];
+            console.log(cve_producto);
+
+        });
+
+        Swal.fire({
+          title: 'Eliminar Produccion',
+          html: '¿Realmente deseas eliminar la produccion con folio: <b>'+cve_captura+'</b>?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Eliminar',
+          cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            jsShowWindowLoad('Eliminando producción...');
+            $.ajax({
+                type:"POST",
+                url:"modelo_captura.php?accion=eliminarCaptura",
+                data: cve_captura,
+                processData:false,
+                contentType:false,
+                success:function(data){
+                    jsRemoveWindowLoad();
+                    consultar();
+                    Swal.fire(
+                        '¡Éxito!',
+                        'Se elimino la produccion',
+                        'success'
+                    )
+                }
+            })
+        }
+      });
 }
 
 function selectTonelada(){
@@ -471,7 +513,7 @@ function insertCaptura() {
     }).then((result) => {
 
     if (result.isConfirmed) {    
-
+        jsShowWindowLoad('Capturando producción...');
         $.ajax({
                 type:"POST",
                 url:"modelo_captura.php?accion=insertar",
@@ -483,6 +525,8 @@ function insertCaptura() {
                     // mostrar();
                     consultar();
                     limpiarCampos();
+                    jsRemoveWindowLoad();
+                    // location.reload();
                     // consultarDatos();
                     // cerrarModal();
                     // $('#modalMatPrima').modal('hide');
@@ -497,6 +541,11 @@ function insertCaptura() {
         }
     });
     // }
+}
+function insertCapturaJS() {
+   
+        jsShowWindowLoad('Capturando producción...');
+
 }
 
 function insertReproceso() {

@@ -27,7 +27,7 @@ class ModeloProducto{
 			 $vquery->close();
 			 $vquery = null;
 	}
-	function showTonelada($cve_producto){
+	public static function showTonelada($cve_producto){
 		$sql = "	SELECT  tonelada_producto
 					FROM cat_productos
 					WHERE cve_producto = $cve_producto";
@@ -134,7 +134,7 @@ if (isset($_GET["accion"]) && $_GET['accion'] == "consultar") {
 }
 
 if ( isset($_GET['accion']) && $_GET['accion'] == "eliminarCaptura") {
-	$cve_captura 	= $_POST['producto'];
+	$producto 	= $_POST['producto'];
 	$user 			= $_POST['user'];
 	
 	// $materia = 'Materia Prima';
@@ -149,7 +149,7 @@ if ( isset($_GET['accion']) && $_GET['accion'] == "eliminarCaptura") {
    $vquery2 = Conexion::conectar()->prepare($sql2);
 
 
-   	$vquery2->bindparam(1, $cve_captura);
+   	$vquery2->bindparam(1, $producto);
    	$vquery2->bindparam(2, $user);
 
    // $vquery->execute();
