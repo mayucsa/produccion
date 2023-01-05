@@ -227,7 +227,7 @@ session_start();
                     <a class="treeview-item" href="../../morteros/salidas/vista_salidas.php"><i class="icon fa fa-circle-o"></i> Salidas</a>
                   </li>
                   <li ng-show="perfilUsu.tperdido_morteros_vista == 1">
-                    <a class="treeview-item" href="../../morteros/seguridad/vista_seguridad.php"><i class="icon fa fa-circle-o"></i> Tiempo pérdido</a>
+                    <a class="treeview-item" href="../../morteros/tiempoperdido/vista_tiempoperdido.php"><i class="icon fa fa-circle-o"></i> Tiempo pérdido</a>
                   </li>
                   <li ng-show="perfilUsu.seguridad_morteros_vista == 1">
                     <a class="treeview-item" href="../../morteros/seguridad/vista_seguridad.php"><i class="icon fa fa-circle-o"></i> Seguridad</a>

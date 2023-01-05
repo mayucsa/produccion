@@ -5,7 +5,7 @@ class ModeloTiempoPerdido{
 	function showMaquina(){
 		$sql = "	SELECT  *
 					FROM cat_maquinas
-					WHERE estatus_maq = 'VIG' AND cve_depto = 3 AND tiempo_perdido = 1
+					WHERE estatus_maq = 'VIG' AND cve_depto = 5 AND tiempo_perdido = 1
 					ORDER BY cve_alterna asc";
 
 			 $vquery = Conexion::conectar()->prepare($sql);
@@ -37,7 +37,7 @@ if ( isset($_GET['accion']) && $_GET['accion'] == "insertar") {
 	$horafin 	= $_POST['horafin'];
 	$usuario 	= $_POST['usuario'];
 
-    $sql		= "INSERT INTO seg_tiempoperdido (cve_maq, cve_fallo, motivo_fallo, hora_inicio, hora_fin, area, capturado_por, eliminado_por, estatus_tp, fecha_registro, fecha_eliminado) VALUES (:maquina, :fallo, :motivo, :horainicio, :horafin, 'VibroBlock', :usuario, '', 'VIG', NOW(), 0);";
+    $sql		= "INSERT INTO seg_tiempoperdido (cve_maq, cve_fallo, motivo_fallo, hora_inicio, hora_fin, area, capturado_por, eliminado_por, estatus_tp, fecha_registro, fecha_eliminado) VALUES (:maquina, :fallo, :motivo, :horainicio, :horafin, 'Morteros', :usuario, '', 'VIG', NOW(), 0);";
 
    $vquery = Conexion::conectar()->prepare($sql);
 
@@ -132,6 +132,5 @@ if (isset($_GET['actualizar']) ) {
    	exit();
 
 }
-
 
  ?>

@@ -54,6 +54,7 @@
 					$_SESSION['entradas_morteros_edit'] = $d->entradas_morteros_edit;
 					$_SESSION['tperdido_besser_edit'] = $d->tperdido_besser_edit;
 					$_SESSION['tperdido_vibro_edit'] = $d->tperdido_vibro_edit;
+					$_SESSION['tperdido_morteros_edit'] = $d->tperdido_morteros_edit;
 
 					$_SESSION['usuario'] = serialize($objeto_datos_usuario);
 					$_SESSION['start'] = time();
