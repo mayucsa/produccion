@@ -39,7 +39,7 @@
     </div>
 </div>
 
-
+<div ng-controller="VistaTPVibro">
     <main class="app-content">
       <div class="app-title">
         <div>
@@ -54,7 +54,7 @@
     <div class="row">
         <div class="col-md-12">
           <div class="tile">
-            <div class="card card-info">
+            <div class="card card-info" ng-show="perfilUsu.tperdido_vibro_captura == 1">
                 <div class="card-header">
                      <h3 class="card-title">CAPTURA DE DATOS</h3>
                      <div class="card-tools">
@@ -101,7 +101,7 @@
                                 <input type="text" id="inputmotivo" name="inputmotivo" class="form-control form-control-md UpperCase">
                                 <label>Motivo de fallo</label>
                             </div>
-                            <div style="width: 25%;" class="form-floating mx-1"> 
+<!--                             <div style="width: 25%;" class="form-floating mx-1"> 
                                 <div class="input-group clockpicker" id="datetimepicker3" data-autoclose="true">
                                     <input type="text" class="form-control datetimepicker-input validanumericos" placeholder="Hora de inicio" id="inputhorainicio" name="inputhorainicio" onkeydown="noPuntoComa( event )">
                                     <div class="input-group-append">
@@ -116,6 +116,18 @@
                                         <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
                                     </div>
                                 </div>
+                            </div> -->
+                            <div style="width: 25%;" class="form-floating mx-1">
+                                <input type="time" id="inputhorainicio" name="inputhorainicio" class="form-control form-control-md">
+                                <label>Hora de inicio</label>
+                            </div>
+                            <div style="width: 25%;" class="form-floating mx-1">
+                                <input type="time" id="inputhorafin" name="inputhorafin" class="form-control form-control-md" onchange="diferencia();">
+                                <label>Hora de fin</label>
+                            </div>
+                            <div style="widows: 25%;" class="form-floating mx-1">
+                                <input type="text-center" id="diferencia" name="diferencia" class="form-control form-control-md" disabled>
+                                <label>Diferencia</label>
                             </div>
                         <div class="col-sm-2 text-left">
                             <span hidden  id="spanuser" name="spanuser" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
@@ -125,20 +137,7 @@
 
                     <div class="row form-group form-group-sm border-top">
                         <div class="col-sm-12" align="center">
-
-                            <?php
-                                 if ($captura_vibro == 1) {
-                            ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="validacion()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }else{
-                             ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }
-                            ?>
-
-                            <!-- <input type="submit" value="Guardar" href="#" onclick="validacion()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
+                            <input type="submit" value="Guardar" href="#" onclick="validacion()" class="btn btn-primary" style="margin-bottom: -25px !important">
                             <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                         </div>
                     </div>
@@ -160,12 +159,13 @@
                             <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaTPVibro">
                                 <thead>
                                     <tr>
+                                        <th class="text-center">Folio</th>
                                         <th class="text-center">Máquina</th>
                                         <th class="text-center">Fallo</th>
                                         <th class="text-center">Hora inicio</th>
                                         <th class="text-center">Hora fin</th>
-                                        <!-- <th class="text-center">Diferencia</th> -->
-                                        <th class="text-center">Fecha</th>
+                                        <th class="text-center">Diferencia</th>
+                                        <th class="text-center">Fecha captura</th>
                                         <th class="text-center">Turno</th>
                                         <th class="text-center">Opciones</th>
                                     </tr>
@@ -176,7 +176,8 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <!-- <td></td> -->
+                                        <td></td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -184,47 +185,23 @@
                                 </tbody>
                             </table>
                         </div>
-<!--                         <div class="col-lg-12 d-lg-flex" style="display: flex; justify-content: flex-end">
-                            <div style="width: 20%;" class="form-floating mx-1">
-                                <input 
-                                        type="text" 
-                                        id="iptNombre"
-                                        class="form-control"
-                                        data-index="0">
-                                <label for="iptNombre">Nombre</label>
-                            </div>
-                            <div style="width: 20%;" class="form-floating mx-1">
-                                <input 
-                                        type="text" 
-                                        id="iptPresentacion"
-                                        class="form-control"
-                                        data-index="1">
-                                <label for="iptPresentacion">Presentación</label>
-                            </div>
-                            <div style="width: 20%;" class="form-floating mx-1">
-                                <input 
-                                        type="text" 
-                                        id="iptFecha"
-                                        class="form-control"
-                                        data-index="5">
-                                <label for="iptFecha">Fecha</label>
-                            </div>
-                        </div> -->
                     </div>
-                </div> <!-- ./ end card-body -->
-            </div> <!-- ./ end card-info -->
+                </div>
+            </div>
 
           </div>
         </div>
     </div> <!--FIN DE DIV ROW--->
       <?php include_once "../../footer.php" ?>
     </main>
+</div>
 
     <script src="../../../includes/js/adminlte.min.js"></script>
 
     <script src="../../../includes/js/jquery351.min.js"></script>
 
     <script src="vista_tiempoperdido.js"></script>
+    <script src="vista_tiempoperdido_ajs.js"></script>
 
 <?php 
 include_once "../../inferior.php";
@@ -255,6 +232,22 @@ include_once "modales.php";
 
     <script type="text/javascript" src="../../../includes/timepicker/bootstrap-clockpicker.min.js"></script>
 
+<!-- Funciones diferencias-->
+<script type="text/javascript">
+    function diferencia(id) {
+        var datos   = new FormData();
+
+        datos.append('inicio', $('#inputhorainicio').val());
+        datos.append('fin', $('#inputhorafin').val());
+
+        console.log(datos.get('inicio'));
+        console.log(datos.get('fin'));
+
+        var dif = ($('#inputhorafin').val() - $('#inputhorainicio').val());
+        console.log(dif);
+        $("#diferencia").html(dif);
+    }
+</script>
 
 <script type="text/javascript">
     $('.clockpicker').clockpicker()
@@ -320,17 +313,7 @@ include_once "modales.php";
 
 
 <script type="text/javascript">
-    <?php
-    if ($edit_vibro == 1) {
-        ?>
-        consultar();
-    <?php
-    }else{
-        ?>
-        consult();
-        <?php
-    }
-     ?>
+    consultar();
 </script>
 
 <!-- NO PUNTOS EN INPUT -->

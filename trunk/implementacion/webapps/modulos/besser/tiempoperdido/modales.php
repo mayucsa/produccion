@@ -47,7 +47,15 @@
                       <input type="text" id="inputmotivoedit" name="inputmotivoedit" class="form-control form-control-md UpperCase">
                       <label>Motivo de fallo</label>
                   </div>
-                  <div style="width: 25%;" class="form-floating mx-1"> 
+                  <div style="width: 25%;" class="form-floating mx-1">
+                      <input type="time" id="inputhorainicioedit" name="inputhorainicioedit" class="form-control form-control-md">
+                      <label>Hora de inicio</label>
+                  </div>
+                  <div style="width: 25%;" class="form-floating mx-1">
+                      <input type="time" id="inputhorafinedit" name="inputhorafinedit" class="form-control form-control-md">
+                      <label>Hora de fin</label>
+                  </div>
+<!--                   <div style="width: 25%;" class="form-floating mx-1"> 
                       <div class="input-group clockpicker" id="datetimepicker3" data-autoclose="true">
                           <input type="text" class="form-control datetimepicker-input validanumericos" placeholder="Hora de inicio" id="inputhorainicioedit" name="inputhorainicioedit" onkeydown="noPuntoComa( event )">
                           <div class="input-group-append">
@@ -62,7 +70,7 @@
                               <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
                           </div>
                       </div>
-                  </div>
+                  </div> -->
               <div class="col-sm-2 text-left">
                   <span hidden id="spanusuario" name="spanusuario" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
               </div>

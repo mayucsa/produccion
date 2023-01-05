@@ -5,7 +5,7 @@ class ModeloTiempoPerdido{
 	function showMaquina(){
 		$sql = "	SELECT  *
 					FROM cat_maquinas
-					WHERE estatus_maq = 'VIG' AND cve_depto = 5
+					WHERE estatus_maq = 'VIG' AND cve_depto = 8 AND tiempo_perdido = 1
 					ORDER BY cve_alterna asc";
 
 			 $vquery = Conexion::conectar()->prepare($sql);

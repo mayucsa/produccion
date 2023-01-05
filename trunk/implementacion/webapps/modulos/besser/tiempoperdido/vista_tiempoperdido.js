@@ -14,7 +14,7 @@ function consultar(){
             "ajax": "serverSideTPBesser.php",
             "lengthMenu": [[15, 30, 50, 100], [15, 30, 50, 100]],
             "pageLength": 15,
-            "order": [4, 'desc'],
+            "order": [0, 'desc'],
             // "destroy": true,
             "searching": true,
             // bSort: false,
@@ -23,48 +23,44 @@ function consultar(){
             "bDestroy": true,
             "columnDefs":[
                             {
-                                "targets": [1, 2, 3, 4, 5, 6],
+                                "targets": [1, 2, 3, 4, 5, 6, 7, 8],
                                 "className": 'dt-body-center' /*alineacion al centro th de tbody de la table*/
                             },
+                            // {
+                            //     "targets": 0,
+                            //     "render": function (data, type, row, meta) {
+                            //         return row[7];
+                            //     }
+                            // },
+                            // {
+                            //     "targets": 1,
+                            //     "render": function (data, type, row, meta) {
+                            //         return row[8];
+                            //     }
+                            // },
                             {
-                                "targets": 0,
-                                "render": function (data, type, row, meta) {
-                                    return row[7];
-                                }
-                            },
-                            {
-                                "targets": 1,
-                                "render": function (data, type, row, meta) {
-                                    return row[8];
-                                }
-                            },
-                            {
-                                "targets": 5,
+                                "targets": 7,
                                 "render": function(data, type, row, meta){
                                     // const primaryKey = data;
                                     // "data": 'cve_entrada',
                                     // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
-                                    if (row[6] >=  '01:00:00', row[6] <= '09:00:00'){
+                                    if (row[7] >=  '01:00:00', row[7] <= '09:00:00'){
                                         return '<span class= "badge badge-success">3er Turno</span>';
                                         // return row[4] - 1;
-                                    } if (row[6] >=  '09:00:01', row[6] <= '18:00:00'){
+                                    } if (row[7] >=  '09:00:01', row[7] <= '18:00:00'){
                                         return '<span class= "badge badge-success">1er Turno</span>';
-                                    } if (row[6] >=  '18:00:01', row[6] <= '23:59:59'){
+                                    } if (row[7] >=  '18:00:01', row[7] <= '23:59:59'){
                                          return '<span class= "badge badge-success">2do Turno</span>';
                                     }
                                 }
                             },
-                            {
-                                "targets": 6,
-                                "render": function(data, type, row, meta){
-                                    // const primaryKey = data;
-                                    // "data": 'cve_entrada',
-                                    return  '<span class= "btn btn-warning" onclick= "obtenerDatosEdit('+row[5]+')" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>' + ' ' + 
-                                            '<span class= "btn btn-danger" onclick= "obtenerDatosE('+row[5]+')" title="Eliminar" data-toggle="modal" data-target="#modalEliminar" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
-                                }
-                                // "data": null,
-                                // "defaultContent": '<span class= "btn btn-warning" onclick= "obtenerDatos(".$value["cve_entrada"].")" data-toggle="modal" data-target="#modalMatPrimaUpdate" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>'
-                            }
+                            // {
+                            //     "targets": 7,
+                            //     "render": function(data, type, row, meta){
+                            //         return  '<span class= "btn btn-warning" onclick= "obtenerDatosEdit('+row[0]+')" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>' + ' ' + 
+                            //                 '<span class= "btn btn-danger" onclick= "obtenerDatosE('+row[0]+')" title="Eliminar" data-toggle="modal" data-target="#modalEliminar" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
+                            //     }
+                            // }
                         ],
 
          "language": {
@@ -312,7 +308,7 @@ function capturaTiempoPerdido(){
     }).then((result) => {
 
     if (result.isConfirmed) {
-
+        jsShowWindowLoad('Capturando tiempo perdido...');
         $.ajax({
                 type:"POST",
                 url:"modelo_tiempoperdido.php?accion=insertar",
@@ -323,11 +319,12 @@ function capturaTiempoPerdido(){
 
                     consultar();
                     limpiarCampos();
+                    jsRemoveWindowLoad();
                     // cerrarModal();
                     // $('#myLoadingGral').modal('show');
                     Swal.fire(
                                 '¡Tiempo pérdido!',
-                                'Se ha capturado el tiempo pérdido con Exito !',
+                                'Se ha capturado el tiempo pérdido exitosamente !',
                                 'success'
                             )
                     }
@@ -427,7 +424,7 @@ function editarTP(){
 
 
         Swal.fire({
-                title: '¿Desea editar el Tiempo pérdido?',
+                title: '¿Estas seguro de editar el folio #'+ datos.get('cve_tp')+ '?',
                 // html: 'Nombre: <b>' + datos.get('nombre_articulo'),
                 icon: 'warning',
                 showCancelButton: true,
@@ -438,6 +435,7 @@ function editarTP(){
     }).then((result) => {
 
     if (result.isConfirmed) {
+        jsShowWindowLoad('Editando tiempo perdido...');
         $.ajax({
                 type:"POST",
                 url:"modelo_tiempoperdido.php?actualizar=1",
@@ -448,10 +446,10 @@ function editarTP(){
             // console.log(r);
             consultar();
             cerrarModalEditar();
-            
+            jsRemoveWindowLoad();
                     Swal.fire(
-                                '¡Modificación!',
-                                'Se ha cambiado los datos del Articulo !!',
+                                '¡Edición!',
+                                'Se ha editado el tiempo pérdido exitosamente',
                                 'success'
                             )
             
@@ -482,8 +480,8 @@ function eliminarTP(){
     console.log(datos.get('falloe'));
     console.log(datos.get('usuarioe'));
         Swal.fire({
-                title: '¿Estas seguro de eliminar el Tiempo pérdido?',
-                html: 'Maquina: <b>' + datos.get('maquinae'),
+                title: '¿Estas seguro de eliminar el folio #'+ datos.get('cve_tpe')+'?',
+                // html: 'Folio: <b>' + datos.get('cve_tpe'),
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -493,6 +491,7 @@ function eliminarTP(){
     }).then((result) => {
 
     if (result.isConfirmed) {
+        jsShowWindowLoad('Eliminando tiempo perdido...');
         $.ajax({
                 type:"POST",
                 url:"modelo_tiempoperdido.php?eliminar=1",
@@ -503,10 +502,10 @@ function eliminarTP(){
             // console.log(r);
             consultar();
             cerrarModalEliminar();
-            
+            jsRemoveWindowLoad();
                     Swal.fire(
                                 '¡Eliminación!',
-                                'Se ha elimnado el Tiempo pérdido !!',
+                                'Se ha elimnado el tiempo pérdido exitosamente',
                                 'success'
                             )
             

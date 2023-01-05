@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once "../../../dbconexion/conexion.php";
 // header('Content-Type: application/json');
 
@@ -44,23 +45,32 @@ $var    = "estatus_tp = 'VIG' AND area = 'VibroBlock'";
                 // return date( 'Y-m-d', strtotime($d));
             // }, 'field' => 'fecha_registro'],
         $columns = [
-            ['db' => '`m`.`cve_maq`', 'dt' => 0, 'field' => 'cve_maq'],
-            ['db' => '`tp`.`cve_fallo`', 'dt' => 1, 'field' => 'cve_fallo'],
-            ['db' => '`tp`.`hora_inicio`', 'dt' => 2, 'field' => 'hora_inicio'],
-            ['db' => '`tp`.`hora_fin`', 'dt' => 3, 'field' => 'hora_fin'],
+            ['db' => '`tp`.`cve_tp`', 'dt' => 0, 'field' => 'cve_tp'],
+            ['db' => '`m`.`nombre_maq`', 'dt' => 1, 'field' => 'nombre_maq'],
+            ['db' => '`f`.`nombre_fallo`', 'dt' => 2, 'field' => 'nombre_fallo'],
+            ['db' => '`tp`.`hora_inicio`', 'dt' => 3, 'field' => 'hora_inicio'],
+            ['db' => '`tp`.`hora_fin`', 'dt' => 4, 'field' => 'hora_fin'],
+            ['db' => '`tp`.`hora_fin`', 'dt' => 5, 'formatter' => function( $d, $row) {
+                // return $d ;
+                return 'Diferencia' ;
+            },'field' => 'hora_fin'],
 
-            ['db' => '`tp`.`fecha_registro`', 'dt' => 4, 'formatter' => function( $d, $row ) {
+            ['db' => '`tp`.`fecha_registro`', 'dt' => 6, 'formatter' => function( $d, $row ) {
                // return validaTurnos();
                 return date( 'Y-m-d', strtotime($d));
             }, 'field' => 'fecha_registro'],
-
-            ['db' => '`tp`.`cve_tp`', 'dt' => 5, 'field' => 'cve_tp'],
-            ['db' => '`tp`.`fecha_registro`', 'dt' => 6, 'formatter' => function( $d, $row ) {
+            ['db' => '`tp`.`fecha_registro`', 'dt' => 7, 'formatter' => function( $d, $row ) {
                 return date( 'H:i:s', strtotime($d));
             }, 'field' => 'fecha_registro'],
-            ['db' => '`m`.`nombre_maq`', 'dt' => 7, 'field' => 'nombre_maq'],
-            ['db' => '`f`.`nombre_fallo`', 'dt' => 8, 'field' => 'nombre_fallo'],
-            // ['db' => '`tp`.`cve_tpbesser`', 'dt' => 8, 'field' => 'cve_tpbesser'],
+            ['db' => '`tp`.`cve_tp`', 'dt' => 8, 'formatter' => function( $d, $row ) {
+                if ($_SESSION['tperdido_vibro_edit'] == 1) {
+                    return  '<span class= "btn btn-warning" onclick= "obtenerDatosEdit('.$row[0].')" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>'. ' '. 
+                            '<span class= "btn btn-danger" onclick= "obtenerDatosE('.$row[0].')" title="Eliminar" data-toggle="modal" data-target="#modalEliminar" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
+                }else{
+                    return  '<span class= "btn btn-warning" onclick= "sinacceso()" title="Editar"><i class="fas fa-edit"></i> </span>'. ' '. 
+                            '<span class= "btn btn-danger" onclick= "sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>';
+                }
+            }, 'field' => 'cve_tp']
             ];
 
  
@@ -85,7 +95,4 @@ echo json_encode(
     SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns, $joinQuery, $var )
 );
 
-function validaTurnos() {
-    return 'hola';
-}
 ?>

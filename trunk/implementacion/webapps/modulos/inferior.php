@@ -99,8 +99,8 @@ s0.parentNode.insertBefore(s1,s0);
             });
         })
         $(document).ready( function () {
-            // $(".UpperCase").on("keypress", function () {
-            $(".UpperCase").on("blur", function () {
+            $(".UpperCase").on("keypress", function () {
+            // $(".UpperCase").on("blur", function () {
                 $input=$(this);
                 setTimeout(function () {
                     $input.val($input.val().toUpperCase());
