@@ -5,7 +5,7 @@ function consultar(){
         "serverSide": true,
         "ajax": "serverSideproduccion.php",
         "lengthMenu": [[15, 30, 45], [15, 30, 45]],
-        "order": [7, 'desc'],
+        "order": [0, 'desc'],
         "searching": true,
         "bDestroy": true,
         "columnDefs":[
@@ -13,28 +13,44 @@ function consultar(){
                             "targets": [1, 2, 3, 4, 5, 6, 7, 8],
                             "className": 'dt-body-center' /*alineacion al centro th de tbody de la table*/
                         },
-                        {
-                          "targets": 1,
-                          // "data": 'creator',
-                          "render": function ( data, type, row ) {
-                          return row[1] +' - '+ row[8] + ' Celdas' ;
-                        }
-                    },
-                        {
-                            "targets": 8,
-                            "render": function(data, type, row, meta){
-                                // const primaryKey = data;
-                                // "data": 'cve_entrada',
-                                // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
-                                if (row[10] >=  '01:00:00', row[10] <= '08:00:00'){
-                                    return '<span class= "badge badge-success">3er Turno</span>';
-                                } if (row[10] >=  '09:00:00', row[10] <= '17:00:00'){
-                                    return '<span class= "badge badge-success">1er Turno</span>';
-                                } if (row[10] >=  '18:00:00', row[10] <= '23:59:59'){
-                                	 return '<span class= "badge badge-success">2do Turno</span>';
+                    //     {
+                    //       "targets": 1,
+                    //       // "data": 'creator',
+                    //       "render": function ( data, type, row ) {
+                    //       return row[1] +' - '+ row[8] + ' Celdas' ;
+                    //     }
+                    // },
+                        // {
+                        //     "targets": 8,
+                        //     "render": function(data, type, row, meta){
+                        //         // const primaryKey = data;
+                        //         // "data": 'cve_entrada',
+                        //         // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
+                        //         if (row[10] >=  '01:00:00', row[10] <= '08:00:00'){
+                        //             return '<span class= "badge badge-success">3er Turno</span>';
+                        //         } if (row[10] >=  '09:00:00', row[10] <= '17:00:00'){
+                        //             return '<span class= "badge badge-success">1er Turno</span>';
+                        //         } if (row[10] >=  '18:00:00', row[10] <= '23:59:59'){
+                        //         	 return '<span class= "badge badge-success">2do Turno</span>';
+                        //         }
+                        //     }
+                        // },
+                            {
+                                "targets": 8,
+                                "render": function(data, type, row, meta){
+                                    // const primaryKey = data;
+                                    // "data": 'cve_entrada',
+                                    // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
+                                    if (row[8] >=  '01:00:00', row[8] <= '09:00:00'){
+                                        return '<span class= "badge badge-success">3er Turno</span>';
+                                        // return row[4] - 1;
+                                    } if (row[8] >=  '09:00:01', row[8] <= '18:00:00'){
+                                        return '<span class= "badge badge-success">1er Turno</span>';
+                                    } if (row[8] >=  '18:00:01', row[8] <= '23:59:59'){
+                                         return '<span class= "badge badge-success">2do Turno</span>';
+                                    }
                                 }
-                            }
-                        }
+                            },
                     ],
 
      "language": {
@@ -59,20 +75,31 @@ function consultar(){
 }
 
 function selectProducto(){
-	var cve_pbloquera = $("#selectproducto").val();
+	var cve_bloquera = $("#selectproducto").val();
 	$.ajax({
 		type: "POST",
 		url: "selectoption.php",
 		// method: "POST",
 		data: {
-			"cve_pbloquera":cve_pbloquera
+			"cve_bloquera":cve_bloquera
 		},
 		success:function(r){
 			// console.log(r);
 			// $("#spantonelada").html(r);
 			// selectTonelada();
-			$("#selectpresentacion").attr("disabled", false);
-			$("#selectpresentacion").html(r);
+			$("#spanpiezas").attr("disabled", false);
+			$("#spanpiezas").val(r);
+
+			$("#inputbarcadas").attr("disabled", false);
+			$("#inputbandeja").attr("disabled", false);
+			$("#inputcemento").attr("disabled", false);
+			$("#inputaditivo").attr("disabled", false);
+			$("#inputpesadas").attr("disabled", false);
+			$("#inputllenado").attr("disabled", false);
+			$("#inputhumedad").attr("disabled", false);
+			$("#inputpesopromedio").attr("disabled", false);
+			$("#inputhinicial").attr("disabled", false);
+			$("#inputhfinal").attr("disabled", false);
 
 		}
 	})
@@ -93,7 +120,7 @@ function selectPiezas(){
 			// $("#spantonelada").html(r);
 			// selectTonelada();
 			$("#spanpiezas").attr("disabled", false);
-			$("#spanpiezas").html(r);
+			$("#spanpiezas").val(r);
 		}
 	})
 }
@@ -257,7 +284,7 @@ function existenciaCemento(){
                     // $('#modalMatPrima').modal('hide');
                     if (data == 'correcto') {
                         // validacionCampos();
-                    existenciaAditivo();
+                    // existenciaAditivo();
 
                     }else{
                         Swal.fire({
@@ -265,7 +292,7 @@ function existenciaCemento(){
                                         // iconColor: '#FF0000',
                                         title: '¡Error!',
                                         text: 'Sin existencia de cemento',
-                                        footer: 'Revisar las existencias de Tarimas',
+                                        footer: 'Revisar las existencias de cemento',
                                         confirmButtonColor: '#1A4672'
                                     })
                         }
@@ -301,7 +328,7 @@ function existenciaAditivo(){
                     // $('#modalMatPrima').modal('hide');
                     if (data == 'correcto') {
                         // validacionCampos();
-                    capturaProduccion();
+                    // capturaProduccion();
 
                     }else{
                         Swal.fire({
@@ -309,7 +336,7 @@ function existenciaAditivo(){
                                         // iconColor: '#FF0000',
                                         title: '¡Error!',
                                         text: 'Sin existencia de Aditivo',
-                                        footer: 'Revisar las existencias de Tarimas',
+                                        footer: 'Revisar las existencias de aditivo',
                                         confirmButtonColor: '#1A4672'
                                     })
                         }

@@ -4,10 +4,9 @@ include_once "../../../dbconexion/conexion.php";
 
 class ModeloProducto{
 	function showProductoBesser(){
-		$sql = "	SELECT  cve_pbloquera,
-							nombre_producto
-					FROM cat_producto_bloquera
-					WHERE area = 'Besser' AND estatus = 'VIG'";
+		$sql = "	SELECT cve_bloquera, cod_producto, nombre_producto, presentacion, num_celdas
+					FROM seg_producto_bloquera
+					WHERE area = 'Besser' AND estatus_producto = 'VIG'";
 
 			 $vquery = Conexion::conectar()->prepare($sql);
              $vquery->execute();
@@ -38,10 +37,10 @@ class ModeloProducto{
 			 $vquery->close();
 			 $vquery = null;
 	}
-	function showPiezasBesser($cve_presentacionb){
+	static function showPiezasBesser($cve_bloquera){
 		$sql = "	SELECT  *
-					FROM seg_presentacion_bloquera
-					WHERE cve_presentacionb = $cve_presentacionb AND estatus_presentacion = 'VIG'";
+					FROM seg_producto_bloquera
+					WHERE cve_bloquera = $cve_bloquera";
 
 			 $vquery = Conexion::conectar()->prepare($sql);
              $vquery->execute();
