@@ -169,15 +169,15 @@
                                 </div>
                             </div> -->
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="time" id="inputhorainicio" name="inputhorainicio" class="form-control form-control-md">
+                                <input type="text" id="inputhorainicio" value="" name="inputhorainicio" class="form-control form-control-md" ng-keyup="checkTime('inputhorainicio');">
                                 <label>Hora de inicio</label>
                             </div>
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="time" id="inputhorafin" name="inputhorafin" class="form-control form-control-md" onchange="diferencia();">
+                                <input type="text" id="inputhorafin" value="" name="inputhorafin" class="form-control form-control-md" ng-keyup="checkTime('inputhorafin');" ng-blur="getdiferencia();">
                                 <label>Hora de fin</label>
                             </div>
                             <div style="widows: 25%;" class="form-floating mx-1">
-                                <input type="text-center" id="diferencia" name="diferencia" class="form-control form-control-md" disabled>
+                                <input type="text" id="diferencia" name="diferencia" class="form-control form-control-md" readonly>
                                 <label>Diferencia</label>
                             </div>
                         <div class="col-sm-2 text-left">
@@ -207,7 +207,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaTPMorteros">
+                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Folio</th>
@@ -222,16 +222,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="(i, obj) in serverSideTPMorteros track by i">
+                                        <td>{{obj.cve_tp}}</td>
+                                        <td>{{obj.nombre_maq}}</td>
+                                        <td>{{obj.nombre_fallo}}</td>
+                                        <td>{{obj.hora_inicio}}</td>
+                                        <td>{{obj.hora_fin}}</td>
+                                        <td>{{obj.Diferencia}}</td>
+                                        <td>{{obj.fecha_registro}}</td>
+                                        <td>
+                                            <span class= "badge badge-success">
+                                                {{obj.Turno}}
+                                            </span>
+                                        </td>
+                                        <td nowrap="nowrap">
+                                            <span class= "btn btn-warning" ng-click="obtenerDatosEdit(obj.cve_tp)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger" ng-click="obtenerDatosE(obj.cve_tp)" title="Eliminar" data-toggle="modal" data-target="#modalEliminar" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -243,7 +250,7 @@
           </div>
         </div>
     </div> <!--FIN DE DIV ROW--->
-      <?php include_once "../../footer.php" ?>
+      <?php include_once "../../footer.php"; include_once "modales.php"; ?>
     </main>
 </div>
 
@@ -256,7 +263,6 @@
 
 <?php 
 include_once "../../inferior.php";
-include_once "modales.php";
 ?>
 
     <!-- <script src="vista_besser.js"></script> -->

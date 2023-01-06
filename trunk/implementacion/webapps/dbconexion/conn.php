@@ -6,7 +6,8 @@ class MysqlConn{
 		$servername = 'mayucsa.synology.me';
 		$username = 'ismael';
 		$password = 'Sistemas$1';
-		$db = "produccionmayucsa";
+		// $db = "produccionmayucsa";
+		$db = "mayucsademo";
 		// create connection
 		$conn = new mysqli($servername, $username, $password, $db);
 		//check connection

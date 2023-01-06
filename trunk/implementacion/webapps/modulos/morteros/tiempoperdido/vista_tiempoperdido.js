@@ -415,3 +415,19 @@ function eliminarTP(){
     });
     // }
 }
+function setNumeric(texto){
+    var numerico = '';
+    for (var i = 0; i < texto.length; i++) {
+        texto[i]
+        if (!isNaN(texto[i])) {
+            numerico = numerico+''+texto[i];
+        }
+    }
+    return numerico;
+}
+function doscifras(numero){
+    if (parseInt(numero) < 10) {
+        return '0'+numero;
+    }
+    return numero;
+}

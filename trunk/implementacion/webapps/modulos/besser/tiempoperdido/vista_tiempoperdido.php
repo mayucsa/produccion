@@ -105,7 +105,7 @@
     <div class="row">
         <div class="col-md-12">
           <div class="tile">
-            <div class="card card-info" ng-show="perfilUsu.tperdido_besser_captura == 1">
+            <div class="card card-info"><!--  ng-show="perfilUsu.tperdido_besser_captura == 1"> -->
                 <div class="card-header">
                      <h3 class="card-title">CAPTURA DE DATOS</h3>
                      <div class="card-tools">
@@ -120,26 +120,14 @@
                             <div style="width: 50%;" class="form-floating mx-1">
                                 <select class="form-control form-group-md" id="selectmaquina" name="selectmaquina">
                                     <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    <?php   
-                                        $sql        = ModeloTiempoPerdido::showMaquina();
-
-                                            foreach ($sql as $value) {
-                                            echo '<option value="'.$value["cve_maq"].'">'.$value["cve_alterna"]." - ".$value["nombre_maq"].'</option>';
-                                            }
-                                        ?>
+                                    <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
                                 </select>
                                 <label>Máquina</label>
                             </div>
                             <div style="width: 50%;" class="form-floating mx-1">
                                 <select class="form-control form-group-md" id="selectfallo" name="selectfallo">
                                     <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    <?php   
-                                        $sql        = ModeloTiempoPerdido::showFallo();
-
-                                            foreach ($sql as $value) {
-                                            echo '<option value="'.$value["cve_fallo"].'">'.$value["cve_alterna"]." - ".$value["nombre_fallo"]." - ".$value["motivo_fallo"].'</option>';
-                                            }
-                                        ?>
+                                    <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
                                 </select>
                                 <label>Fallo</label>
                             </div>
@@ -169,15 +157,15 @@
                                 </div>
                             </div> -->
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="time" id="inputhorainicio" name="inputhorainicio" class="form-control form-control-md">
+                                <input type="text" id="inputhorainicio" value="" name="inputhorainicio" class="form-control form-control-md" ng-keyup="checkTime('inputhorainicio');">
                                 <label>Hora de inicio</label>
                             </div>
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="time" id="inputhorafin" name="inputhorafin" class="form-control form-control-md" onchange="diferencia();">
+                                <input type="text" id="inputhorafin" value="" name="inputhorafin" class="form-control form-control-md" ng-keyup="checkTime('inputhorafin');" ng-blur="getdiferencia();">
                                 <label>Hora de fin</label>
                             </div>
                             <div style="widows: 25%;" class="form-floating mx-1">
-                                <input type="text-center" id="diferencia" name="diferencia" class="form-control form-control-md" disabled>
+                                <input type="text" id="diferencia" name="diferencia" class="form-control form-control-md" readonly>
                                 <label>Diferencia</label>
                             </div>
                         <div class="col-sm-2 text-left">
@@ -207,10 +195,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaTPBesser">
+                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">Folio</th>
+                                        <th class="text-center">Foliadasdo</th>
                                         <th class="text-center">Máquina</th>
                                         <th class="text-center">Fallo</th>
                                         <th class="text-center">Hora inicio</th>
@@ -222,16 +210,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="(i, obj) in serverSideTPBesser track by i">
+                                        <td>{{obj.cve_tp}}</td>
+                                        <td>{{obj.nombre_maq}}</td>
+                                        <td>{{obj.nombre_fallo}}</td>
+                                        <td>{{obj.hora_inicio}}</td>
+                                        <td>{{obj.hora_fin}}</td>
+                                        <td>{{obj.Diferencia}}</td>
+                                        <td>{{obj.fecha_registro}}</td>
+                                        <td>
+                                            <span class= "badge badge-success">
+                                                {{obj.Turno}}
+                                            </span>
+                                        </td>
+                                        <td nowrap="nowrap">
+                                            <span class= "btn btn-warning" ng-click="obtenerDatosEdit(obj.cve_tp)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger" ng-click="obtenerDatosE(obj.cve_tp)" title="Eliminar" data-toggle="modal" data-target="#modalEliminar" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -243,7 +238,7 @@
           </div>
         </div>
     </div> <!--FIN DE DIV ROW--->
-      <?php include_once "../../footer.php" ?>
+      <?php include_once "../../footer.php"; include_once "modales.php";?>
     </main>
 </div>
 
@@ -256,7 +251,6 @@
 
 <?php 
 include_once "../../inferior.php";
-include_once "modales.php";
 ?>
 
     <!-- <script src="vista_besser.js"></script> -->
@@ -282,24 +276,6 @@ include_once "modales.php";
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
 
     <script type="text/javascript" src="../../../includes/timepicker/bootstrap-clockpicker.min.js"></script>
-
-<!-- Funciones diferencias-->
-<script type="text/javascript">
-    function diferencia(id) {
-        var datos   = new FormData();
-
-        datos.append('inicio', $('#inputhorainicio').val());
-        datos.append('fin', $('#inputhorafin').val());
-
-        console.log(datos.get('inicio'));
-        console.log(datos.get('fin'));
-
-        var dif = ($('#inputhorafin').val() - $('#inputhorainicio').val());
-        console.log(dif);
-        $("#diferencia").html(dif);
-    }
-</script>
-
 
 <script type="text/javascript">
     $('.clockpicker').clockpicker()

@@ -16,9 +16,12 @@
 //     'host' => '162.241.62.122'
 // );
 $sql_details = array(
-    'user' => 'alfredochaan',
-    'pass' => '$oporteMys#1',
-    'db'   => 'produccionmayucsa',
+    // 'user' => 'alfredochaan',
+    // 'pass' => '$oporteMys#1',
+    // 'db'   => 'produccionmayucsa',
+    'user' => 'ismael',
+    'pass' => 'Sistemas$1',
+    'db'   => 'mayucsademo',
     // 'host' => '192.168.1.6'
     'host' => 'mayucsa.synology.me'
 );

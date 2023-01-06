@@ -48,11 +48,11 @@
                       <label>Motivo de fallo</label>
                   </div>
                   <div style="width: 25%;" class="form-floating mx-1">
-                      <input type="time" id="inputhorainicioedit" name="inputhorainicioedit" class="form-control form-control-md">
+                      <input type="text" id="inputhorainicioedit" ng-keyup="checkTime('inputhorainicioedit');" name="inputhorainicioedit" class="form-control form-control-md">
                       <label>Hora de inicio</label>
                   </div>
                   <div style="width: 25%;" class="form-floating mx-1">
-                      <input type="time" id="inputhorafinedit" name="inputhorafinedit" class="form-control form-control-md">
+                      <input type="text" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md">
                       <label>Hora de fin</label>
                   </div>
 <!--                   <div style="width: 25%;" class="form-floating mx-1"> 

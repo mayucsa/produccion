@@ -198,29 +198,6 @@ function consult(){
             })
 }
 
-function obtenerDatosEdit(cve_tp) {
-    $.getJSON("modelo_tiempoperdido.php?consultar="+cve_tp, function(registros){
-        // console.log(registros);
-
-        $('#inputidedit').val(registros[0]['cve_tp']);
-        $('#selectmaquinaedit').val(registros[0]['cve_maq']);
-        $('#selectfalloedit').val(registros[0]['cve_fallo']);
-        $('#inputmotivoedit').val(registros[0]['motivo_fallo']);
-        $('#inputhorainicioedit').val(registros[0]['hora_inicio']);
-        $('#inputhorafinedit').val(registros[0]['hora_fin']);
-    });
-}
-
-function obtenerDatosE(cve_tp) {
-    $.getJSON("modelo_tiempoperdido.php?consultarDelete="+cve_tp, function(registros){
-        console.log(registros);
-
-        $('#inputide').val(registros[0]['cve']);
-        $('#inputmaqe').val(registros[0]['maquina']);
-        $('#inputfalloe').val(registros[0]['fallo']);
-    });
-}
-
 function limpiarCampos() {
     $('#selectmaquina').val("0");
     $('#selectfallo').val("0");
@@ -523,4 +500,20 @@ function eliminarTP(){
   }
     });
     // }
+}
+function setNumeric(texto){
+    var numerico = '';
+    for (var i = 0; i < texto.length; i++) {
+        texto[i]
+        if (!isNaN(texto[i])) {
+            numerico = numerico+''+texto[i];
+        }
+    }
+    return numerico;
+}
+function doscifras(numero){
+    if (parseInt(numero) < 10) {
+        return '0'+numero;
+    }
+    return numero;
 }

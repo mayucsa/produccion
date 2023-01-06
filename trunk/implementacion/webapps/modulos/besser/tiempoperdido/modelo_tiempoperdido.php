@@ -1,5 +1,6 @@
 <?php 
 include_once "../../../dbconexion/conexion.php";
+include_once "../../../dbconexion/conn.php";
 
 class ModeloTiempoPerdido{
 	function showMaquina(){
@@ -13,6 +14,16 @@ class ModeloTiempoPerdido{
 			 return $vquery->fetchAll();
 			 $vquery->close();
 			 $vquery = null;
+	}
+	public static function getMaquinas(){
+		$dbcon = new MysqlConn;
+		$sql = "SELECT *
+		FROM cat_maquinas
+		WHERE estatus_maq = 'VIG' AND cve_depto = 8 AND tiempo_perdido = 1
+		ORDER BY cve_alterna asc";
+		$datos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
+		return $datos;
+
 	}
 	function showFallo(){
 		$sql = "	SELECT  *
