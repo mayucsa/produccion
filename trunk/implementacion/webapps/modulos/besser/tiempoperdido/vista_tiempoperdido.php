@@ -105,7 +105,7 @@
     <div class="row">
         <div class="col-md-12">
           <div class="tile">
-            <div class="card card-info"><!--  ng-show="perfilUsu.tperdido_besser_captura == 1"> -->
+            <div class="card card-info" ng-show="perfilUsu.tperdido_besser_captura == 1">
                 <div class="card-header">
                      <h3 class="card-title">CAPTURA DE DATOS</h3>
                      <div class="card-tools">

@@ -69,26 +69,16 @@
                             <div style="width: 50%;" class="form-floating mx-1">
                                 <select class="form-control form-group-md" id="selectmaquina" name="selectmaquina">
                                     <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    <?php   
-                                        $sql        = ModeloTiempoPerdido::showMaquina();
-
-                                            foreach ($sql as $value) {
-                                            echo '<option value="'.$value["cve_maq"].'">'.$value["cve_alterna"]." - ".$value["nombre_maq"].'</option>';
-                                            }
-                                        ?>
+                                    <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
+                                </select>
                                 </select>
                                 <label>Máquina</label>
                             </div>
                             <div style="width: 50%;" class="form-floating mx-1">
                                 <select class="form-control form-group-md" id="selectfallo" name="selectfallo">
                                     <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    <?php   
-                                        $sql        = ModeloTiempoPerdido::showFallo();
-
-                                            foreach ($sql as $value) {
-                                            echo '<option value="'.$value["cve_fallo"].'">'.$value["cve_alterna"]." - ".$value["nombre_fallo"]." - ".$value["motivo_fallo"].'</option>';
-                                            }
-                                        ?>
+                                    <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
+                                </select>
                                 </select>
                                 <label>Fallo</label>
                             </div>

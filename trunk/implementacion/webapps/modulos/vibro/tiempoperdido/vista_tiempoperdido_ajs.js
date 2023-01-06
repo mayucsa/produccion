@@ -1,5 +1,23 @@
 app.controller('VistaTPVibro', function(BASEURL, ID, $scope, $http){
 	$http.post('Controlador.php', {
+		'task': 'getMaquinas'
+	}).then(function (response){
+		response = response.data;
+		console.log('getMaquinas', response);
+		$scope.Maquinas = response;
+	},function(error){
+		console.log('error', error);
+	});
+	$http.post('Controlador.php', {
+		'task': 'getFallos'
+	}).then(function (response){
+		response = response.data;
+		console.log('getFallos', response);
+		$scope.Fallos = response;
+	},function(error){
+		console.log('error', error);
+	});
+	$http.post('Controlador.php', {
 		'task': 'tablaTPVibro'
 	}).then(function (response){
 		response = response.data;

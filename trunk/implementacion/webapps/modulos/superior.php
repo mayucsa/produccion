@@ -1,5 +1,10 @@
 <?php   
 session_start();
+if (!isset($_SESSION)) {
+  die('123');
+}else{
+  // die(json_encode($_SESSION));
+}
 set_time_limit(0); ?>
 <!DOCTYPE html>
 <html lang="en">

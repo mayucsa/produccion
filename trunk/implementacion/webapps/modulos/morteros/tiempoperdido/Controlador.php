@@ -10,11 +10,11 @@ function dd($var){
 }
 function getMaquinas(){
 	$Maquinas = new ModeloTiempoPerdido;
-	dd($Maquinas->getMaquinas());
+	dd($Maquinas->showMaquina());
 }
 function getFallos(){
 	$Fallos = new ModeloTiempoPerdido;
-	// dd($Fallos->showFallo());
+	dd($Fallos->showFallo());
 }
 function getDifHoras($inicio, $fin){
 	$inicio = explode(':', $inicio);
