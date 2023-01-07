@@ -1,4 +1,5 @@
 <?php
+session_start();
 date_default_timezone_set('America/Mexico_City');
 function dd($var){
     if (is_array($var) || is_object($var)) {
@@ -44,6 +45,34 @@ function guardarProduccion($dbcon, $Datos){
 		dd(['code'=>300, 'msj'=>'error al crear folio.', 'sql'=>$sql]);
 	}
 }
+function eliminar($dbcon){
+	$cve_produccion_bloquera = $_REQUEST['id'];
+	$fecha = date('Y-m-d H:i:s');
+	$sql = "UPDATE captura_produccionbloquera SET 
+		estatus_registro = 'DELET',
+		eliminado_por = ".$_SESSION['id'].",
+		fecha_eliminado = '".$fecha."'
+	WHERE cve_produccion_bloquera = ".$cve_produccion_bloquera;
+	if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+		dd(['code'=>400, 'msj'=>'Error al actualizar tabla', 'sql'=>$sql]);
+	}
+	$sql = "SELECT cve_bloquera, piezas_totales, consumototal_cemento, consumo_aditivo FROM captura_produccionbloquera WHERE cve_produccion_bloquera = ".$cve_produccion_bloquera;
+	$Datos = $dbcon->qBuilder($dbcon->conn(), 'first', $sql);
+
+	$sqlu = "UPDATE seg_producto_bloquera SET cantidad = cantidad - ".floatval($Datos->piezas_totales)." WHERE cve_bloquera = ".$Datos->cve_bloquera." ";
+	if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sqlu)) {
+		dd(['code'=>400, 'msj'=>'Error al actualizar cantidad de piezas.', 'sql'=>$sqlu]);
+	}
+	$sqlcemento = "UPDATE seg_mp_bloquera SET cantidad_materia_prima = cantidad_materia_prima + ".floatval($Datos->consumototal_cemento)." WHERE cve_mp = 1 ";
+	if(!$dbcon->qBuilder($dbcon->conn(), 'do', $sqlcemento)){
+		dd(['code'=>400, 'msj'=>'Error al actualizar cantidad de cemento.', 'sql'=>$sqlcemento]);
+	}
+	$sqladitivo = "UPDATE seg_mp_bloquera SET cantidad_materia_prima = cantidad_materia_prima + ".floatval($Datos->consumo_aditivo)." WHERE cve_mp = 2 ";
+	if(!$dbcon->qBuilder($dbcon->conn(), 'do', $sqladitivo)){
+		dd(['code'=>400, 'msj'=>'Error al actualizar cantidad de aditivo.', 'sql'=>$sqladitivo]);
+	}
+	dd(['code'=>200]);
+}
 
 
 include_once "../../../dbconexion/conn.php";
@@ -59,6 +88,9 @@ if ($tarea == '') {
 switch ($tarea) {
 	case 'guardarProduccion':
 		guardarProduccion($dbcon, $objDatos);
+		break;
+	case 'eliminar':
+		eliminar($dbcon);
 		break;
 }
 ?>

@@ -33,10 +33,10 @@ $columns = [
     }, 'field' => 'fecha_registro'],
     ['db' => '`prod`.`cve_produccion_bloquera`', 'dt' => 9, 'formatter' => function($d, $row){
         if ($_SESSION['produccion_besser_edit'] == 1 ) {
-            return  '<a class= "btn btn-warning" href="odcPDFformato.php?cve_odc='.$row[0].'" target="_blank" title="Descargar PDF"><i class="fas fa-file-pdf"></i> </a>' . ' '.
+            return  '<a class= "btn btn-warning" href="odcPDFformato.php?id='.$row[0].'" target="_blank" title="Descargar PDF"><i class="fas fa-file-pdf"></i> </a>' . ' '.
                     '<span class= "btn btn-danger" onclick= "eliminar('.$row[0].')" title="Eliminar"><i class="fas fa-window-close"></i> </span>';
         } else{
-            return '<a class= "btn btn-warning" href="odcPDFformato.php?cve_odc='.$row[0].'" target="_blank" title="Descargar PDF"><i class="fas fa-file-pdf"></i> </a>';
+            return '<a class= "btn btn-warning" href="odcPDFformato.php?id='.$row[0].'" target="_blank" title="Descargar PDF"><i class="fas fa-file-pdf"></i> </a>';
         }
     }, 'field' => 'cve_produccion_bloquera'],
     ['db' => '`inv`.`presentacion`', 'dt' => 10, 'field' => 'presentacion'],

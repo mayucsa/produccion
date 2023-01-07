@@ -1,77 +1,77 @@
 function consultar(){
     $(document).ready(function() {
-    $('#tablaCapturaBloquera').DataTable( {
-        "processing": true,
-        "serverSide": true,
-        "ajax": "serverSideproduccion.php",
-        "lengthMenu": [[15, 30, 45], [15, 30, 45]],
-        "order": [0, 'desc'],
-        "searching": true,
-        "bDestroy": true,
-        "columnDefs":[
-                        {
-                            "targets": [1, 2, 3, 4, 5, 6, 7, 8],
-                            "className": 'dt-body-center' /*alineacion al centro th de tbody de la table*/
-                        },
-                    //     {
-                    //       "targets": 1,
-                    //       // "data": 'creator',
-                    //       "render": function ( data, type, row ) {
-                    //       return row[1] +' - '+ row[8] + ' Celdas' ;
-                    //     }
-                    // },
-                        // {
-                        //     "targets": 8,
-                        //     "render": function(data, type, row, meta){
-                        //         // const primaryKey = data;
-                        //         // "data": 'cve_entrada',
-                        //         // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
-                        //         if (row[10] >=  '01:00:00', row[10] <= '08:00:00'){
-                        //             return '<span class= "badge badge-success">3er Turno</span>';
-                        //         } if (row[10] >=  '09:00:00', row[10] <= '17:00:00'){
-                        //             return '<span class= "badge badge-success">1er Turno</span>';
-                        //         } if (row[10] >=  '18:00:00', row[10] <= '23:59:59'){
-                        //         	 return '<span class= "badge badge-success">2do Turno</span>';
-                        //         }
-                        //     }
-                        // },
-                            {
-                                "targets": 8,
-                                "render": function(data, type, row, meta){
-                                    // const primaryKey = data;
-                                    // "data": 'cve_entrada',
-                                    // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
-                                    if (row[8] >=  '01:00:00', row[8] <= '09:00:00'){
-                                        return '<span class= "badge badge-success">3er Turno</span>';
-                                        // return row[4] - 1;
-                                    } if (row[8] >=  '09:00:01', row[8] <= '18:00:00'){
-                                        return '<span class= "badge badge-success">1er Turno</span>';
-                                    } if (row[8] >=  '18:00:01', row[8] <= '23:59:59'){
-                                         return '<span class= "badge badge-success">2do Turno</span>';
-                                    }
-                                }
-                            },
-                    ],
+        $('#tablaCapturaBloquera').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "ajax": "serverSideproduccion.php",
+            "lengthMenu": [[15, 30, 45], [15, 30, 45]],
+            "order": [0, 'desc'],
+            "searching": true,
+            "bDestroy": true,
+            "columnDefs":[
+                {
+                    "targets": [1, 2, 3, 4, 5, 6, 7, 8],
+                    "className": 'dt-body-center' /*alineacion al centro th de tbody de la table*/
+                },
+            //     {
+            //       "targets": 1,
+            //       // "data": 'creator',
+            //       "render": function ( data, type, row ) {
+            //       return row[1] +' - '+ row[8] + ' Celdas' ;
+            //     }
+            // },
+                // {
+                //     "targets": 8,
+                //     "render": function(data, type, row, meta){
+                //         // const primaryKey = data;
+                //         // "data": 'cve_entrada',
+                //         // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
+                //         if (row[10] >=  '01:00:00', row[10] <= '08:00:00'){
+                //             return '<span class= "badge badge-success">3er Turno</span>';
+                //         } if (row[10] >=  '09:00:00', row[10] <= '17:00:00'){
+                //             return '<span class= "badge badge-success">1er Turno</span>';
+                //         } if (row[10] >=  '18:00:00', row[10] <= '23:59:59'){
+                //         	 return '<span class= "badge badge-success">2do Turno</span>';
+                //         }
+                //     }
+                // },
+                {
+                    "targets": 8,
+                    "render": function(data, type, row, meta){
+                        // const primaryKey = data;
+                        // "data": 'cve_entrada',
+                        // if (row[8] >=  '05:00:00' + 'AND' + row[8] <= '07:00:00') {
+                        if (row[8] >=  '01:00:00', row[8] <= '09:00:00'){
+                            return '<span class= "badge badge-success">3er Turno</span>';
+                            // return row[4] - 1;
+                        } if (row[8] >=  '09:00:01', row[8] <= '18:00:00'){
+                            return '<span class= "badge badge-success">1er Turno</span>';
+                        } if (row[8] >=  '18:00:01', row[8] <= '23:59:59'){
+                             return '<span class= "badge badge-success">2do Turno</span>';
+                        }
+                    }
+                },
+            ],
 
-     "language": {
-         "lengthMenu": "Mostrar _MENU_ registros por página.",
-         "zeroRecords": "No se encontró registro.",
-         "info": "  _START_ de _END_ (_TOTAL_ registros totales).",
-         "infoEmpty": "0 de 0 de 0 registros",
-         "infoFiltered": "(Encontrado de _MAX_ registros)",
-         "search": "Buscar: ",
-         "processing": "Procesando...",
-                  "paginate": {
-             "first": "Primero",
-             "previous": "Anterior",
-             "next": "Siguiente",
-             "last": "Último"
-         }
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página.",
+                "zeroRecords": "No se encontró registro.",
+                "info": "  _START_ de _END_ (_TOTAL_ registros totales).",
+                "infoEmpty": "0 de 0 de 0 registros",
+                "infoFiltered": "(Encontrado de _MAX_ registros)",
+                "search": "Buscar: ",
+                "processing": "Procesando...",
+                "paginate": {
+                    "first": "Primero",
+                    "previous": "Anterior",
+                    "next": "Siguiente",
+                    "last": "Último"
+                 }
 
-     }
+            }
 
-    } );
-} );
+        });
+    });
 }
 
 function selectProducto(){
@@ -479,4 +479,51 @@ function capturaProduccion(){
   }
     });
 
+}
+function eliminar(cve_produccion_bloquera){
+    Swal.fire({
+        title: 'Eliminar',
+        text: '¿Estas seguro de eliminar la captura?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'green',
+        cancelButtonColor: 'red',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            jsShowWindowLoad('Eliminando...');
+            const formData = new FormData();
+            formData.append("task", 'eliminar'); 
+            formData.append("id", cve_produccion_bloquera); 
+            $.ajax({
+                    type:"POST",
+                    url:"Controller.php",
+                    data: formData,
+                    processData:false,
+                    contentType:false,
+                    headers: {'Content-Type': undefined}, 
+                success:function(data){
+                    console.log(data);
+                    data = JSON.parse(data);
+                    jsRemoveWindowLoad();
+                    if (data.code == 200) {
+                        consultar();
+                        Swal.fire(
+                            '¡Éxito!',
+                            '¡La captura se ha eliminado correctamente!',
+                            'success'
+                        );
+                    }else{
+                        Swal.fire(
+                            '¡Error!',
+                            'Error en controlador!',
+                            'error'
+                        );
+                    }
+                }
+            });
+        }
+        return;
+    });
 }
