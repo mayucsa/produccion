@@ -42,13 +42,13 @@ function getTurno($hora){
 	}else{
 		$hora = '00:00:00';
 	}
-	if ($hora >=  '01:00:00' && $hora <= '09:00:00'){
+	if ($hora >=  '00:00:01' && $hora <= '08:00:00'){
         return '3er Turno';
     } 
-    if ($hora >=  '09:00:01' && $hora <= '18:00:00'){
+    if ($hora >=  '08:00:01' && $hora <= '16:00:00'){
         return '1er Turno';
     } 
-    if ($hora >=  '18:00:01' && $hora <= '23:59:59'){
+    if ($hora >=  '16:00:01' && $hora <= '23:59:59'){
          return '2do Turno';
     }
     return 'Sin Turno';
@@ -58,7 +58,8 @@ function serverSideTPMorteros($dbcon){
 	FROM seg_tiempoperdido AS tp 
     INNER JOIN cat_maquinas m ON (tp.cve_maq = m.cve_maq)
     INNER JOIN cat_fallos f ON (tp.cve_fallo = f.cve_fallo)
-    WHERE estatus_tp = 'VIG' AND area = 'Morteros'";
+    WHERE estatus_tp = 'VIG' AND area = 'Morteros'
+    ORDER BY cve_tp DESC ";
     $datos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
     foreach ($datos as $i => $row) {
     	$row->Diferencia = getDifHoras($row->hora_inicio, $row->hora_fin);
@@ -66,6 +67,42 @@ function serverSideTPMorteros($dbcon){
     }
     dd($datos);
 }
+function guardarTiempoPerdido($dbcon, $Datos){
+	$fecha = date('Y-m-d H:i:s');
+	$status = 'VIG';
+	$area = 'Morteros';
+	$conn = $dbcon->conn();
+	$sql = "INSERT INTO seg_tiempoperdido (cve_maq, cve_fallo, motivo_fallo, hora_inicio, hora_fin, area, capturado_por, estatus_tp, fecha_registro) VALUES (".$Datos->maquina.", ".$Datos->fallo.", '".$Datos->motivo."', '".$Datos->hinicio."', '".$Datos->hfin."', '".$area."', ".$Datos->id.", '".$status."', '".$fecha."' ) ";
+	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+	// dd($sql);
+	if ($qBuilder) {
+		$getId = "SELECT max(cve_tp) cve_tp FROM seg_tiempoperdido WHERE
+		fecha_registro = '".$fecha."'
+		AND area = '".$area."'
+		AND capturado_por = ".$Datos->id."
+		AND estatus_tp = '".$status."'
+		AND cve_maq = ".$Datos->maquina."
+		AND cve_fallo = ".$Datos->fallo."
+		AND motivo_fallo =  '".$Datos->motivo."'
+		AND hora_inicio = '".$Datos->hinicio."'
+		AND hora_fin = '".$Datos->hfin."' ";
+
+		$getId = $dbcon->qBuilder($conn, 'first', $getId);
+		dd(['code'=>200,'msj'=>'Carga ok', 'folio'=>$getId->cve_tp]);
+	}else{
+		dd(['code'=>300, 'msj'=>'error al crear folio.', 'sql'=>$sql]);
+	}
+}
+function EliminarTPerdido($dbcon, $Datos){
+	$fecha = date('Y-m-d H:i:s');
+	$status = 'DELETE';
+	$conn = $dbcon->conn();
+	$sql = "UPDATE seg_tiempoperdido SET estatus_tp = '".$status."', eliminado_por = ".$Datos->id.", fecha_eliminado = '".$fecha."' WHERE cve_tp = ".$Datos->cve." ";
+
+	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+	dd($sql);
+}
+
 include_once "../../../dbconexion/conn.php";
 $dbcon	= 	new MysqlConn;
 $conn 	= 	$dbcon->conn();
@@ -85,6 +122,12 @@ switch ($tarea){
 		break;
 	case 'serverSideTPMorteros':
 		serverSideTPMorteros($dbcon);
+		break;
+	case 'guardarTiempoPerdido':
+		guardarTiempoPerdido($dbcon, $objDatos);
+		break;
+	case 'EliminarTPerdido':
+		EliminarTPerdido($dbcon, $objDatos);
 		break;
 }
 

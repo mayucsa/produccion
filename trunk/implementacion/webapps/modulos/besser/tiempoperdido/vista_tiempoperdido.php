@@ -118,15 +118,15 @@
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
                             <div style="width: 50%;" class="form-floating mx-1">
-                                <select class="form-control form-group-md" id="selectmaquina" name="selectmaquina">
-                                    <option selected="selected" value="0">[Seleccione una opción..]</option>
+                                <select class="form-control form-group-md" ng-model="maquina" id="selectmaquina" name="selectmaquina">
+                                    <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
                                     <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
                                 </select>
                                 <label>Máquina</label>
                             </div>
                             <div style="width: 50%;" class="form-floating mx-1">
-                                <select class="form-control form-group-md" id="selectfallo" name="selectfallo">
-                                    <option selected="selected" value="0">[Seleccione una opción..]</option>
+                                <select class="form-control form-group-md" ng-model="fallo" id="selectfallo" name="selectfallo">
+                                    <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
                                     <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
                                 </select>
                                 <label>Fallo</label>
@@ -137,7 +137,7 @@
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
                            <div style="width: 50%;" class="form-floating mx-1">
-                                <input type="text" id="inputmotivo" name="inputmotivo" class="form-control form-control-md UpperCase">
+                                <input type="text" ng-model="motivo" id="inputmotivo" name="inputmotivo" class="form-control form-control-md UpperCase">
                                 <label>Motivo de fallo</label>
                             </div>
 <!--                             <div style="width: 25%;" class="form-floating mx-1"> 
@@ -157,27 +157,27 @@
                                 </div>
                             </div> -->
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="text" id="inputhorainicio" value="" name="inputhorainicio" class="form-control form-control-md" ng-keyup="checkTime('inputhorainicio');">
+                                <input type="text" ng-model="hinicio" id="inputhorainicio" value="" name="inputhorainicio" class="form-control form-control-md" ng-keyup="checkTime('inputhorainicio');">
                                 <label>Hora de inicio</label>
                             </div>
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="text" id="inputhorafin" value="" name="inputhorafin" class="form-control form-control-md" ng-keyup="checkTime('inputhorafin');" ng-blur="getdiferencia();">
+                                <input type="text" ng-model="hfin" id="inputhorafin" value="" name="inputhorafin" class="form-control form-control-md" ng-keyup="checkTime('inputhorafin');" ng-blur="getdiferencia();">
                                 <label>Hora de fin</label>
                             </div>
                             <div style="widows: 25%;" class="form-floating mx-1">
-                                <input type="text" id="diferencia" name="diferencia" class="form-control form-control-md" readonly>
+                                <input type="text" ng-model="diferencia" id="diferencia" name="diferencia" class="form-control form-control-md" readonly>
                                 <label>Diferencia</label>
                             </div>
-                        <div class="col-sm-2 text-left">
-                            <span hidden  id="spanuser" name="spanuser" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
-                        </div>
+   <!--                      <div class="col-sm-2 text-left">
+                            <span hidden  id="spanuser" name="spanuser" class="form-control form-control-sm" style="background-color: #E9ECEF;"><php echo $nombre." ".$apellido?></span>
+                        </div> -->
                         </div>
                     </div>
 
                     <div class="row form-group form-group-sm border-top">
                         <div class="col-sm-12" align="center">
-                            <input type="submit" value="Guardar" href="#" onclick="validacion()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
+                            <input type="submit" value="Guardar" href="#" ng-click="validacionDatos()" class="btn btn-primary" style="margin-bottom: -25px !important">
+                            <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                         </div>
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                             <table class="table table-striped table-bordered table-hover w-100 shadow" id="">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">Foliadasdo</th>
+                                        <th class="text-center">Folio</th>
                                         <th class="text-center">Máquina</th>
                                         <th class="text-center">Fallo</th>
                                         <th class="text-center">Hora inicio</th>
@@ -224,8 +224,10 @@
                                             </span>
                                         </td>
                                         <td nowrap="nowrap">
-                                            <span class= "btn btn-warning" ng-click="obtenerDatosEdit(obj.cve_tp)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
-                                            <span class= "btn btn-danger" ng-click="obtenerDatosE(obj.cve_tp)" title="Eliminar" data-toggle="modal" data-target="#modalEliminar" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>
+                                            <span class= "btn btn-warning" ng-show="perfilUsu.tperdido_besser_edit == 1"  ng-click="obtenerDatosEdit(obj.cve_tp)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger" ng-show="perfilUsu.tperdido_besser_edit == 1"  ng-click="eliminartp(obj.cve_tp)" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
+                                            <span class= "btn btn-warning" ng-show="perfilUsu.tperdido_besser_edit == 0" ng-click="sinacceso()" title="Editar"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger" ng-show="perfilUsu.tperdido_besser_edit == 0" ng-click="sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
                                         </td>
                                     </tr>
                                 </tbody>

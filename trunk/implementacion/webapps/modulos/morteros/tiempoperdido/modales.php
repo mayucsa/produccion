@@ -9,18 +9,18 @@
         </button>
       </div>
       <div class="card-body">
-        <input hidden type="text" class="form-control" id="inputidedit" name="inputidedit" required="" disabled >
+        <input  type="text" ng-model="cve_tpe" class="form-control" id="inputidedit" name="inputidedit" disabled >
           <div class="row form-group form-group-sm">
               <div class="col-lg-12 d-lg-flex">
                   <div style="width: 50%;" class="form-floating mx-1">
-                      <select class="form-control form-group-md" id="selectmaquinaedit" name="selectmaquinaedit">
+                      <select class="form-control form-group-md" ng-model="maquinae"  id="selectmaquinaedit" name="selectmaquinaedit">
                           <option selected="selected" value="0">[Seleccione una opción..]</option>
                           <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
                       </select>
                       <label>Máquina</label>
                   </div>
                   <div style="width: 50%;" class="form-floating mx-1">
-                      <select class="form-control form-group-md" id="selectfalloedit" name="selectfalloedit">
+                      <select class="form-control form-group-md" ng-model="falloe" id="selectfalloedit" name="selectfalloedit">
                           <option selected="selected" value="0">[Seleccione una opción..]</option>
                           <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
                       </select>
@@ -32,15 +32,15 @@
           <div class="row form-group form-group-sm">
               <div class="col-lg-12 d-lg-flex">
                  <div style="width: 50%;" class="form-floating mx-1">
-                      <input type="text" id="inputmotivoedit" name="inputmotivoedit" class="form-control form-control-md UpperCase">
+                      <input type="text" ng-model="motivoe" id="inputmotivoedit" name="inputmotivoedit" class="form-control form-control-md UpperCase">
                       <label>Motivo de fallo</label>
                   </div>
                   <div style="width: 25%;" class="form-floating mx-1">
-                      <input type="text" id="inputhorainicioedit" ng-keyup="checkTime('inputhorainicioedit');" name="inputhorainicioedit" class="form-control form-control-md">
+                      <input type="text" ng-model="hinicioe" id="inputhorainicioedit" ng-keyup="checkTime('inputhorainicioedit');" name="inputhorainicioedit" class="form-control form-control-md">
                       <label>Hora de inicio</label>
                   </div>
                   <div style="width: 25%;" class="form-floating mx-1">
-                      <input type="text" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md">
+                      <input type="text" ng-model="hfine" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md">
                       <label>Hora de fin</label>
                   </div>
 <!--                   <div style="width: 25%;" class="form-floating mx-1"> 

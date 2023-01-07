@@ -421,8 +421,8 @@ function editarTP(){
 
 
         Swal.fire({
-                title: '¿Estas seguro de editar el folio #'+ datos.get('cve_tp')+ '?',
-                // html: 'Nombre: <b>' + datos.get('nombre_articulo'),
+                title: 'Edición',
+                html: '¿Estas seguro de editar el <b>folio ' + datos.get('cve_tp') + '</b>?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -441,15 +441,23 @@ function editarTP(){
                 contentType:false,
         success:function(r){
             // console.log(r);
-            consultar();
-            cerrarModalEditar();
+            // consultar();
+            // cerrarModalEditar();
             jsRemoveWindowLoad();
-                    Swal.fire(
-                                '¡Edición!',
-                                'Se ha editado el tiempo pérdido exitosamente',
-                                'success'
-                            )
-            
+           Swal.fire({
+              title: '¡Éxito!',
+              html: 'Su edición de tiempo perdido se generó correctamente.\n <b>Folio: ' +datos.get('cve_tp') + '</b>',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: 'green',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                location.reload();
+              }else{
+                location.reload();
+              }
+            }); 
         }
     })
         } else if (
