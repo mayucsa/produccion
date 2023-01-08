@@ -73,6 +73,30 @@ function eliminar($dbcon){
 	}
 	dd(['code'=>200]);
 }
+function validaExistencia($dbcon, $tipo, $cantidad){
+	$cve_mp = 0;
+	switch ($tipo) {
+		case 'aditivo':
+			$cve_mp = 2;
+			break;
+		case 'cemento':
+			$cve_mp = 1;
+			break;
+	}
+	$sql = "SELECT cantidad_materia_prima FROM seg_mp_bloquera WHERE cve_mp = ".$cve_mp;
+	$seg_mp_bloquera = $dbcon->qBuilder($dbcon->conn(), 'first', $sql);
+	if (floatval($cantidad) > floatval($seg_mp_bloquera->cantidad_materia_prima)) {
+		dd([
+			'cantidad' => $seg_mp_bloquera->cantidad_materia_prima,
+			'msj' => 'Cantidad mayor a la existencia'
+		]);
+	}else{
+		dd([
+			'cantidad' => $cantidad,
+			'msj' => 'ok'
+		]);
+	}
+}
 
 
 include_once "../../../dbconexion/conn.php";
@@ -91,6 +115,9 @@ switch ($tarea) {
 		break;
 	case 'eliminar':
 		eliminar($dbcon);
+		break;
+	case 'validaExistencia':
+		validaExistencia($dbcon, $objDatos->tipo, $objDatos->cantidad);
 		break;
 }
 ?>

@@ -43,7 +43,7 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="card">
-                <div class="card card-info"> <!-- ng-show="perfilUsu.produccion_besser_captura == 1"> -->
+                <div class="card card-info" ng-show="perfilUsu.produccion_besser_captura == 1">
                     <div class="card-header">
                          <h3 class="card-title">CAPTURA DE DATOS</h3>
                          <div class="card-tools">
@@ -112,7 +112,7 @@
                                     <label>Bandejas producidas</label>
                                 </div>
                                 <div style="width: 33%;" class="form-floating mx-1">
-                                    <input type="text" ng-model="cemento" id="inputcemento" name="inputcemento" class="form-control form-control-sm validanumericos" onchange="operaciones();" disabled>
+                                    <input type="text" ng-model="cemento" id="inputcemento" name="inputcemento" class="form-control form-control-sm validanumericos"  ng-blur="validaExistencia('cemento', cemento * barcadas)" disabled>
                                     <label>Cemento por barcada</label>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                         <div class="row form-group form-group-sm">
                             <div class="col-lg-12 d-lg-flex">
                                 <div style="width: 33%;" class="form-floating mx-1">
-                                    <input type="text" ng-model="aditivo" id="inputaditivo" name="inputaditivo" class="form-control form-control-sm validanumericos" disabled>
+                                    <input type="text" ng-model="aditivo" id="inputaditivo" name="inputaditivo" class="form-control form-control-sm validanumericos" ng-blur="validaExistencia('aditivo', aditivo)" disabled>
                                     <label>Consumo de aditivo</label>
                                 </div>
                                 <div style="width: 33%;" class="form-floating mx-1">
@@ -289,7 +289,7 @@
                                     <label>Piezas totales</label>
                                 </div>
                                 <div style="width: 33%;" class="form-floating mx-1">
-                                    <input ng-model="cementototal" id="spConsumoCemento" name="spConsumoCemento" class="form-control form-control-sm" style="background-color: #CDCDCD;" disabled>
+                                    <input ng-model="cementototal" id="spConsumoCemento" name="spConsumoCemento" class="form-control form-control-sm" ng-blur="validaExistencia('cemento', cementototal)" style="background-color: #CDCDCD;" disabled>
                                     <label>Consumo total de cemento</label>
                                 </div>
                                 <div style="width: 33%;" class="form-floating mx-1">
@@ -387,7 +387,7 @@
 
         var b = ($('#inputbarcadas').val() * $('#inputcemento').val());
 
-        $("#spConsumoCemento").val(b);
+        $("#spConsumoCemento").val(b.toFixed(2));
 
         var c = ($('#spConsumoCemento').val() / $('#spPiezasTotal').val());
 

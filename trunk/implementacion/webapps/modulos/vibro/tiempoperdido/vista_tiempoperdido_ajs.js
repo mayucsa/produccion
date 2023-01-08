@@ -23,6 +23,9 @@ app.controller('VistaTPVibro', function(BASEURL, ID, $scope, $http){
 		response = response.data;
 		console.log('serverSideTPVibro', response);
 		$scope.serverSideTPVibro = response;
+		setTimeout(function(){
+			$('#tableserverSideTPVibro').DataTable();
+		},800);
 	},function(error){
 		console.log('error', error);
 	});

@@ -201,7 +201,7 @@ app.controller('vistaProduccionBesser', function(BASEURL, ID, $scope, $http){
 		$scope.porcentajegravilla = $('#spPorcGravilla').val();
 		$scope.porcentajegravillados = $('#spPorcGravillados').val();
 		$scope.hdiferencia = $('#inputhdiferencia').val();
-
+		
 		console.log('piezatotal', $scope.piezastotal);
 		console.log('cementopieza', $scope.cementopieza);
 		console.log('cementototal', $scope.cementototal);
@@ -281,5 +281,76 @@ app.controller('vistaProduccionBesser', function(BASEURL, ID, $scope, $http){
 			}
 		})
 	}
+	$scope.validaExistencia = function(tipo, cantidad){
+		cantidad = parseFloat(cantidad);
+		if (cantidad > 0) {
+			console.log('cantidades', cantidad)
+			jsShowWindowLoad('Validando cantidades...');
+			$http.post('Controller.php', {
+				'task': 'validaExistencia',
+				'tipo': tipo,
+				'cantidad': cantidad
+			}).then(function(response){
+				response = response.data;
+				jsRemoveWindowLoad();
+				// if (tipo == 'cemento') {
+				// 	var resultado = response.cantidad / multiplo;
+				// 	if (resultado - parseInt(resultado) > 0) {
+				// 		resultado = resultado.toFixed(4);
+				// 	}
+				// 	$scope.cemento = resultado;
+				// }else{
+				// 	$scope[tipo] =  response.cantidad;
+				// }
+				if (response.msj != 'ok') {
+					Swal.fire({
+					  title: 'Consumo de '+tipo,
+					  text: response.msj,
+					  icon: 'warning',
+					  showCancelButton: false,
+					  confirmButtonColor: 'green',
+					  confirmButtonText: 'Aceptar'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							$scope.resetifValueFailed(tipo, response.cantidad);
+						}else{
+							$scope.resetifValueFailed(tipo, response.cantidad);
+						}
+					});
+				}else{
+					if (tipo == 'cemento') {
+						operaciones();
+						setTimeout(function(){
+							if ($("#spConsumoCemento").val() > response.cantidad) {
+								$("#spConsumoCemento").val(response.cantidad);
+							}
+						},500);
+					}
+				}
+			}, function(error){
+				console.log('error', error);
+				jsRemoveWindowLoad();
+			});
+		}
+	}
+	$scope.resetifValueFailed = function(tipo, cantidad){
+		var inputName = '';
+		if (tipo == 'cemento') {
+			$('#inputcemento').val('');
+			inputName = 'inputcemento';
+		}else{
+			$('#inputaditivo').val('');
+			inputName = 'inputaditivo';
+		}
+		$scope[tipo] =  undefined;
+		operaciones();
+		setTimeout(function(){
+			if ($("#spConsumoCemento").val() > cantidad) {
+				$("#spConsumoCemento").val(cantidad);
+			}
+			$('#'+inputName).focus();
+			console.log('setFocus');
+		}, 500);
+	}
+});
 
-})

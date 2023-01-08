@@ -195,7 +195,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="">
+                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tableserverSideTPMorteros">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Folio</th>

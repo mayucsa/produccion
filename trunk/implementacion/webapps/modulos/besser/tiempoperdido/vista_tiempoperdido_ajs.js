@@ -23,6 +23,9 @@ app.controller('VistaTPBesser', function(BASEURL, ID, $scope, $http){
 	}).then(function (response){
 		response = response.data;
 		$scope.serverSideTPBesser = response;
+		setTimeout(function(){
+			$('#tableserverSideTPBesser').DataTable();
+		},800);
 	},function(error){
 		console.log('error', error);
 	});

@@ -23,6 +23,10 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		response = response.data;
 		console.log('serverSideTPMorteros', response);
 		$scope.serverSideTPMorteros = response;
+		$scope.serverSideTPVibro = response;
+		setTimeout(function(){
+			$('#tableserverSideTPMorteros').DataTable();
+		},800);
 	},function(error){
 		console.log('error', error);
 	});
