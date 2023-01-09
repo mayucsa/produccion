@@ -309,6 +309,15 @@ session_start();
                   </li>
                 </ul>
             </li>
+            <!-- Almacenistas -->
+            <li class="treeview" ng-show="perfilUsu.porteria_vista == 1">
+              <a class="app-menu__item" href="../../porteria/movimientos/vista_movimientos.php">
+                <i class="app-menu__icon fas fa-list-ol"></i><span class="app-menu__label">Porteria</span>
+              </a>
+                <ul class="treeview-menu">
+
+                </ul>
+            </li>
             <!-- mis datos -->
             <li class="treeview">
               <a class="app-menu__item" href="#" data-toggle="treeview">
@@ -322,9 +331,9 @@ session_start();
             </li>
             <!-- cierre sesión -->
             <li>
-              <a class="app-menu__item" href="../../../logout.php">
+              <a class="app-menu__item" href="">
                 <i class="app-menu__icon fas fa-sign-out-alt"></i>
-                <span class="app-menu__label">Cerrar sesi&oacute;n</span>
+                <span class="app-menu__label" ng-click="cerrarsesion()">Cerrar sesi&oacute;n</span>
               </a>
             </li>
           </ul>
