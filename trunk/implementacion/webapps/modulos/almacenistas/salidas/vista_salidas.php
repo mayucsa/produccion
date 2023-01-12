@@ -13,252 +13,173 @@
                     background-color: #1A4672;
                     color:  white;
                 }
+                .fixedTable tbody{
+                    display: block;
+                    height:400px;
+                    overflow-y:auto;
+                }
+                .fixedTable thead, tbody, tr{
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+                .fixedTable thead{
+                    width: calc( 100% - 1em )
+                }
+            </style>
+                <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
+                <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
+                <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
             </style>
         </head>
+<div ng-controller="vistaDespachoBloqueras">
 
-<div class="modal fade" id="myLoading" tabindex="-3" data-backdrop="static" data-keyboard="false" style="padding-top:20%; overflow-y:visible;" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div align="center"><img src="../../../includes/imagenes/loading3.gif" width="140px"></div>
-    <div id="divtextloading" align="center" style="font-weight:bold; font-size:20px; color:#FFFFFF">Espere un momento...</div>
-</div>
-
-<div class="modal fade" id="modalMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top:10%; overflow-y:visible;" >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header modal-danger">
-                <h5 class="modal-title" id="encabezadoModal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="cuerpoModal"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-    <main class="app-content">
-      <div class="app-title">
-        <div>
-          <h1><i class="fas fa-sign-out-alt"></i> Salida Producto Finalizado</h1>
-        </div>
-        <ul class="app-breadcrumb breadcrumb">
-          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="vista_captura.php"> Salida Producto Finalizado</a></li>
-        </ul>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="tile">
-            <div class="card">
-                <div class="card-body">
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item">
-                    <a class="nav-link active border" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><strong>VibroBlock</strong> </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link border" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><strong>Besser</strong></a>
-                    </li>
-                    </ul>
-                    <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                            <form novalidate id="tablaCapturaVibro" onsubmit="return false" autocomplete="off" method="POST">
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-sm-1 text-left" style="font-size:13px">Producto</div>
-                                    <div class="col-sm-3 text-left">
-                                        <select class="form-control form-control-sm" id="selectproducto" name="selectproducto" onchange="selectProducto()">
-                                            <option selected="selected">[Seleccione una opción..]</option>
-                                            <?php   
-                                                $sql        = ModeloSalidas::showProductoVibro();
-                                                    foreach ($sql as $key =>$value) {
-                                                    echo '<option value="'.$value["cve_pbloquera"].'">'.$value["nombre_producto"].'</option>';
-                                                    }
-                                                ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-1 text-left" style="font-size:12px">Presentación</div>
-                                    <div class="col-sm-3 text-left">
-                                        <select class="form-control form-control-sm" id="selectpresentacion" name="selectpresentacion" onchange="selectPresentacion()" disabled>
-                                            <option selected="selected">[Seleccione una opción..]</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-1 text-left" style="font-size:13px">Estiba</div>
-                                    <div class="col-sm-3 text-left">
-                                        <select class="form-control form-control-sm" id="selectestiba" name="selectestiba" disabled>
-                                            <option selected="selected">[Seleccione una opción..]</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-sm-1 text-left" style="font-size:13px">Cantidad</div>
-                                    <div class="col-sm-3 text-left">
-                                        <input type="text" id="inputcantidad" name="inputcantidad" class="form-control form-control-sm validanumericos">
-                                    </div>
-                                    <div class="col-sm-1 text-left" style="font-size:13px">Remisi&oacute;n</div>
-                                    <div class="col-sm-3 text-left">
-                                        <input type="text" id="inputremision" name="inputremision" class="form-control form-control-sm validanumericos" >
-                                    </div>
-                                    <div class="col-sm-1 text-left" style="font-size:13px">Placas</div>
-                                    <div class="col-sm-3 text-left">
-                                        <input type="text" id="inputplacas" name="inputplacas" class="form-control form-control-sm UpperCase" >
-                                    </div>
-                                    <!-- <div class="col-sm-1 text-left" style="font-size:13px">Piezas</div> -->
-                                    <div class="col-sm-2 text-left">
-                                        <span hidden id="spanuser" name="spanuser" class="form-control" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
-                                    </div>
- <!--                                    <div class="col-sm-1 text-left" style="font-size:13px">Firma</div>
-                                    <div class="col-sm-2 text-left">
-                                        <input type="text" id="inputfirmas" name="inputfirmas" class="form-control form-control-md validanumericos" >
-                                    </div> -->
-                                </div>
-                                <div class="row form-group form-group-sm border-top">
-                                    <div class="col-sm-12" align="center" >
-                            <?php
-                                 if ($clave == 1 || $clave == 10) {
-                            ?>
-                                    <input id="btnvibro" name="btnvibro" type="submit" value="Guardar" href="#" onclick="validacionDatos()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }else{
-                             ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }
-                            ?>
-                                        <!-- <input type="submit" value="Guardar" href="#" onclick="validacionDatos()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
-                                        <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <form novalidate id="tablaCapturaVibro" onsubmit="return false" autocomplete="off" method="POST">
-                            <div class="row form-group form-group-sm">
-                                <div class="col-sm-1 text-left" style="font-size:13px">Producto</div>
-                                <div class="col-sm-3 text-left">
-                                    <select class="form-control form-control-sm" id="selectproductob" name="selectproductob" onchange="selectProductoBesser()">
-                                        <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                        <?php   
-                                            $sql        = ModeloProducto::showProductoBesser();
-                                                foreach ($sql as $key =>$value) {
-                                                echo '<option value="'.$value["cve_pbloquera"].'">'.$value["nombre_producto"].'</option>';
-                                                }
-                                            ?>
-                                    </select>
-                                </div>
-                                <div class="col-sm-1 text-left" style="font-size:12px">Presentación</div>
-                                <div class="col-sm-3 text-left">
-                                    <select class="form-control form-control-sm" id="selectpresentacionb" name="selectpresentacionb" onchange="selectPresentacionBesser()" disabled>
-                                        <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-1 text-left" style="font-size:13px">Celdas</div>
-                                <div class="col-sm-3 text-left">
-                                    <select class="form-control form-control-sm" id="selectceldasb" name="selectceldasb" onchange="selectEstibaBesser()" disabled>
-                                        <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    </select>
-                                </div>
+            <!-- MODAL DE DESPACHO -->
+            <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modalMisRequ == true">
+                <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">
+                    <h3>Verificación de producto</h3>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="documento" id="inputdocumento" name="inputdocumento" class="form-control form-control-md validanumericos" disabled>
+                                <label>CIDDOCUMENTO</label>
                             </div>
-                            <div class="row form-group form-group-sm">
-                                <div class="col-sm-1 text-left" style="font-size:13px">Estiba</div>
-                                <div class="col-sm-3 text-left">
-                                    <select class="form-control form-control-sm" id="selectestibab" name="selectestibab" disabled>
-                                        <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-1 text-left" style="font-size:13px">Cantidad</div>
-                                <div class="col-sm-3 text-left">
-                                    <input type="text" id="inputcantidadb" name="inputcantidadb" class="form-control form-control-sm validanumericos">
-                                </div>
-                                <div class="col-sm-1 text-left" style="font-size:13px">Remisi&oacute;n</div>
-                                <div class="col-sm-3 text-left">
-                                    <input type="text" id="inputremisionb" name="inputremisionb" class="form-control form-control-sm validanumericos" >
-                                </div>
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="foliov" id="inputfoliov" name="inputfoliov" class="form-control form-control-md validanumericos" disabled>
+                                <label>Folio</label>
                             </div>
-                            <div class="row form-group form-group-sm">
-                                <div class="col-sm-1 text-left" style="font-size:13px">Placas</div>
-                                <div class="col-sm-3 text-left">
-                                    <input type="text" id="inputplacasb" name="inputplacasb" class="form-control form-control-sm UpperCase" >
-                                </div>
-                                <div class="col-sm-2 text-left">
-                                    <span hidden id="spanuser" name="spanuser" class="form-control" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
-                                </div>
-                            </div>
-                            <div class="row form-group form-group-sm border-top">
-                                <div class="col-sm-12" align="center" >
-                            <?php
-                                 if ($clave == 1 || $clave == 10) {
-                            ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="validacionDatosBesser()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }else{
-                             ?>
-                                    <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                            <?php
-                                }
-                            ?>
-                                    <!-- <input type="submit" value="Guardar" href="#" onclick="validacionDatosBesser()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
-                                    <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
-                                </div>
-                            </div>
-                        </form>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="clientev" id="inputclientev" name="inputclientev" class="form-control form-control-md validanumericos" disabled>
+                                <label>Cliente</label>
+                            </div>
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="placasv" id="inputplacasv" name="inputplacasv" class="form-control form-control-md validanumericos" disabled>
+                                <label>Chofer / placas</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaSalidaVibro">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">Area</th>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Presentación</th>
-                                    <th class="text-center">Celdas</th>
-                                    <th class="text-center">Número de estiba</th>
-                                    <th class="text-center">Cantidad de salida</th>
-                                    <th class="text-center">Número de remision</th>
-                                    <th class="text-center">Placas</th>
-                                    <th class="text-center">Fecha de salida</th>
-                                    <th class="text-center">Eliminar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
+                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaModal">
+
                         </table>
                     </div>
                 </div>
+                <div class="col-lg-12 col-md-12 text-right">
+                    <button class="btn btn-success" ng-click="verificar()">Verificar</button>
+                    <button class="btn btn-danger" ng-click="setModalMisRequ()">Cerrar</button>
+                </div>
             </div>
-          </div>
+
+    <main class="app-content">
+        <div class="app-title">
+            <div>
+            <h1><i class="fas fa-sign-out-alt"></i> Salidas bloqueras</h1>
+            </div>
+            <ul class="app-breadcrumb breadcrumb">
+              <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+              <li class="breadcrumb-item"><a href="vista_salidas.php"> Salidas bloqueras</a></li>
+            </ul>
         </div>
-      </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tile">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Despacho bloqueras</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row form-group form-group-sm">
+                                <div class="col-lg-12 d-lg-flex">
+                                    <div style="width: 33%;" class="form-floating mx-1">
+                                        <input type="text" ng-model="folio" ng-blur="validaFolio(folio)" id="inputfolio" name="inputfolio" class="form-control form-control-sm validanumericos">
+                                        <label>Folio</label>
+                                    </div>
+                                    <div style="width: 33%;" class="form-floating mx-1">
+                                        <input type="text" ng-model="cliente" id="inputcliente" name="inputcliente" class="form-control form-control-sm validanumericos" disabled>
+                                        <label>Cliente</label>
+                                    </div>
+                                    <div style="width: 33%;" class="form-floating mx-1">
+                                        <input type="text" ng-model="placas" id="inputplacas" name="inputplacas" class="form-control form-control-sm validanumericos" disabled>
+                                        <label>Chofer / placas</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group form-group-sm border-top">
+                                <div class="col-sm-12" align="center">
+                                    <input type="submit" value="Despachar producto" href="#" ng-click="validacionCampos()"class="btn btn-primary" style="margin-bottom: -25px !important">
+                                    <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="tile">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Despacho bloqueras</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row form-group form-group-sm">
+                                <div class="col-lg-12 d-lg-flex">
+                                    <table class="table table-striped table-bordered table-hover table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Folio</th>
+                                                <th class="text-center">Clave Producto</th>
+                                                <th class="text-center">Producto</th>
+                                                <th class="text-center">Cantidad</th>
+                                                <th class="text-center">Indicar cant a surtir</th>
+                                                <th class="text-center">Estiba</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="(i, obj) in admDocumentosDetalle track by i">
+                                                <td class="text-center">{{obj.CFOLIO}}</td>
+                                                <td class="text-center">{{obj.CIDPRODUCTO}}</td>
+                                                <td class="text-center">{{obj.CNOMBREPRODUCTO}}</td>
+                                                <td class="text-center">{{obj.CUNIDADESCAPTURADAS}}</td>
+                                                <td class="text-center">
+                                                    <input type="text" ng-model="obj.CUNIDADESCAPTURADAS" class="form-control text-right">
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="text" ng-model="estiba" ng-blur="validaEstiba(estiba, obj.CIDPRODUCTO, obj.CUNIDADESCAPTURADAS)" class="form-control text-right">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> 
+                        </div>                            
+                    </div>
+                </div>
+            </div>
+        </div>
       <?php include_once "../../footer.php" ?>
     </main>
+</div>
+<script src="../../../includes/js/adminlte.min.js"></script>
 
-
-
-    
-
-<script src="vista_salidas.js"></script>
+<script src="salidas_bloqueras_ajs.js"></script>
 
 <script src="../../../includes/js/jquery351.min.js"></script>
 
-<script src="vista_salidas.js"></script>
-
-<?php include_once "modal_salidas.php" ?>
 
 <?php include_once "../../inferior.php" ?>
 
@@ -275,19 +196,10 @@
     <link rel="stylesheet" type="text/css" href="../../../includes/css/datatables.min.css"/>
 
     <script type="text/javascript" src="../../../includes/js/datatables.min.js"></script>
-
-<script type="text/javascript">
-    <?php
-    if ($clave == 1) {
-        ?>
-        consultar();
-        // consultarEstiba();
-    <?php
-    }else{
-        ?>
-        consult();
-        // consultEstiba();
-        <?php
-    }
-     ?>
-</script>
+    <script src="../../../includes/js/data_tables_js/jquery.dataTables.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/dataTables.buttons.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/jszip.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/pdfmake.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/vfs_fonts.js"></script>
+    <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>

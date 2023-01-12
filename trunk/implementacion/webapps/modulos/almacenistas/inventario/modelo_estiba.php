@@ -51,9 +51,12 @@ if ( isset($_GET['accion']) == "insertar") {
 }
 
 if (isset($_GET["consultar"])) {
-    $cve_estiba = $_GET["consultar"];
+    $numero_estiba = $_GET["consultar"];
 
-    $sql    = " SELECT * FROM seg_inventario_estibas WHERE cve_estiba =" .$cve_estiba;
+    $sql    = " SELECT sie.nombre_producto, CONCAT(spb.nombre_producto,' - ', presentacion, ' - ', num_celdas, ' CELDAS') as producto, numero_estiba, cantidad_estiba 
+                FROM seg_inventario_estibas sie 
+                INNER JOIN seg_producto_bloquera spb  ON spb.cve_bloquera  = sie.nombre_producto 
+                WHERE numero_estiba =" .$numero_estiba;
     // $sql = " SELECT * FROM seg_entradas ORDER BY fecha_registro DESC";
 
     $vquery = Conexion::conectar()->prepare($sql);

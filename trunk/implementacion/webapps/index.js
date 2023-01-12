@@ -13,7 +13,7 @@ function iniciarSesion() {
 	var msj = "";
 
 	if (usuario == "") {
-		msj += "<li>Ingrese el nombre de usuario</li>";
+		msj += "<li>Ingrese su número de empleado</li>";
 	}
 	if (password == "") {
 		msj += "<li>Ingrese su contraseña</li>";
@@ -28,18 +28,36 @@ function iniciarSesion() {
 }
 
 function validacionDatos(pusuario,ppassword){
-    $.post('modulos/seguridad/login/ctrl_operaciones.php', { 
+    $.post('modulos/seguridad/login/ctrl_operaciones.php', {
         usuario: pusuario, 
         contrasenia: ppassword
-    },function (data) {
-        if(data.success){
+    }).then(function (data){
+        console.log('data', data);
+        data = JSON.parse(data);
+        if (data.success) {
             $('#myLoading').modal('show');
-            setTimeout(function(){location.href='modulos/bienvenida/bienvenida/bienvenida.php';},2000);
-            // setTimeout(function(){location.href='modulos/inventario/bloquera/inventario_bloquera.php';},2000);
-        } else {
+            setTimeout(function(){location.href='modulos/bienvenida/bienvenida/bienvenida.php';},2000);  
+        }else{
+            console.log('error');
             $('#encabezadoModal').html('Validación de datos');
-            $('#cuerpoModal').html('El usuario y/o la contraseña son incorrrectos');
+            $('#cuerpoModal').html(data.message);
             $('#modalMensajes').modal('toggle');
         }
-    },'json');
+    }, function(error){
+        console.log('Error en controlador', error);
+    });
+
+    // $.post('modulos/seguridad/login/ctrl_operaciones.php', {
+    //     usuario: pusuario, 
+    //     contrasenia: ppassword
+    // },function (data) {
+    //     if(data.success){
+    //         $('#myLoading').modal('show');
+    //         setTimeout(function(){location.href='modulos/bienvenida/bienvenida/bienvenida.php';},2000);
+    //     } else {
+    //         $('#encabezadoModal').html('Validación de datos');
+    //         $('#cuerpoModal').html('El número de empleado y/o la contraseña son incorrrectos');
+    //         $('#modalMensajes').modal('toggle');
+    //     }
+    // },'json');
 }
