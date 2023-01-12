@@ -36,6 +36,7 @@ class Modelo_login{
 	}
 
     function consulta_vigencia_persona($usuario) {
+        $resultado = false;
         try {
             $dbcon = new MysqlConn;
             $con = $dbcon->conn();
@@ -43,7 +44,9 @@ class Modelo_login{
                     FROM    cat_usuarios
                     WHERE   nombre_usuario = '".$usuario."'";
             $vig = $dbcon->qBuilder($con, 'first', $sql);
-            if ($vig) {
+            // dd($sql);
+            // echo ('$vig');
+            if ($vig = 1) {
                 $resultado = true;
             }
         } catch (Exception $ex) {

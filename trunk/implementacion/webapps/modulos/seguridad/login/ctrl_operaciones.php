@@ -12,7 +12,7 @@
 	$response	= array();
 	if ($objetoModelo->consulta_usuario_existencia($usuario) == true) {
 		if ($objetoModelo->consulta_contrasenia_correcta($usuario, $contrasenia) == true) {
-			// if ($objetoModelo->consulta_vigencia_persona($usuario) == true) {
+			if ($objetoModelo->consulta_vigencia_persona($usuario) == true) {
 				if (($d = $objetoModelo->consulta_usuario_persona($usuario, $contrasenia)) == true) {
 					// foreach ($arreglo_datos as $d) {
 					$objeto_datos_usuario = new Datos_usuario;
@@ -23,31 +23,6 @@
 					$objeto_datos_usuario->set_puesto_persona($d->puesto);
 					$objeto_datos_usuario->set_rol_persona($d->cve_rol);
 
-					// $objeto_datos_usuario->set_vista_dashboard($d->dashboard_vista);
-
-					// $objeto_datos_usuario->set_vista_inventario($d->inventario_vista);
-
-					// $objeto_datos_usuario->set_vista_laboratorio($d->laboratorio_vista);
-
-					// $objeto_datos_usuario->set_vista_besser($d->besser_vista);
-					// $objeto_datos_usuario->set_captura_besser($d->besser_captura);
-					// $objeto_datos_usuario->set_edit_besser($d->besser_edit);
-
-					// $objeto_datos_usuario->set_vista_vibro($d->vibro_vista);
-					// $objeto_datos_usuario->set_captura_vibro($d->vibro_captura);
-					// $objeto_datos_usuario->set_edit_vibro($d->vibro_edit);
-
-					// $objeto_datos_usuario->set_vista_almacenistas($d->almacenistas_vista);
-
-					// $objeto_datos_usuario->set_vista_reportes($d->reportes_vista);
-
-					// $objeto_datos_usuario->set_vista_usuarios($d->usuarios_vista);
-
-
-					// $objeto_datos_usuario->set_vista_morteros($d->morteros_vista);
-					// $objeto_datos_usuario->set_captura_morteros($d->morteros_captura);
-					// $objeto_datos_usuario->set_edit_morteros($d->morteros_edit);
-					// $objeto_datos_usuario->set_delete_morteros($d->morteros_delete);
 					$_SESSION['loggedin'] = true;
 					$_SESSION['id'] = $d->cve_usuario;
 					$_SESSION['produccion_morteros_edit'] = $d->produccion_morteros_edit;
@@ -56,6 +31,7 @@
 					$_SESSION['tperdido_vibro_edit'] = $d->tperdido_vibro_edit;
 					$_SESSION['tperdido_morteros_edit'] = $d->tperdido_morteros_edit;
 					$_SESSION['produccion_besser_edit'] = $d->produccion_besser_edit;
+					$_SESSION['entradas_besser_edit'] = $d->entradas_besser_edit;
 
 					$_SESSION['usuario'] = serialize($objeto_datos_usuario);
 					$_SESSION['start'] = time();
@@ -66,13 +42,12 @@
 	                $response['error'] = 0;
 	                $response['message'] = "Acceso permitido.";
 				}
-		
-		// }else{
-		// 	$response['success'] = FALSE;
-  //           $response['error'] = 1;
-  //           $response['message'] = "<div style='color: red'><center>Usuario sin privilegios, contacte al administardor del sistema.</center></div>";
-  //           $_SESSION['usuario'] = null;
-		// 	}
+		}else{
+			$response['success'] = FALSE;
+            $response['error'] = 1;
+            $response['message'] = "<div style='color: red'><center>Usuario sin privilegios, contacte al administrador del sistema.</center></div>";
+            $_SESSION['usuario'] = null;
+			}
 		} else {
 			$response['success'] = FALSE;
             $response['error'] = 3;
@@ -82,7 +57,7 @@
 	} else {
 		$response['success'] = FALSE;
         $response['error'] = 4;
-        $response['message'] = "<div style='color: red'><center>El nombre de usuario no existe, verifique con su administrador de sistema.</center></div>";
+        $response['message'] = "<div style='color: red'><center>El número de empleado no existe, verifique con su administrador de sistema.</center></div>";
         $_SESSION['usuario'] = null;
 	}
 	die(json_encode($response));
