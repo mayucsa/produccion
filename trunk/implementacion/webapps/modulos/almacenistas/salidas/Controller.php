@@ -53,7 +53,7 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 			'msj' => 'Estiba inexistente.'
 		]);
 	}
-	if (floatval($cantidad) >= floatval($seg_cantestiba->cantidad_estiba)) {
+	if (floatval($cantidad) > floatval($seg_cantestiba->cantidad_estiba)) {
 		dd([
 			'cantidad' => $seg_cantestiba->cantidad_estiba,
 			'msj' => 'Cantidad mayor a la existencia. Esta estiba sólo cuenta con '.$seg_cantestiba->cantidad_estiba.' unidades.'
@@ -77,6 +77,16 @@ function despacharProducto($dbcon, $datos, $folio){
 			dd([
 				'code' => 400,
 				'msj' => 'Error al actualizar cantidad_estiba',
+				'sql' => $sql
+			]);
+		}
+		$sql = "UPDATE seg_inventario_patios 
+		SET cantidad_inventario = cantidad_inventario - ".$val->cantidad_salida."
+		WHERE cve_bloquera = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."') ";
+		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+			dd([
+				'code' => 400,
+				'msj' => 'Error al actualizar cantidad_inventario',
 				'sql' => $sql
 			]);
 		}
