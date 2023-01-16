@@ -46,7 +46,6 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 		$scope.placas = '';
 		$scope.admDocumentosDetalle = [];
 	}
-
 	$scope.validaFolio = function(folio){
 		if (folio == '' || folio == undefined) {
 			return;
@@ -97,6 +96,9 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 					$scope.admDocumentosDetalle = response.data;
 					// $scope.setModalMisRequ();
 					break;
+				case '4':
+					Swal.fire('Pedido entregado','El folio <b>'+ folio +'</b> ya fue entregado','error');
+					break;
 			}
 
 
@@ -113,7 +115,6 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 			console.log('Error', caseError);
 		});
 	}
-
 	$scope.verificar = function(){
 		$scope.documento = $('#inputdocumento').val();
 		$scope.foliov = $('#inputfoliov').val();
@@ -176,7 +177,6 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 			}
 		})
 	}
-
 	$scope.validaExistencia =  function(i){
 		const estiba = $scope.admDocumentosDetalle[i].estiba;
 		const idproducto = $scope.admDocumentosDetalle[i].CIDPRODUCTO;
@@ -413,5 +413,18 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 				console.log('sin Confirmar');
 			}
 		});
+	}
+	$scope.inputCharacters = function(i) {
+		i++;
+		// if (tipo != '') {
+			if (i == 0) {
+				$('#nextFocusHeader1').focus();
+				$('#nextFocusHeader1').click();
+			}else{
+				$('#nextFocusHeader1').focus();
+				$('#nextFocusHeader1').click();
+			}
+			// return;
+		// }
 	}
 })

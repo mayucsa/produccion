@@ -111,6 +111,45 @@ function despacharProducto($dbcon, $datos, $folio){
 				]);
 			}
 		}
+		$sql = "UPDATE seg_inventario_patios 
+		SET cantidad_inventario = cantidad_inventario - ".$val->cantidad_salida."
+		WHERE cve_bloquera = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."') ";
+		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+			dd([
+				'code' => 400,
+				'msj' => 'Error al actualizar cantidad_inventario',
+				'sql' => $sql
+			]);
+		}
+		// Insertar salidas
+		$sql = "INSERT INTO seg_salidas_bloquera
+		(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
+		VALUES(
+			".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
+			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
+		)";
+		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+			dd([
+				'code' => 400,
+				'msj' => 'Error al insertar datos salidas',
+				'sql' => $sql
+			]);
+		}
+		if ($val->cantidad_salida < $val->CUNIDADESCAPTURADAS) {
+			// revisar para actualizar o no el status documento
+		}
+	}
+	$sql = "UPDATE admDocumentos_detalle 
+	SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."'
+	WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
+	AND CVALORCLASIFICACION = 'BLOQUERA' ";
+	if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+		dd([
+			'code' => 400,
+			'msj' => 'Error al actualizar estatus_documento y fecha_surtido',
+			'sql' => $sql
+		]);
+>>>>>>> 2502380666484359109f14fa76673b9ed64128a4
 	}
 	// ok
 	dd([

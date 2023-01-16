@@ -101,11 +101,11 @@
                             <div class="row form-group form-group-sm">
                                 <div class="col-lg-12 d-lg-flex">
                                     <div style="width: 33%;" class="form-floating mx-1">
-                                        <input type="text" ng-model="folio" ng-blur="validaFolio(folio)" id="inputfolio" name="inputfolio" class="form-control form-control-sm validanumericos">
+                                        <input type="text" ng-model="folio" ng-blur="validaFolio(folio)" id="nextFocusHeader0" name="inputfolio" class="form-control form-control-sm validanumericos" ng-keyup="$event.keyCode == 13 ? inputCharacters(0) : null">
                                         <label>Folio</label>
                                     </div>
                                     <div style="width: 33%;" class="form-floating mx-1">
-                                        <input type="text" ng-model="cliente" id="inputcliente" name="inputcliente" class="form-control form-control-sm validanumericos" disabled>
+                                        <input type="text" ng-model="cliente" id="nextFocusHeader1" name="inputcliente" class="form-control form-control-sm validanumericos" readonly>
                                         <label>Cliente</label>
                                     </div>
                                     <div style="width: 33%;" class="form-floating mx-1">
