@@ -84,9 +84,9 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 				                                    '</thead>');
 				        for (i = 0; i < response.data.length; i++){
 				             $("#tablaModal").append('<tr>' + 
-				                '<td style="dislay: none;">' + response.data[0].CIDPRODUCTO + '</td>'+
-				                '<td style="dislay: none;">' + response.data[0].CNOMBREPRODUCTO + '</td>'+
-				                '<td style="dislay: none;">' + response.data[0].CUNIDADESCAPTURADAS + '</td>'+ 
+				                '<td style="dislay: none;">' + response.data[i].CIDPRODUCTO + '</td>'+
+				                '<td style="dislay: none;">' + response.data[i].CNOMBREPRODUCTO + '</td>'+
+				                '<td style="dislay: none;">' + response.data[i].CUNIDADESCAPTURADAS + '</td>'+ 
 				                '</td>'
 				                +'</tr>');
 				        }
@@ -350,25 +350,27 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 	}
 	$scope.validacionCampos = function(){
 		for (var i = 0; i < $scope.admDocumentosDetalle.length; i++) {
-			const cantidades = $scope.admDocumentosDetalle[i].cantidad_salida;
-			if (parseFloat(cantidades) <= 0 || cantidades == undefined) {
-				console.log('cantidades', cantidades, parseFloat(cantidades));
-				Swal.fire({
-					icon: 'warning',
-					title: 'Cantidad  a surtir',
-					text: 'Éste campo debe contener un dato correcto.'
-				});
-				return;
-			}
-			const estibas = $scope.admDocumentosDetalle[i].estiba;
-			console.log('estiba', estibas);
-			if (parseFloat(estibas) <= 0 || estibas == undefined) {
-				Swal.fire({
-					icon: 'warning',
-					title: 'Estiba',
-					text: 'Éste campo debe contener un dato correcto.'
-				});
-				return;
+			if ($scope.admDocumentosDetalle[i].ESTATUS_DOCUMENTO == 3) {
+				const cantidades = $scope.admDocumentosDetalle[i].cantidad_salida;
+				if (parseFloat(cantidades) <= 0 || cantidades == undefined) {
+					console.log('cantidades', cantidades, parseFloat(cantidades));
+					Swal.fire({
+						icon: 'warning',
+						title: 'Cantidad  a surtir',
+						text: 'Éste campo debe contener un dato correcto.'
+					});
+					return;
+				}
+				const estibas = $scope.admDocumentosDetalle[i].estiba;
+				console.log('estiba', estibas);
+				if (parseFloat(estibas) <= 0 || estibas == undefined) {
+					Swal.fire({
+						icon: 'warning',
+						title: 'Estiba',
+						text: 'Éste campo debe contener un dato correcto.'
+					});
+					return;
+				}
 			}
 		}
 		Swal.fire({

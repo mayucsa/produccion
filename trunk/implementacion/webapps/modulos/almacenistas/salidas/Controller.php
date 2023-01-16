@@ -12,7 +12,7 @@ function validaFolio($dbcon, $folio){
 	$sql = "SELECT CFOLIO, ad.CIDDOCUMENTO, CRAZONSOCIAL, CTEXTOEXTRA2, CIDPRODUCTO, CNOMBREPRODUCTO, CVALORCLASIFICACION, CUNIDADESCAPTURADAS, ESTATUS_DOCUMENTO 
 			FROM admDocumentos_detalle add2
 			INNER JOIN admDocumentos ad ON ad.CIDDOCUMENTO = add2.CIDDOCUMENTO 
-			WHERE CVALORCLASIFICACION = 'BLOQUERA' AND CFOLIO = ".$folio;
+			WHERE CVALORCLASIFICACION = 'BLOQUERA' AND CFOLIO = ".$folio." ORDER BY ESTATUS_DOCUMENTO ASC";
 	$detalle = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
 	// foreach ($detalle as $i => $val) {
 	// 	$sql = "SELECT sum(cantidad_entrada) cantidad_entrada FROM movtos_entradas_detalle mvd INNER JOIN movtos_entradas mv ON mv.cve_mov = mvd.cve_mov WHERE mv.cve_odc = ".$folio." AND cve_articulo = ".$val->cve_art;
@@ -70,44 +70,47 @@ function despacharProducto($dbcon, $datos, $folio){
 	$completo = count($datos);
 	// Actualizar cantidad_estiba
 	foreach ($datos as $i => $val) {
-		$sql = "UPDATE seg_inventario_estibas 
-		SET cantidad_estiba = cantidad_estiba - ".$val->cantidad_salida."
-		WHERE numero_estiba = ".$val->estiba." AND nombre_producto = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."')";
-		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-			dd([
-				'code' => 400,
-				'msj' => 'Error al actualizar cantidad_estiba',
-				'sql' => $sql
-			]);
+		if ($val->ESTATUS_DOCUMENTO == 3) {
+			$sql = "UPDATE seg_inventario_estibas 
+			SET cantidad_estiba = cantidad_estiba - ".$val->cantidad_salida."
+			WHERE numero_estiba = ".$val->estiba." AND nombre_producto = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."')";
+			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+				dd([
+					'code' => 400,
+					'msj' => 'Error al actualizar cantidad_estiba',
+					'sql' => $sql
+				]);
+			}
+			// Insertar salidas
+			$sql = "INSERT INTO seg_salidas_bloquera
+			(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
+			VALUES(
+				".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
+				".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
+			)";
+			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+				dd([
+					'code' => 400,
+					'msj' => 'Error al insertar datos salidas',
+					'sql' => $sql
+				]);
+			}
+			$sql = "UPDATE admDocumentos_detalle 
+				SET ";
+			if ( (floatval($val->CUNIDADESCAPTURADAS) - floatval($val->cantidad_salida)) == 0) {
+				$sql .= " ESTATUS_DOCUMENTO = 4, ";
+			}
+			$sql .= " CUNIDADESCAPTURADAS = CUNIDADESCAPTURADAS - ".$val->cantidad_salida.", FECHA_SURTIDO = '".$fecha."' 
+			WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
+			AND CVALORCLASIFICACION = 'BLOQUERA' AND CIDPRODUCTO = '".$val->CIDPRODUCTO."'";
+			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+				dd([
+					'code' => 400,
+					'msj' => 'Error al Actualizar CUNIDADESCAPTURADAS, estatus_documento y fecha_surtido',
+					'sql' => $sql
+				]);
+			}
 		}
-		// Insertar salidas
-		$sql = "INSERT INTO seg_salidas_bloquera
-		(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
-		VALUES(
-			".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
-			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
-		)";
-		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-			dd([
-				'code' => 400,
-				'msj' => 'Error al insertar datos salidas',
-				'sql' => $sql
-			]);
-		}
-		if ($val->cantidad_salida < $val->CUNIDADESCAPTURADAS) {
-			// revisar para actualizar o no el status documento
-		}
-	}
-	$sql = "UPDATE admDocumentos_detalle 
-	SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."'
-	WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
-	AND CVALORCLASIFICACION = 'BLOQUERA' ";
-	if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-		dd([
-			'code' => 400,
-			'msj' => 'Error al actualizar estatus_documento y fecha_surtido',
-			'sql' => $sql
-		]);
 	}
 	// ok
 	dd([

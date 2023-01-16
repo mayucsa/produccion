@@ -150,7 +150,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="(i, obj) in admDocumentosDetalle track by i">
+                                            <tr ng-repeat="(i, obj) in admDocumentosDetalle track by i" ng-show="obj.ESTATUS_DOCUMENTO == 3">
                                                 <td class="text-center">{{obj.CFOLIO}}</td>
                                                 <td class="text-center">{{obj.CIDPRODUCTO}}</td>
                                                 <td class="text-center">{{obj.CNOMBREPRODUCTO}}</td>
