@@ -116,7 +116,7 @@
                             </div>
                             <div class="row form-group form-group-sm border-top">
                                 <div class="col-sm-12" align="center">
-                                    <input type="submit" value="Despachar producto" href="#" ng-click="validacionCampos()"class="btn btn-primary" style="margin-bottom: -25px !important">
+                                    <input type="submit" value="Despachar producto" href="#" ng-click="validacionCampos()" ng-show="admDocumentosDetalle.length > 0" class="btn btn-primary" style="margin-bottom: -25px !important">
                                     <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                                 </div>
                             </div>
@@ -156,10 +156,10 @@
                                                 <td class="text-center">{{obj.CNOMBREPRODUCTO}}</td>
                                                 <td class="text-center">{{obj.CUNIDADESCAPTURADAS}}</td>
                                                 <td class="text-center">
-                                                    <input type="text" ng-model="obj.CUNIDADESCAPTURADAS" class="form-control text-right">
+                                                    <input type="text" ng-model="obj.cantidad_salida" class="form-control text-right">
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="text" ng-model="estiba" ng-blur="validaEstiba(estiba, obj.CIDPRODUCTO, obj.CUNIDADESCAPTURADAS)" class="form-control text-right">
+                                                    <input type="text" ng-model="obj.estiba" ng-blur="validaEstiba(i)" class="form-control text-right">
                                                 </td>
                                             </tr>
                                         </tbody>

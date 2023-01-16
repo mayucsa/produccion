@@ -40,13 +40,13 @@ class Modelo_login{
         try {
             $dbcon = new MysqlConn;
             $con = $dbcon->conn();
-            $sql = "SELECT  estatus_usuario
+            $sql = "SELECT  *
                     FROM    cat_usuarios
-                    WHERE   nombre_usuario = '".$usuario."'";
+                    WHERE   nombre_usuario = '".$usuario."' AND estatus_usuario = 1";
             $vig = $dbcon->qBuilder($con, 'first', $sql);
             // dd($sql);
             // echo ('$vig');
-            if ($vig = 1) {
+            if ($vig) {
                 $resultado = true;
             }
         } catch (Exception $ex) {

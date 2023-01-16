@@ -8,11 +8,10 @@
 	set_time_limit(0);
 	$usuario 		= 	$_POST["usuario"];
 	$contrasenia	= 	md5($_POST["contrasenia"]);
-
 	$response	= array();
 	if ($objetoModelo->consulta_usuario_existencia($usuario) == true) {
 		if ($objetoModelo->consulta_contrasenia_correcta($usuario, $contrasenia) == true) {
-			if ($objetoModelo->consulta_vigencia_persona($usuario) == true) {
+			if ( $objetoModelo->consulta_vigencia_persona($usuario) ) {
 				if (($d = $objetoModelo->consulta_usuario_persona($usuario, $contrasenia)) == true) {
 					// foreach ($arreglo_datos as $d) {
 					$objeto_datos_usuario = new Datos_usuario;

@@ -1,4 +1,5 @@
 <?php 
+session_start();
 date_default_timezone_set('America/Mexico_City');
 function dd($var){
     if (is_array($var) || is_object($var)) {
@@ -18,6 +19,9 @@ function validaFolio($dbcon, $folio){
 	// 	$cantidad_entrada = $dbcon->qBuilder($dbcon->conn(), 'first', $sql);
 	// 	$val->cantidad_cotizada = floatval($val->cantidad_cotizada) - floatval($cantidad_entrada->cantidad_entrada);
 	// }
+	foreach ($detalle as $key => $value) {
+		$value->cantidad_salida = $value->CUNIDADESCAPTURADAS;
+	}
 	dd($detalle);
 }
 function verificarFolio($dbcon, $Datos){
@@ -43,10 +47,16 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 			 INNER JOIN seg_producto_bloquera spb ON spb.cve_bloquera = sie.nombre_producto
 			 WHERE numero_estiba = ".$estiba." AND spb.cod_producto = '".$idproducto."' ";
 	$seg_cantestiba = $dbcon->qBuilder($dbcon->conn(), 'first', $sql);
-	if (floatval($cantidad) > floatval($seg_cantestiba->cantidad_estiba)) {
+	if (!$seg_cantestiba) {
+		dd([
+			'cantidad' => false,
+			'msj' => 'Estiba inexistente.'
+		]);
+	}
+	if (floatval($cantidad) >= floatval($seg_cantestiba->cantidad_estiba)) {
 		dd([
 			'cantidad' => $seg_cantestiba->cantidad_estiba,
-			'msj' => 'Cantidad mayor a la existencia'
+			'msj' => 'Cantidad mayor a la existencia. Esta estiba sólo cuenta con '.$seg_cantestiba->cantidad_estiba.' unidades.'
 		]);
 	}else{
 		dd([
@@ -54,6 +64,56 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 			'msj' => 'ok'
 		]);
 	}
+}
+function despacharProducto($dbcon, $datos, $folio){
+	$fecha = date('Y-m-d H:i:s');
+	$completo = count($datos);
+	// Actualizar cantidad_estiba
+	foreach ($datos as $i => $val) {
+		$sql = "UPDATE seg_inventario_estibas 
+		SET cantidad_estiba = cantidad_estiba - ".$val->cantidad_salida."
+		WHERE numero_estiba = ".$val->estiba." AND nombre_producto = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."')";
+		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+			dd([
+				'code' => 400,
+				'msj' => 'Error al actualizar cantidad_estiba',
+				'sql' => $sql
+			]);
+		}
+		// Insertar salidas
+		$sql = "INSERT INTO seg_salidas_bloquera
+		(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
+		VALUES(
+			".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
+			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
+		)";
+		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+			dd([
+				'code' => 400,
+				'msj' => 'Error al insertar datos salidas',
+				'sql' => $sql
+			]);
+		}
+		if ($val->cantidad_salida < $val->CUNIDADESCAPTURADAS) {
+			// revisar para actualizar o no el status documento
+		}
+	}
+	$sql = "UPDATE admDocumentos_detalle 
+	SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."'
+	WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
+	AND CVALORCLASIFICACION = 'BLOQUERA' ";
+	if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+		dd([
+			'code' => 400,
+			'msj' => 'Error al actualizar estatus_documento y fecha_surtido',
+			'sql' => $sql
+		]);
+	}
+	// ok
+	dd([
+		'code' => 200,
+		'msj' => 'Se ha generado el despacho de producto con éxito.'
+	]);
 }
 
 include_once "../../../dbconexion/conn.php";
@@ -76,6 +136,9 @@ switch ($tarea){
 		break;
 	case 'validaExistencia':
 		validaExistencia($dbcon, $objDatos->estiba, $objDatos->idproducto, $objDatos->cantidad);
+		break;
+	case 'despacharProducto':
+		despacharProducto($dbcon, $objDatos->datos, $objDatos->folio);
 		break;
 }
 
