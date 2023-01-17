@@ -53,7 +53,7 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 			'msj' => 'Estiba inexistente.'
 		]);
 	}
-	if (floatval($cantidad) >= floatval($seg_cantestiba->cantidad_estiba)) {
+	if (floatval($cantidad) > floatval($seg_cantestiba->cantidad_estiba)) {
 		dd([
 			'cantidad' => $seg_cantestiba->cantidad_estiba,
 			'msj' => 'Cantidad mayor a la existencia. Esta estiba sólo cuenta con '.$seg_cantestiba->cantidad_estiba.' unidades.'
@@ -149,7 +149,6 @@ function despacharProducto($dbcon, $datos, $folio){
 			'msj' => 'Error al actualizar estatus_documento y fecha_surtido',
 			'sql' => $sql
 		]);
->>>>>>> 2502380666484359109f14fa76673b9ed64128a4
 	}
 	// ok
 	dd([

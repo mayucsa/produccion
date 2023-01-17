@@ -156,10 +156,10 @@
                                                 <td class="text-center">{{obj.CNOMBREPRODUCTO}}</td>
                                                 <td class="text-center">{{obj.CUNIDADESCAPTURADAS}}</td>
                                                 <td class="text-center">
-                                                    <input type="text" ng-model="obj.cantidad_salida" class="form-control text-right">
+                                                    <input type="text" ng-model="obj.cantidad_salida" class="form-control text-right" ng-keyup="checkCantSalidas(i)">
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="text" ng-model="obj.estiba" ng-blur="validaEstiba(i)" class="form-control text-right">
+                                                    <input type="text" ng-model="obj.estiba" ng-blur="validaEstiba(i)" ng-keyup="obj.estiba = setNumerico(obj.estiba)" class="form-control text-right">
                                                 </td>
                                             </tr>
                                         </tbody>

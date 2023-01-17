@@ -348,6 +348,36 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 			}
 		}
 	}
+	$scope.setNumerico = function(numero){
+		if (numero == undefined) return;
+		var aux = '';
+		for (var x = 0; x < numero.length; x++) {
+			if (!isNaN(numero[x])) {
+				aux = aux +''+numero[x];
+			}else{
+				if (numero[x] == '.') {
+					if ((numero.substring(0, x+1)).split('.').length == 2) {
+						aux = aux +''+numero[x];
+					}
+				}
+			}
+		}
+		return aux;
+	}
+	$scope.checkCantSalidas = function(i){
+		$scope.admDocumentosDetalle[i].cantidad_salida = $scope.setNumerico($scope.admDocumentosDetalle[i].cantidad_salida);
+		if (	parseFloat($scope.admDocumentosDetalle[i].CUNIDADESCAPTURADAS) 
+				< 
+				parseFloat($scope.admDocumentosDetalle[i].cantidad_salida)	) {
+			Swal.fire({
+				icon: 'warning',
+				title: 'Cantidad  excedente',
+				text: 'El campo cantidad a surtir no puede ser mayor al campo cantidad.'
+			});
+			$scope.admDocumentosDetalle[i].cantidad_salida = $scope.admDocumentosDetalle[i].CUNIDADESCAPTURADAS;
+			return;
+		}
+	}
 	$scope.validacionCampos = function(){
 		for (var i = 0; i < $scope.admDocumentosDetalle.length; i++) {
 			if ($scope.admDocumentosDetalle[i].ESTATUS_DOCUMENTO == 3) {
