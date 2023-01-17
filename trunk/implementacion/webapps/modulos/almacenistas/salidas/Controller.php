@@ -135,20 +135,6 @@ function despacharProducto($dbcon, $datos, $folio){
 				'sql' => $sql
 			]);
 		}
-		if ($val->cantidad_salida < $val->CUNIDADESCAPTURADAS) {
-			// revisar para actualizar o no el status documento
-		}
-	}
-	$sql = "UPDATE admDocumentos_detalle 
-	SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."'
-	WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
-	AND CVALORCLASIFICACION = 'BLOQUERA' ";
-	if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-		dd([
-			'code' => 400,
-			'msj' => 'Error al actualizar estatus_documento y fecha_surtido',
-			'sql' => $sql
-		]);
 	}
 	// ok
 	dd([
