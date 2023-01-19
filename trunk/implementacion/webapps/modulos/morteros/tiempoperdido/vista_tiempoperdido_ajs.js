@@ -25,7 +25,27 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		$scope.serverSideTPMorteros = response;
 		$scope.serverSideTPVibro = response;
 		setTimeout(function(){
-			$('#tableserverSideTPMorteros').DataTable();
+			$('#tableserverSideTPMorteros').DataTable({
+		        "processing": true,
+		        "bDestroy": true,
+				"order": [0, 'desc'],
+				"lengthMenu": [[30, 50, 75], [30, 50, 75]],
+			     "language": {
+			         "lengthMenu": "Mostrar _MENU_ registros por página.",
+			         "zeroRecords": "No se encontró registro.",
+			         "info": "  _START_ de _END_ (_TOTAL_ registros totales).",
+			         "infoEmpty": "0 de 0 de 0 registros",
+			         "infoFiltered": "(Encontrado de _MAX_ registros)",
+			         "search": "Buscar: ",
+			         "processing": "Procesando...",
+			                  "paginate": {
+			             "first": "Primero",
+			             "previous": "Anterior",
+			             "next": "Siguiente",
+			             "last": "Último"
+			         }
+			     }
+			});
 		},800);
 	},function(error){
 		console.log('error', error);
@@ -33,13 +53,14 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 	$scope.limpiarCampos = function (){
 		$scope.maquina = '';
 		$scope.fallo = '';
+		$scope.oservicio = '';
+		$("#inputoservicio").attr("disabled", true);
 		$scope.motivo = '';
 		$scope.hinicio = '';
 		$scope.hfin = '';
 		$scope.diferencia = '';
 
 	}
-
 	$scope.validacionDatos = function(){
 		if ($scope.maquina == '' || $scope.maquina == null) {
 			Swal.fire(
@@ -64,6 +85,16 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 			  'warning'
 			);
 			return;
+		}
+		if ($scope.fallo == 4 || $scope.fallo == 5 || $scope.fallo == 6 || $scope.fallo == 14 || $scope.fallo == 15 || $scope.fallo == 16) {
+			if ($scope.oservicio == '' || $scope.oservicio == null) {
+				Swal.fire(
+				  'Campo faltante',
+				  'Es necesario escribir el número de orden de servicio',
+				  'warning'
+				);
+				return;
+			}
 		}
 		if ($scope.hinicio == '' || $scope.hinicio == null) {
 			Swal.fire(
@@ -98,6 +129,7 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 					'task': 'guardarTiempoPerdido',
 					'maquina': $scope.maquina,
 					'fallo': $scope.fallo,
+					'orden': $scope.oservicio,
 					'motivo': $scope.motivo,
 					'hinicio': $scope.hinicio,
 					'hfin': $scope.hfin,
@@ -131,7 +163,6 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		  }
 		})
 	}
-
 	$scope.sinacceso = function(){
     Swal.fire({
         // confirmButtonColor: '#3085d6',
@@ -140,7 +171,6 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
         confirmButtonColor: '#1A4672'
         });
 	}
-
 	$scope.obtenerDatosEdit = function(cve_tp) {
 	    $.getJSON("modelo_tiempoperdido.php?consultar="+cve_tp, function(registros){
 	        // console.log(registros);
@@ -153,15 +183,19 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 	        $('#inputhorafinedit').val(registros[0]['hora_fin']);
 	    });
 	}
-
+	$scope.editartp = function(){
 		$scope.cve_tpe = $('#inputidedit').val();
 		$scope.maquinae = $('#selectmaquinaedit').val();
 		$scope.falloe = $('#selectfalloedit').val();
 		$scope.motivoe = $('#inputmotivoedit').val();
-		$scope.hinicioe = $('#hinicioe').val();
-		$scope.hfine = $('#hfine').val();
-
-	$scope.editartp = function(cve_tp){
+		$scope.hinicioe = $('#inputhorainicioedit').val();
+		$scope.hfine = $('#inputhorafinedit').val();
+		console.log('cve_tpe', $scope.cve_tpe);
+		console.log('maquinae', $scope.maquinae);
+		console.log('falloe', $scope.falloe);
+		console.log('motivoe', $scope.motivoe);
+		console.log('hinicioe', $scope.hinicioe);
+		console.log('hfine', $scope.hfine);
 		Swal.fire({
 		  title: 'Estás a punto de editar un tiempo perdido.',
 		  text: '¿Es correcta la información agregada?',
@@ -175,13 +209,12 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 			jsShowWindowLoad('Editando tiempo pérdido...');
 			$http.post('Controlador.php', {
     			'task': 'EditarTPerdido',
-    			// 'cve': cve_tp,
-    			'cvee': $scope.cve_tpe,
-				'maquina': $scope.maquinae,
-				'fallo': $scope.falloe,
-				'motivo': $scope.motivoe,
-				'hinicio': $scope.hinicioe,
-				'hfin': $scope.hfine,
+    			'cve': $scope.cve_tpe,
+    			'maquinae': $scope.maquinae,
+    			'falloe': $scope.falloe,
+    			'motivoe': $scope.motivoe,
+    			'inicioe': $scope.hinicioe,
+    			'fine': $scope.hfine,
     			'id': ID,
 			}).then(function(response){
 				response = response.data;
@@ -189,7 +222,7 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 				jsRemoveWindowLoad();
 				Swal.fire({
 				  title: '¡Éxito!',
-				  html: 'Se edito el folio correctamente.\n Folio: ' + cve_tpe + '</b>',
+				  html: 'Se edito el folio correctamente.\n Folio: ' + $scope.cve_tpe + '</b>',
 				  icon: 'success',
 				  showCancelButton: false,
 				  confirmButtonColor: 'green',
@@ -207,7 +240,6 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 			})
 		})
 	}
-
 	$scope.eliminartp = function(cve_tp) {
 	    $.getJSON("modelo_tiempoperdido.php?consultarDelete="+cve_tp, function(registros){
 	        console.log(registros);
@@ -306,4 +338,14 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		    $("#diferencia").val(dif);
 	    }
 	}
+	$scope.validaservicio = function(fallo){
+		console.log('fallo', fallo);
+		if (fallo == 4 || fallo == 5 || fallo == 6 || fallo == 14 || fallo == 15 || fallo == 16) {
+			$scope.nservicion = true;
+			$("#inputoservicio").attr("disabled", false);
+		}else{
+			$("#inputoservicio").attr("disabled", true);
+		}
+	}
+
 })

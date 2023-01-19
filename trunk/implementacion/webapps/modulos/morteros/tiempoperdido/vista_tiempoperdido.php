@@ -5,66 +5,6 @@
 ?>
         <head>
             <title>Captura de Producci&oacute;n</title>
-    <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-<!--     <link rel="stylesheet" type="text/css" href="../../../includes/datapicker/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="../../../includes/datapicker/jquery-ui.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../includes/timepicker/timepicker.css">
-    <script type="text/javascript" src="../../../includes/timepicker/timepicker.js"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.38.0/js/tempusdominus-bootstrap-4.min.js" crossorigin="anonymous"></script> -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.38.0/css/tempusdominus-bootstrap-4.min.css" crossorigin="anonymous" /> -->
-
-            <style type="text/css">
-                body{
-                    background-color: #f7f6f6;
-                }
-                table thead{
-                    background-color: #1A4672;
-                    color:  white;
-                }
-/*.input-group-addon:last-child {
-    border-left: 0;
-}
-.input-group-addon {
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1;
-    color: #555;
-    text-align: center;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-.input-group-addon, .input-group-btn {
-    width: 1%;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-.input-group-addon, .input-group-btn, .input-group .form-control {
-    display: table-cell;
-}
-.input-group {
-    position: relative;
-    display: table;
-    border-collapse: separate;
-}
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}*/
-            </style>
             <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
@@ -91,6 +31,62 @@
 </div>
 
 <div ng-controller="VistaTPMorteros">
+<!-- MODAL EDITAR GRUPO -->
+<div id="modalEditar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <input ng-show="false" type="text" ng-model="cve_tpe" class="form-control" id="inputidedit" name="inputidedit" disabled >
+          <div class="row form-group form-group-sm">
+              <div class="col-lg-12 d-lg-flex">
+                  <div style="width: 50%;" class="form-floating mx-1">
+                      <select class="form-control form-group-md" ng-model="maquinae"  id="selectmaquinaedit" name="selectmaquinaedit">
+                          <option selected="selected" value="0">[Seleccione una opción..]</option>
+                          <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
+                      </select>
+                      <label>Máquina</label>
+                  </div>
+                  <div style="width: 50%;" class="form-floating mx-1">
+                      <select class="form-control form-group-md" ng-model="falloe" id="selectfalloedit" name="selectfalloedit">
+                          <option selected="selected" value="0">[Seleccione una opción..]</option>
+                          <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
+                      </select>
+                      <label>Fallo</label>
+                  </div>
+              </div>
+          </div>
+
+          <div class="row form-group form-group-sm">
+              <div class="col-lg-12 d-lg-flex">
+                 <div style="width: 50%;" class="form-floating mx-1">
+                      <input type="text" ng-model="motivoe" id="inputmotivoedit" name="inputmotivoedit" class="form-control form-control-md UpperCase">
+                      <label>Motivo de fallo</label>
+                  </div>
+                  <div style="width: 25%;" class="form-floating mx-1">
+                      <input type="text" ng-model="hinicioe" id="inputhorainicioedit" ng-keyup="checkTime('inputhorainicioedit');" name="inputhorainicioedit" class="form-control form-control-md">
+                      <label>Hora de inicio</label>
+                  </div>
+                  <div style="width: 25%;" class="form-floating mx-1">
+                      <input type="text" ng-model="hfine" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md">
+                      <label>Hora de fin</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <input type="button" value="Actualizar" ng-click="editartp()" class="btn btn-primary">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <main class="app-content">
       <div class="app-title">
         <div>
@@ -117,19 +113,23 @@
                 <div class="card-body">
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
-                            <div style="width: 50%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <select class="form-control form-group-md" ng-model="maquina" id="selectmaquina" name="selectmaquina">
                                     <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
                                     <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
                                 </select>
                                 <label>Máquina</label>
                             </div>
-                            <div style="width: 50%;" class="form-floating mx-1">
-                                <select class="form-control form-group-md" ng-model="fallo" id="selectfallo" name="selectfallo">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <select class="form-control form-group-md" ng-model="fallo" ng-change="validaservicio(fallo)" id="selectfallo" name="selectfallo">
                                     <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
                                     <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
                                 </select>
                                 <label>Fallo</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="oservicio" id="inputoservicio" name="inputoservicio" value="0" class="form-control form-control-md validanumericos" disabled>
+                                <label>Orden de servicio</label>
                             </div>
                         </div>
                     </div>
@@ -211,23 +211,23 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(i, obj) in serverSideTPMorteros track by i">
-                                        <td>{{obj.cve_tp}}</td>
-                                        <td>{{obj.nombre_maq}}</td>
-                                        <td>{{obj.nombre_fallo}}</td>
-                                        <td>{{obj.hora_inicio}}</td>
-                                        <td>{{obj.hora_fin}}</td>
-                                        <td>{{obj.Diferencia}}</td>
-                                        <td>{{obj.fecha_registro}}</td>
-                                        <td>
+                                        <td class="text-center">{{obj.cve_tp}}</td>
+                                        <td class="text-center">{{obj.nombre_maq}}</td>
+                                        <td class="text-center">{{obj.nombre_fallo}}</td>
+                                        <td class="text-center">{{obj.hora_inicio}}</td>
+                                        <td class="text-center">{{obj.hora_fin}}</td>
+                                        <td class="text-center">{{obj.Diferencia}}</td>
+                                        <td class="text-center">{{obj.fecha_registro}}</td>
+                                        <td class="text-center">
                                             <span class= "badge badge-success">
                                                 {{obj.Turno}}
                                             </span>
                                         </td>
-                                        <td nowrap="nowrap">
-                                            <span class= "btn btn-warning" ng-show="perfilUsu.tperdido_morteros_edit == 1" ng-click="obtenerDatosEdit(obj.cve_tp)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
-                                            <span class= "btn btn-danger" ng-show="perfilUsu.tperdido_morteros_edit == 1" ng-click="eliminartp(obj.cve_tp)" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
-                                            <span class= "btn btn-warning" ng-show="perfilUsu.tperdido_morteros_edit == 0" ng-click="sinacceso()" title="Editar"><i class="fas fa-edit"></i> </span>
-                                            <span class= "btn btn-danger" ng-show="perfilUsu.tperdido_morteros_edit == 0" ng-click="sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
+                                        <td nowrap="nowrap" class="text-center">
+                                            <span class= "btn btn-warning btn-sm" ng-show="perfilUsu.tperdido_morteros_edit == 1" ng-click="obtenerDatosEdit(obj.cve_tp)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.tperdido_morteros_edit == 1" ng-click="eliminartp(obj.cve_tp)" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
+                                            <span class= "btn btn-warning btn-sm" ng-show="perfilUsu.tperdido_morteros_edit == 0" ng-click="sinacceso()" title="Editar"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.tperdido_morteros_edit == 0" ng-click="sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -240,7 +240,6 @@
           </div>
         </div>
     </div> <!--FIN DE DIV ROW--->
-        <?php include_once "modales.php";  ?>
       <?php include_once "../../footer.php";  ?>
     </main>
 </div>
