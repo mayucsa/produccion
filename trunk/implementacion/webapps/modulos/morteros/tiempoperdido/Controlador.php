@@ -17,23 +17,26 @@ function getFallos(){
 	dd($Fallos->showFallo());
 }
 function getDifHoras($inicio, $fin){
-	$inicio = explode(':', $inicio);
+	$ini = explode(':', $inicio);
 	$fin = explode(':', $fin);
-	$horas = intval($fin[0]) - intval($inicio[0]);
-	$minutos = intval($fin[1]) - intval($inicio[1]);
-	$segundos = intval($fin[2]) - intval($inicio[2]);
-	if ($minutos < 0) {
-		$minutos--;
-		$segundos = abs($segundos);
-	}
-	if ($minutos < 0) {
-		$horas--;
-		$minutos = abs($minutos);
-	}
-	$horas = str_pad($horas, 2, '0', STR_PAD_LEFT);
-	$minutos = str_pad($minutos, 2, '0', STR_PAD_LEFT);
-	$segundos = str_pad($segundos, 2, '0', STR_PAD_LEFT);
-	return $horas.':'.$minutos.':'.$segundos;
+	$horas_fin = intval($fin[0]) * 3600;
+    $minutos_fin = intval($fin[1]) * 60;
+    $segundos_fin = intval(isset($fin[2])?$fin[2]:0);
+    $horas_ini = intval($ini[0]) * 3600;
+	$minutos_ini = intval($ini[1]) * 60;
+	$segundos_ini = intval(isset($ini[2])?$ini[2]:0);
+	$inicial = $horas_ini+$minutos_ini+$segundos_ini;
+	$final = $horas_fin+$minutos_fin+$segundos_fin;
+    if ($inicial > $final) {
+    	$dif = (86400 + $final) - $inicial;
+    }else{
+    	$dif = $final - $inicial;
+    }
+    $horas = intval($dif / 3600);
+    $minutos = intval(($dif % 3600)/60);
+    $segundos = $dif - (($horas * 3600 ) + ($minutos * 60)); 
+    $dif = str_pad($horas, 2, '0', STR_PAD_LEFT).':'.str_pad($minutos, 2, '0', STR_PAD_LEFT).':'.str_pad($segundos, 2, '0', STR_PAD_LEFT);
+	return $dif;
 }
 function getTurno($hora){
 	$hora = explode(' ', $hora);

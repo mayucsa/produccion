@@ -267,7 +267,22 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 	            aux = aux + ':';
 	        }
 	    }
-	    if (texto.length == 6 && $('#inputhorainicio').val() != '' && $('#inputhorafin').val() != '') {
+	    var auxiliar = aux.split(':');
+	    aux = '';
+	    for (var i = 0; i < auxiliar.length; i++) {
+	    	var maxHour = 59;
+	    	if (i == 0 ) {
+	    		maxHour = 23;
+	    	}
+    		if(auxiliar[i] > maxHour){
+    			aux += (i>0?':':'')+maxHour;
+    		}else{
+    			aux += (i>0?':':'')+auxiliar[i];
+    		}
+	    }
+	    if (texto.length == 6 && $('#inputhorainicio').val() != '' && texto.length == 6 
+	    	&& $('#inputhorainicio').val() != undefined && $('#inputhorafin').val() != '' 
+	    	&& $('#inputhorafin').val() != undefined) {
 	        setTimeout(function(){
 	            $scope.getdiferencia();
 	        },500);
@@ -278,32 +293,30 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 	    $('#'+id).val(aux);
 	}
 	$scope.getdiferencia = function() {
-	    var inicio = $('#inputhorainicio').val();
+	    var ini = $('#inputhorainicio').val();
 	    var fin = $('#inputhorafin').val();
-	    if (inicio.length != 8 && fin.length != 8) {
+	    if (ini.length != 8 || fin.length != 8) {
 	    	return;
 	    }
-	    inicio = inicio.split(':');
+	    ini = ini.split(':');
 	    fin = fin.split(':');
-	    var horas = parseInt(fin[0]) - parseInt(inicio[0]);
-	    var minutos = parseInt(fin[1]) - parseInt(inicio[1]);
-	    var segundos = parseInt(fin[2]) - parseInt(inicio[2]);
-	    if (segundos < 0) {
-	        minutos --;
-	        segundos = Math.abs(segundos);
-	    }
-	    if (minutos < 0) {
-	        horas--;
-	        minutos = Math.abs(minutos);
-	    }
-	    if (horas < 0) {
-	        Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
-	        $('#inputhorafin').val('');
-	        $("#diferencia").val('');;
-	        return;
+	    var horas_fin = parseInt(fin[0]) * 3600;
+	    var minutos_fin = parseInt(fin[1]) * 60;
+	    var segundos_fin = parseInt(fin[2]);
+	    var horas_ini = parseInt(ini[0]) * 3600;
+		var minutos_ini = parseInt(ini[1]) * 60;
+		var segundos_ini = parseInt(ini[2]);
+		var inicial = horas_ini+minutos_ini+segundos_ini;
+		var final = horas_fin+minutos_fin+segundos_fin;
+	    if (inicial > final) {
+	    	var dif = (86400 + final) - inicial;
 	    }else{
-		    var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
-		    $("#diferencia").val(dif);
+	    	var dif = final - inicial;
 	    }
+	    var horas = parseInt(dif / 3600);
+	    var minutos = parseInt((dif % 3600)/60);
+	    var segundos = dif - ((horas * 3600 ) + (minutos * 60)); 
+	    var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+	    $("#diferencia").val(dif);
 	}
 })
