@@ -75,7 +75,7 @@ function guardarTiempoPerdido($dbcon, $Datos){
 	$status = 'VIG';
 	$area = 'Morteros';
 	$conn = $dbcon->conn();
-	$sql = "INSERT INTO seg_tiempoperdido (cve_maq, cve_fallo, motivo_fallo, hora_inicio, hora_fin, area, capturado_por, estatus_tp, fecha_registro) VALUES (".$Datos->maquina.", ".$Datos->fallo.", '".$Datos->motivo."', '".$Datos->hinicio."', '".$Datos->hfin."', '".$area."', ".$Datos->id.", '".$status."', '".$fecha."' ) ";
+	$sql = "INSERT INTO seg_tiempoperdido (cve_maq, cve_fallo, motivo_fallo, orden_servicio, hora_inicio, hora_fin, area, capturado_por, estatus_tp, fecha_registro) VALUES (".$Datos->maquina.", ".$Datos->fallo.", '".$Datos->motivo."',".$Datos->orden.", '".$Datos->hinicio."', '".$Datos->hfin."', '".$area."', ".$Datos->id.", '".$status."', '".$fecha."' ) ";
 	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 	// dd($sql);
 	if ($qBuilder) {
@@ -105,6 +105,38 @@ function EliminarTPerdido($dbcon, $Datos){
 	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 	dd($sql);
 }
+function EditarTPerdido($dbcon, $Datos){
+	$fecha = date('Y-m-d H:i:s');
+	$status = 'VIG';
+	$conn = $dbcon->conn();
+	$cBuilder = "SELECT cve_maq, cve_fallo, motivo_fallo, hora_inicio, hora_fin FROM seg_tiempoperdido WHERE cve_tp = ".$Datos->cve." ";
+	$cBuilder = $dbcon->qBuilder($conn, 'first', $cBuilder);
+	// dd($cBuilder);
+
+	$sql = "INSERT INTO ctrl_editar_tp(cve_tp, cve_maq, cve_maq_nuevo, cve_fallo, cve_fallo_nuevo, motivo_fallo, motivo_fallo_nuevo, hora_inicio,hora_inicio_nuevo, hora_fin, hora_fin_nuevo, editado_por, estatus_editado, fecha_edicion) VALUES(".$Datos->cve.", ".$cBuilder->cve_maq.", ".$Datos->maquinae.", ".$cBuilder->cve_fallo.", ".$Datos->falloe.", '".$cBuilder->motivo_fallo."', '".$Datos->motivoe."', '".$cBuilder->hora_inicio."', '".$Datos->inicioe."', '".$cBuilder->hora_fin."', '".$Datos->fine."', ".$Datos->id.", '".$status."', '".$fecha."' ) ";
+	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+	// dd($qBuilder);
+
+	$u1 = "UPDATE seg_tiempoperdido SET cve_maq = ".$Datos->maquinae." WHERE cve_tp = ".$Datos->cve." ";
+	$qu1 = $dbcon->qBuilder($conn, 'do', $u1);
+	// dd($u1);
+
+	$u2 = "UPDATE seg_tiempoperdido SET cve_fallo = ".$Datos->falloe." WHERE cve_tp = ".$Datos->cve." ";
+	$qu2 = $dbcon->qBuilder($conn, 'do', $u2);
+	// dd($u2);
+
+	$u3 = "UPDATE seg_tiempoperdido SET motivo_fallo = '".$Datos->motivoe."' WHERE cve_tp = ".$Datos->cve." ";
+	$qu3 = $dbcon->qBuilder($conn, 'do', $u3);
+	// dd($u3);
+
+	$u4 = "UPDATE seg_tiempoperdido SET hora_inicio = '".$Datos->inicioe."' WHERE cve_tp = ".$Datos->cve." ";
+	$qu4 = $dbcon->qBuilder($conn, 'do', $u4);
+	// dd($u4);
+
+	$u5 = "UPDATE seg_tiempoperdido SET hora_fin = '".$Datos->fine."' WHERE cve_tp = ".$Datos->cve." ";
+	$qu5 = $dbcon->qBuilder($conn, 'do', $u5);
+	// dd($u5);
+}
 
 include_once "../../../dbconexion/conn.php";
 $dbcon	= 	new MysqlConn;
@@ -131,6 +163,9 @@ switch ($tarea){
 		break;
 	case 'EliminarTPerdido':
 		EliminarTPerdido($dbcon, $objDatos);
+		break;
+	case 'EditarTPerdido':
+		EditarTPerdido($dbcon, $objDatos);
 		break;
 }
 

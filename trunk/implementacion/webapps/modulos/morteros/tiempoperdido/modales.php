@@ -9,7 +9,7 @@
         </button>
       </div>
       <div class="card-body">
-        <input  type="text" ng-model="cve_tpe" class="form-control" id="inputidedit" name="inputidedit" disabled >
+        <input ng-show="false" type="text" ng-model="cve_tpe" class="form-control" id="inputidedit" name="inputidedit" disabled >
           <div class="row form-group form-group-sm">
               <div class="col-lg-12 d-lg-flex">
                   <div style="width: 50%;" class="form-floating mx-1">
@@ -66,7 +66,7 @@
           </div>
       </div>
       <div class="modal-footer">
-        <input type="button" value="Actualizar" onclick="editarTP()" class="btn btn-primary">
+        <input type="button" value="Actualizar" ng-click="editartp()" class="btn btn-primary">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
       </div>
     </div>
