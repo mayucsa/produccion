@@ -1,4 +1,6 @@
 app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
+	$scope.ordenServicioDisabled = true;
+	$scope.oservicio = '';
 	$http.post('Controlador.php', {
 		'task': 'getMaquinas'
 	}).then(function (response){
@@ -78,6 +80,15 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 			);
 			return;
 		}
+		if ($("#inputoservicio").attr("disabled") == undefined && $scope.oservicio == '') {
+			$('#inputoservicio').focus();
+			Swal.fire(
+			  'Campo faltante',
+			  'Es necesario escribir la orden de servicio',
+			  'warning'
+			);
+			return;
+		}
 		if ($scope.motivo == '' || $scope.motivo == null) {
 			Swal.fire(
 			  'Campo faltante',
@@ -112,7 +123,6 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 			);
 			return;
 		}
-
 		Swal.fire({
 		  title: 'Estás a punto de capturar un tiempo pérdido.',
 		  text: '¿Es correcta la información agregada?',
@@ -136,7 +146,7 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 					'id': ID,
 			}).then(function(response){
 				response = response.data;
-				// console.log('response', response);
+				console.log('response', response);
 				jsRemoveWindowLoad();
 				if (response.code == 200) {
 					Swal.fire({
@@ -352,7 +362,7 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 	    $("#diferencia").val(dif);
 	}
 	$scope.validaservicio = function(fallo){
-		console.log('fallo', fallo);
+		const arregloFallos = [4, 5, 6, 14, 15, 16];
 		if (fallo == 4 || fallo == 5 || fallo == 6 || fallo == 14 || fallo == 15 || fallo == 16) {
 			$scope.nservicion = true;
 			$("#inputoservicio").attr("disabled", false);

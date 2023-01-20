@@ -101,7 +101,7 @@
     <div class="row">
         <div class="col-md-12">
           <div class="tile">
-            <div class="card card-info" ng-show="perfilUsu.tperdido_morteros_captura == 1">
+            <div class="card card-info"> <!-- ng-show="perfilUsu.tperdido_morteros_captura == 1"> -->
                 <div class="card-header">
                      <h3 class="card-title">CAPTURA DE DATOS</h3>
                      <div class="card-tools">
@@ -128,7 +128,7 @@
                                 <label>Fallo</label>
                             </div>
                             <div style="width: 100%;" class="form-floating mx-1">
-                                <input type="text" ng-model="oservicio" id="inputoservicio" name="inputoservicio" value="0" class="form-control form-control-md validanumericos" disabled>
+                                <input type="text" ng-model="oservicio" id="inputoservicio" maxlength="10" name="inputoservicio" value="0" class="form-control form-control-md validanumericos" ng-disabled="ordenServicioDisabled">
                                 <label>Orden de servicio</label>
                             </div>
                         </div>

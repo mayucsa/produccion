@@ -75,6 +75,9 @@ function guardarTiempoPerdido($dbcon, $Datos){
 	$status = 'VIG';
 	$area = 'Morteros';
 	$conn = $dbcon->conn();
+	if ($Datos->orden == '') {
+		$Datos->orden = 0;
+	}
 	$sql = "INSERT INTO seg_tiempoperdido (cve_maq, cve_fallo, motivo_fallo, orden_servicio, hora_inicio, hora_fin, area, capturado_por, estatus_tp, fecha_registro) VALUES (".$Datos->maquina.", ".$Datos->fallo.", '".$Datos->motivo."',".$Datos->orden.", '".$Datos->hinicio."', '".$Datos->hfin."', '".$area."', ".$Datos->id.", '".$status."', '".$fecha."' ) ";
 	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 	// dd($sql);
