@@ -61,7 +61,7 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		$scope.hinicio = '';
 		$scope.hfin = '';
 		$scope.diferencia = '';
-
+		$("#diferencia").val('');
 	}
 	$scope.validacionDatos = function(){
 		if ($scope.maquina == '' || $scope.maquina == null) {
@@ -216,38 +216,40 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		  confirmButtonText: 'Aceptar',
 		  cancelButtonText: 'Cancelar'
 		}).then((result) =>{
-			jsShowWindowLoad('Editando tiempo pérdido...');
-			$http.post('Controlador.php', {
-    			'task': 'EditarTPerdido',
-    			'cve': $scope.cve_tpe,
-    			'maquinae': $scope.maquinae,
-    			'falloe': $scope.falloe,
-    			'motivoe': $scope.motivoe,
-    			'inicioe': $scope.hinicioe,
-    			'fine': $scope.hfine,
-    			'id': ID,
-			}).then(function(response){
-				response = response.data;
-				console.log('response', response);
-				jsRemoveWindowLoad();
-				Swal.fire({
-				  title: '¡Éxito!',
-				  html: 'Se edito el folio correctamente.\n Folio: ' + $scope.cve_tpe + '</b>',
-				  icon: 'success',
-				  showCancelButton: false,
-				  confirmButtonColor: 'green',
-				  confirmButtonText: 'Aceptar'
-				}).then((result) => {
-				  if (result.isConfirmed) {
-				  	location.reload();
-				  }else{
-				  	location.reload();
-				  }
-				});
-			}, function(error){
-				console.log('error', error);
-				jsRemoveWindowLoad();
-			})
+			if (result.isConfirmed) {
+				jsShowWindowLoad('Editando tiempo pérdido...');
+				$http.post('Controlador.php', {
+	    			'task': 'EditarTPerdido',
+	    			'cve': $scope.cve_tpe,
+	    			'maquinae': $scope.maquinae,
+	    			'falloe': $scope.falloe,
+	    			'motivoe': $scope.motivoe,
+	    			'inicioe': $scope.hinicioe,
+	    			'fine': $scope.hfine,
+	    			'id': ID,
+				}).then(function(response){
+					response = response.data;
+					console.log('response', response);
+					jsRemoveWindowLoad();
+					Swal.fire({
+					  title: '¡Éxito!',
+					  html: 'Se edito el folio correctamente.\n Folio: ' + $scope.cve_tpe + '</b>',
+					  icon: 'success',
+					  showCancelButton: false,
+					  confirmButtonColor: 'green',
+					  confirmButtonText: 'Aceptar'
+					}).then((result) => {
+					  if (result.isConfirmed) {
+					  	location.reload();
+					  }else{
+					  	location.reload();
+					  }
+					});
+				}, function(error){
+					console.log('error', error);
+					jsRemoveWindowLoad();
+				})
+			}
 		})
 	}
 	$scope.eliminartp = function(cve_tp) {
@@ -369,6 +371,345 @@ app.controller('VistaTPMorteros', function(BASEURL, ID, $scope, $http){
 		}else{
 			$("#inputoservicio").attr("disabled", true);
 		}
+	}
+
+	$scope.getdiferenciah = function() {
+		var inicio = $('#inputhorainicio').val();
+		var fin = $('#inputhorafin').val();
+		// console.log(hinicio);
+		inicio = inicio.split(':');
+	    fin = fin.split(':');
+		var horas_ini = parseInt(inicio[0]);
+		var horas_fin = parseInt(fin[0]);
+		var min_ini = parseInt(inicio[1]);
+		var min_fin = parseInt(fin[1]);
+		var inicial = parseInt(inicio[0]+inicio[1]+inicio[2]);
+		var final = parseInt(fin[0]+ fin[1]+fin[2]);
+		// console.log(horas_ini);
+		// console.log(min_ini);
+		// console.log(horas_fin);
+		// console.log(min_fin);
+		// console.log(inicial);
+		// console.log(final);
+		if (inicial >= 220000) {
+			// if (inicial > 2200 && inicial < 600) {
+			    var ini = $('#inputhorainicio').val();
+			    var fin = $('#inputhorafin').val();
+			    if (ini.length != 8 || fin.length != 8) {
+			    	return;
+			    }
+			    ini = ini.split(':');
+			    fin = fin.split(':');
+			    var horas_fin = parseInt(fin[0]) * 3600;
+			    var minutos_fin = parseInt(fin[1]) * 60;
+			    var segundos_fin = parseInt(fin[2]);
+			    var horas_ini = parseInt(ini[0]) * 3600;
+				var minutos_ini = parseInt(ini[1]) * 60;
+				var segundos_ini = parseInt(ini[2]);
+				var inicial = horas_ini+minutos_ini+segundos_ini;
+				var final = horas_fin+minutos_fin+segundos_fin;
+				// console.log(inicial);
+				// console.log(final);
+			    if (inicial > final) {
+			    	var dif = (86400 + final) - inicial;
+			    }else{
+			    	var dif = final - inicial;
+			    	Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
+			        $('#inputhorafin').val('');
+			        $("#diferencia").val('');
+			    }
+			    var horas = parseInt(dif / 3600);
+			    var minutos = parseInt((dif % 3600)/60);
+			    var segundos = dif - ((horas * 3600 ) + (minutos * 60)); 
+			    var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+			    $("#diferencia").val(dif);	
+			// }else{
+			// 	Swal.fire('Error','No se puede capturar la hora final despues de turno','warning');
+			// 	$('#inputhorafin').val('');
+			//     $("#diferencia").val('');
+			// }
+		}else{
+			if (inicial >= 60000 && inicial <=135959) {
+			    var inicio = $('#inputhorainicio').val();
+			    var fin = $('#inputhorafin').val();
+			    if (inicio.length != 8 && fin.length != 8) {
+			    	return;
+			    }
+			    inicio = inicio.split(':');
+			    fin = fin.split(':');
+			    var horas = parseInt(fin[0]) - parseInt(inicio[0]);
+			    var minutos = parseInt(fin[1]) - parseInt(inicio[1]);
+			    var segundos = parseInt(fin[2]) - parseInt(inicio[2]);
+			    if (segundos < 0) {
+			        minutos --;
+			        segundos = Math.abs(segundos);
+			    }
+			    if (minutos < 0) {
+			        horas--;
+			        minutos = Math.abs(minutos);
+			    }
+			    if (horas < 0) {
+			        Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
+			        $('#inputhorafin').val('');
+			        $("#diferencia").val('');
+			        return;
+			    }if (final >= 140000) {
+			    	Swal.fire('Error','No puedes capturar tu hora final fuera del 1er turno, horario maximo 13:59:59','warning');
+			        $('#inputhorafin').val('');
+			        $("#diferencia").val('');
+			    }if (inicial == final) {
+			    	Swal.fire('Error','No puedes capturar hora inicial y final en un mismo horario','warning');
+			        $('#inputhorafin').val('');
+			        $("#diferencia").val('');
+			    }else{
+			    	// if (final == 235959) {
+			    		var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+					    $("#diferencia").val(dif);
+			    	// }else{
+					//     var dif = doscifras(horas+1)+':'+doscifras(minutos-59)+':'+doscifras(segundos-59);
+					//     $("#diferencia").val(dif);
+					// }
+			    }
+			}
+			// else{
+			// 	Swal.fire('Error','No se puede capturar la hora final despues de turno','warning');
+			// 	$('#inputhorafin').val('');
+			//     $("#diferencia").val('');
+			// }
+			if (inicial >= 140000 && inicial <= 215959 ) {
+			    var inicio = $('#inputhorainicio').val();
+			    var fin = $('#inputhorafin').val();
+			    if (inicio.length != 8 && fin.length != 8) {
+			    	return;
+			    }
+			    inicio = inicio.split(':');
+			    fin = fin.split(':');
+			    var horas = parseInt(fin[0]) - parseInt(inicio[0]);
+			    var minutos = parseInt(fin[1]) - parseInt(inicio[1]);
+			    var segundos = parseInt(fin[2]) - parseInt(inicio[2]);
+			    if (segundos < 0) {
+			        minutos --;
+			        segundos = Math.abs(segundos);
+			    }
+			    if (minutos < 0) {
+			        horas--;
+			        minutos = Math.abs(minutos);
+			    }
+			    if (horas < 0) {
+			        Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
+			        $('#inputhorafin').val('');
+			        $("#diferencia").val('');
+			        return;
+			    }if (final >= 220000) {
+			    	Swal.fire('Error','No puedes capturar tu hora final fuera del 2do turno, horario maximo 21:59:59','warning');
+			        $('#inputhorafin').val('');
+			        $("#diferencia").val('');
+			    }else{
+				    var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+				    $("#diferencia").val(dif);
+			    }
+			}
+			// else{
+			// 	Swal.fire('Error','No se puede capturar la hora final despues de turno','warning');
+			// 	$('#inputhorafin').val('');
+			//     $("#diferencia").val('');
+			// }
+		}
+
+	    // var ini = $('#inputhorainicio').val();
+	    // var fin = $('#inputhorafin').val();
+	    // if (ini.length != 8 || fin.length != 8) {
+	    // 	return;
+	    // }
+	    // ini = ini.split(':');
+	    // fin = fin.split(':');
+	    // var horas_fin = parseInt(fin[0]) * 3600;
+	    // var minutos_fin = parseInt(fin[1]) * 60;
+	    // var segundos_fin = parseInt(fin[2]);
+	    // var horas_ini = parseInt(ini[0]) * 3600;
+		// var minutos_ini = parseInt(ini[1]) * 60;
+		// var segundos_ini = parseInt(ini[2]);
+		// var inicial = horas_ini+minutos_ini+segundos_ini;
+		// var final = horas_fin+minutos_fin+segundos_fin;
+	    // if (inicial > final) {
+	    // 	var dif = (86400 + final) - inicial;
+	    // }else{
+	    // 	var dif = final - inicial;
+	    // }
+	    // var horas = parseInt(dif / 3600);
+	    // var minutos = parseInt((dif % 3600)/60);
+	    // var segundos = dif - ((horas * 3600 ) + (minutos * 60)); 
+	    // var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+	    // $("#diferencia").val(dif);
+	}
+	$scope.getdiferenciahe = function() {
+		var inicio = $('#inputhorainicioedit').val();
+		var fin = $('#inputhorafinedit').val();
+		// console.log(hinicio);
+		inicio = inicio.split(':');
+	    fin = fin.split(':');
+		var horas_ini = parseInt(inicio[0]);
+		var horas_fin = parseInt(fin[0]);
+		var min_ini = parseInt(inicio[1]);
+		var min_fin = parseInt(fin[1]);
+		var inicial = parseInt(inicio[0]+inicio[1]+inicio[2]);
+		var final = parseInt(fin[0]+ fin[1]+fin[2]);
+		// console.log(horas_ini);
+		// console.log(min_ini);
+		// console.log(horas_fin);
+		// console.log(min_fin);
+		// console.log(inicial);
+		// console.log(final);
+		if (inicial >= 220000) {
+			// if (inicial > 2200 && inicial < 600) {
+			    var ini = $('#inputhorainicioedit').val();
+			    var fin = $('#inputhorafinedit').val();
+			    if (ini.length != 8 || fin.length != 8) {
+			    	return;
+			    }
+			    ini = ini.split(':');
+			    fin = fin.split(':');
+			    var horas_fin = parseInt(fin[0]) * 3600;
+			    var minutos_fin = parseInt(fin[1]) * 60;
+			    var segundos_fin = parseInt(fin[2]);
+			    var horas_ini = parseInt(ini[0]) * 3600;
+				var minutos_ini = parseInt(ini[1]) * 60;
+				var segundos_ini = parseInt(ini[2]);
+				var inicial = horas_ini+minutos_ini+segundos_ini;
+				var final = horas_fin+minutos_fin+segundos_fin;
+				// console.log(inicial);
+				// console.log(final);
+			    if (inicial > final) {
+			    	var dif = (86400 + final) - inicial;
+			    }else{
+			    	var dif = final - inicial;
+			    	Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
+			        $('#inputhorafinedit').val('');
+			        $("#diferenciaedit").val('');
+			    }
+			    var horas = parseInt(dif / 3600);
+			    var minutos = parseInt((dif % 3600)/60);
+			    var segundos = dif - ((horas * 3600 ) + (minutos * 60)); 
+			    var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+			    $("#diferenciaedit").val(dif);	
+			// }else{
+			// 	Swal.fire('Error','No se puede capturar la hora final despues de turno','warning');
+			// 	$('#inputhorafin').val('');
+			//     $("#diferencia").val('');
+			// }
+		}else{
+			if (inicial >= 60000 && inicial <=135959) {
+			    var inicio = $('#inputhorainicioedit').val();
+			    var fin = $('#inputhorafinedit').val();
+			    if (inicio.length != 8 && fin.length != 8) {
+			    	return;
+			    }
+			    inicio = inicio.split(':');
+			    fin = fin.split(':');
+			    var horas = parseInt(fin[0]) - parseInt(inicio[0]);
+			    var minutos = parseInt(fin[1]) - parseInt(inicio[1]);
+			    var segundos = parseInt(fin[2]) - parseInt(inicio[2]);
+			    if (segundos < 0) {
+			        minutos --;
+			        segundos = Math.abs(segundos);
+			    }
+			    if (minutos < 0) {
+			        horas--;
+			        minutos = Math.abs(minutos);
+			    }
+			    if (horas < 0) {
+			        Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
+			        $('#inputhorafinedit').val('');
+			        $("#diferenciaedit").val('');
+			        return;
+			    }if (final >= 140000) {
+			    	Swal.fire('Error','No puedes capturar tu hora final fuera del 1er turno, horario maximo 13:59:59','warning');
+			        $('#inputhorafinedit').val('');
+			        $("#diferenciaedit").val('');
+			    }if (inicial == final) {
+			    	Swal.fire('Error','No puedes capturar hora inicial y final en un mismo horario','warning');
+			        $('#inputhorafinedit').val('');
+			        $("#diferenciaedit").val('');
+			    }else{
+			    	// if (final == 235959) {
+			    		var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+					    $("#diferenciaedit").val(dif);
+			    	// }else{
+					//     var dif = doscifras(horas+1)+':'+doscifras(minutos-59)+':'+doscifras(segundos-59);
+					//     $("#diferencia").val(dif);
+					// }
+			    }
+			}
+			// else{
+			// 	Swal.fire('Error','No se puede capturar la hora final despues de turno','warning');
+			// 	$('#inputhorafin').val('');
+			//     $("#diferencia").val('');
+			// }
+			if (inicial >= 140000 && inicial <= 215959 ) {
+			    var inicio = $('#inputhorainicioedit').val();
+			    var fin = $('#inputhorafinedit').val();
+			    if (inicio.length != 8 && fin.length != 8) {
+			    	return;
+			    }
+			    inicio = inicio.split(':');
+			    fin = fin.split(':');
+			    var horas = parseInt(fin[0]) - parseInt(inicio[0]);
+			    var minutos = parseInt(fin[1]) - parseInt(inicio[1]);
+			    var segundos = parseInt(fin[2]) - parseInt(inicio[2]);
+			    if (segundos < 0) {
+			        minutos --;
+			        segundos = Math.abs(segundos);
+			    }
+			    if (minutos < 0) {
+			        horas--;
+			        minutos = Math.abs(minutos);
+			    }
+			    if (horas < 0) {
+			        Swal.fire('Error','La hora de inicio debe ser menor a la hora fin','warning');
+			        $('#inputhorafinedit').val('');
+			        $("#diferenciaedit").val('');
+			        return;
+			    }if (final >= 220000) {
+			    	Swal.fire('Error','No puedes capturar tu hora final fuera del 2do turno, horario maximo 21:59:59','warning');
+			        $('#inputhorafinedit').val('');
+			        $("#diferenciaedit").val('');
+			    }else{
+				    var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+				    $("#diferenciaedit").val(dif);
+			    }
+			}
+			// else{
+			// 	Swal.fire('Error','No se puede capturar la hora final despues de turno','warning');
+			// 	$('#inputhorafin').val('');
+			//     $("#diferencia").val('');
+			// }
+		}
+
+	    // var ini = $('#inputhorainicio').val();
+	    // var fin = $('#inputhorafin').val();
+	    // if (ini.length != 8 || fin.length != 8) {
+	    // 	return;
+	    // }
+	    // ini = ini.split(':');
+	    // fin = fin.split(':');
+	    // var horas_fin = parseInt(fin[0]) * 3600;
+	    // var minutos_fin = parseInt(fin[1]) * 60;
+	    // var segundos_fin = parseInt(fin[2]);
+	    // var horas_ini = parseInt(ini[0]) * 3600;
+		// var minutos_ini = parseInt(ini[1]) * 60;
+		// var segundos_ini = parseInt(ini[2]);
+		// var inicial = horas_ini+minutos_ini+segundos_ini;
+		// var final = horas_fin+minutos_fin+segundos_fin;
+	    // if (inicial > final) {
+	    // 	var dif = (86400 + final) - inicial;
+	    // }else{
+	    // 	var dif = final - inicial;
+	    // }
+	    // var horas = parseInt(dif / 3600);
+	    // var minutos = parseInt((dif % 3600)/60);
+	    // var segundos = dif - ((horas * 3600 ) + (minutos * 60)); 
+	    // var dif = doscifras(horas)+':'+doscifras(minutos)+':'+doscifras(segundos);
+	    // $("#diferencia").val(dif);
 	}
 
 })

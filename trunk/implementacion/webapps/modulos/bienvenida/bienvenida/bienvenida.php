@@ -7,7 +7,12 @@
             <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
-
+            <style type="text/css">
+                .img img {
+                  max-width: 100%;
+                  height: auto;
+                }
+            </style>
 
         </head>
     <main class="app-content">

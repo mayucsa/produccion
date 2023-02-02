@@ -294,6 +294,27 @@
                   </li>
                 </ul>
             </li>
+            <!-- Trituradora -->
+            <li class="treeview" ng-show="perfilUsu.trituradora_principal == 1">
+              <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fas fa-industry"></i><span class="app-menu__label">Trituradora</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                  <li ng-show="perfilUsu.produccion_trituradoral1_vista == 1">
+                    <a class="treeview-item" href="../../trituradora/produccion/linea1_vista.php"><i class="icon fa fa-circle-o"></i> Producción Línea 1</a>
+                  </li>
+                  <li ng-show="perfilUsu.produccion_trituradoral2_vista == 1">
+                    <a class="treeview-item" href="../../trituradora/produccion/linea2_vista.php"><i class="icon fa fa-circle-o"></i> Producción Línea 2</a>
+                  </li>
+                  <li ng-show="perfilUsu.tperdido_trituradoral1_vista == 1">
+                    <a class="treeview-item" href="../../trituradora/tiempoperdido/tiempoperdidol1_vista.php"><i class="icon fa fa-circle-o"></i> Tiempo pérdido Línea 1</a>
+                  </li>
+                  <li ng-show="perfilUsu.tperdido_trituradoral2_vista == 1">
+                    <a class="treeview-item" href="../../trituradora/tiempoperdido/tiempoperdidol2_vista.php"><i class="icon fa fa-circle-o"></i> Tiempo pérdido Línea 2</a>
+                  </li>
+                  <li ng-show="perfilUsu.salidas_trituradora_vista == 1">
+                    <a class="treeview-item" href="../../trituradora/salidas/vista_salidas.php"><i class="icon fa fa-circle-o"></i> Salidas</a>
+                  </li>
+                </ul>
+            </li>
             <!-- Almacenistas -->
             <li class="treeview" ng-show="perfilUsu.almacenista_principal == 1">
               <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fas fa-user"></i><span class="app-menu__label">Almacenistas</span><i class="treeview-indicator fa fa-angle-right"></i></a>

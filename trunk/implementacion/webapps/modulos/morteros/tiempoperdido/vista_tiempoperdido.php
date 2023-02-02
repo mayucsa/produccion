@@ -31,7 +31,7 @@
 </div>
 
 <div ng-controller="VistaTPMorteros">
-<!-- MODAL EDITAR GRUPO -->
+<!-- MODAL EDITAR TIEMPO PERIDDO -->
 <div id="modalEditar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -73,8 +73,12 @@
                       <label>Hora de inicio</label>
                   </div>
                   <div style="width: 25%;" class="form-floating mx-1">
-                      <input type="text" ng-model="hfine" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md">
+                      <input type="text" ng-model="hfine" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md" ng-blur="getdiferenciahe();">
                       <label>Hora de fin</label>
+                  </div>
+                  <div style="widows: 25%;" class="form-floating mx-1">
+                    <input type="text" ng-model="diferencia" id="diferenciaedit" name="diferencia" class="form-control form-control-md" readonly>
+                    <label>Diferencia</label>
                   </div>
               </div>
           </div>
@@ -90,11 +94,11 @@
     <main class="app-content">
       <div class="app-title">
         <div>
-          <h1><i class="fas fa-clock"></i> Tiempo p&eacute;rdido Morteros</h1>
+          <h1><i class="fas fa-clock"></i> Tiempo perdido Morteros</h1>
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="vista_tiempoperdido.php"> Tiempo p&eacute;rdido</a></li>
+          <li class="breadcrumb-item"><a href="vista_tiempoperdido.php"> Tiempo perdido</a></li>
         </ul>
       </div>
 
@@ -161,7 +165,7 @@
                                 <label>Hora de inicio</label>
                             </div>
                             <div style="width: 25%;" class="form-floating mx-1">
-                                <input type="text" ng-model="hfin" id="inputhorafin" value="" name="inputhorafin" class="form-control form-control-md" ng-keyup="checkTime('inputhorafin');" ng-blur="getdiferencia();">
+                                <input type="text" ng-model="hfin" id="inputhorafin" value="" name="inputhorafin" class="form-control form-control-md" ng-keyup="checkTime('inputhorafin');" ng-blur="getdiferenciah();">
                                 <label>Hora de fin</label>
                             </div>
                             <div style="widows: 25%;" class="form-floating mx-1">

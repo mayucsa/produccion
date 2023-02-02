@@ -45,13 +45,16 @@ function getTurno($hora){
 	}else{
 		$hora = '00:00:00';
 	}
-	if ($hora >=  '00:00:01' && $hora <= '08:00:00'){
+	if ($hora >=  '22:00:00' && $hora <= '23:59:59'){
         return '3er Turno';
     } 
-    if ($hora >=  '08:00:01' && $hora <= '16:00:00'){
+	if ($hora >=  '00:00:01' && $hora <= '05:59:59'){
+        return '3er Turno';
+    } 
+    if ($hora >=  '08:00:00' && $hora <= '13:59:59'){
         return '1er Turno';
     } 
-    if ($hora >=  '16:00:01' && $hora <= '23:59:59'){
+    if ($hora >=  '14:00:00' && $hora <= '21:59:59'){
          return '2do Turno';
     }
     return 'Sin Turno';

@@ -5,69 +5,75 @@
 ?>
         <head>
             <title>Captura de Producci&oacute;n</title>
+            <style type="text/css">
+                body{
+                    background-color: #f7f6f6;
+                }
+                table thead{
+                    background-color: #1A4672;
+                    color:  white;
+                }
+                .fixedTable tbody{
+                    display: block;
+                    height:400px;
+                    overflow-y:auto;
+                }
+                .fixedTable thead, tbody, tr{
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+                .fixedTable thead{
+                    width: calc( 100% - 1em )
+                }
+            </style>
                 <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
                 <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
                 <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
         </head>
 
 <div ng-controller="vistaSalidasMorteros">
-    <!-- MODAL VERIFICAR NOTA -->
-    <div id="modalverificar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title" id="exampleModalLabel">Nota</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-                <div class="row form-group form-group-sm">
-                    <div class="col-lg-12 d-lg-flex">
-                        <div style="width: 25%;" class="form-floating mx-1">
-                            <input type="text" ng-model="foliov" id="inputfoliov" name="inputfoliov" class="form-control form-control-md validanumericos" disabled>
-                            <label>Folio</label>
+
+            <!-- MODAL DE DESPACHO -->
+            <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modalMisRequ == true">
+                <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">
+                    <h3>Iniciar surtido</h3>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="documento" id="inputdocumento" name="inputdocumento" class="form-control form-control-md validanumericos" disabled>
+                                <label>CIDDOCUMENTO</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="foliov" id="inputfoliov" name="inputfoliov" class="form-control form-control-md validanumericos" disabled>
+                                <label>Folio</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row form-group form-group-sm">
-                    <div class="col-lg-12 d-lg-flex">
-                        <div style="width: 50%;" class="form-floating mx-1">
-                            <input type="text" ng-model="clientev" id="inputclientev" name="inputclientev" class="form-control form-control-md validanumericos" disabled>
-                            <label>Cliente</label>
-                        </div>
-                        <div style="width: 50%;" class="form-floating mx-1">
-                            <input type="text" ng-model="choferv" id="inputchoferv" name="inputchoferv" class="form-control form-control-md validanumericos" disabled>
-                            <label>Chofer / placas</label>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="clientev" id="inputclientev" name="inputclientev" class="form-control form-control-md validanumericos" disabled>
+                                <label>Cliente</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="placasv" id="inputplacasv" name="inputplacasv" class="form-control form-control-md validanumericos" disabled>
+                                <label>Chofer / placas</label>
+                            </div>
                         </div>
                     </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaModal">
+
+                        </table>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaMPBesser">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Clave producto</th>
-                                <th class="text-center">Nombre de producto</th>
-                                <th class="text-center">Cantidad a despachar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-lg-12 col-md-12 text-right">
+                    <button class="btn btn-success" ng-click="verificar()">Aceptar</button>
+                    <button class="btn btn-danger" ng-click="setModalMisRequ()">Cerrar</button>
                 </div>
-          </div>
-          <div class="modal-footer">
-            <input type="button" value="Verificar" ng-click="verificar()" class="btn btn-primary">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </div>
+
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -93,31 +99,27 @@
                          </div>
                     </div>
                     <div class="card-body">
-                        <div class="row form-group form-group-sm">
+                        <div class="row form-group form-group-sm">.
                             <div class="col-lg-12 d-lg-flex">
-                                <div style="width: 25%;" class="form-floating mx-1">
-                                    <input type="text" ng-model="folio" id="inputfolio" name="inputfolio" class="form-control form-control-md validanumericos">
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input type="number" ng-model="folio" id="nextFocusHeader0" class="form-control form-control-sm validanumericos" ng-keypress="($event.charCode==13)?validaFolio(folio):return">
                                     <label>Folio</label>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row form-group form-group-sm">
-                            <div class="col-lg-12 d-lg-flex">
-                                <div style="width: 50%;" class="form-floating mx-1">
-                                    <input type="text" ng-model="cliente" id="inputcliente" name="inputcliente" class="form-control form-control-md validanumericos" disabled>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input type="text" ng-model="cliente" id="nextFocusHeader1" name="inputcliente" class="form-control form-control-sm validanumericos" disabled>
                                     <label>Cliente</label>
                                 </div>
-                                <div style="width: 50%;" class="form-floating mx-1">
-                                    <input type="text" ng-model="chofer" id="inputchofer" name="inputchofer" class="form-control form-control-md validanumericos" disabled>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input type="text" ng-model="placas" id="inputplacas" name="inputplacas" class="form-control form-control-sm validanumericos" disabled>
                                     <label>Chofer / placas</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row form-group form-group-sm border-top">
                             <div class="col-sm-12" align="center" >
-                                <input type="submit" value="Generar salida" href="#" ng-click="validacionDatos()" class="btn btn-primary" style="margin-bottom: -25px !important">
+                                <input type="submit" value="Surtir pedido" href="#" ng-click="validacionDatos()" ng-show="admDocumentosDetalle.length > 0" class="btn btn-primary" style="margin-bottom: -25px !important">
                                 <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
-                                <input type="submit" value="modal" data-toggle="modal" data-target="#modalverificar" data-whatever="@getbootstrap" class="btn btn-danger" style="margin-bottom: -25px !important">
+                                <!-- <input type="submit" value="modal" data-toggle="modal" data-target="#modalverificar" data-whatever="@getbootstrap" class="btn btn-danger" style="margin-bottom: -25px !important"> -->
                             </div>
                         </div>
                     </div>
@@ -138,14 +140,14 @@
                                     <tr>
                                         <th class="text-center">Clave producto</th>
                                         <th class="text-center">Nombre de producto</th>
-                                        <th class="text-center">Cantidad a despachar</th>
+                                        <th class="text-center">Cantidad a surtir</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
+                                    <tr ng-repeat="(i, obj) in admDocumentosDetalle track by i" ng-show="obj.ESTATUS_DOCUMENTO == 3">
+                                        <td class="text-center">{{obj.CIDPRODUCTO}}</td>
+                                        <td class="text-center">{{obj.CNOMBREPRODUCTO}}</td>
+                                        <td class="text-center">{{obj.CUNIDADESCAPTURADAS}} {{obj.CUNIDADMEDIDA}} / {{OBJ.SERVOBSERVAMOV}} SACOS</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -194,7 +196,3 @@
     <script src="../../../includes/js/data_tables_js/vfs_fonts.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
-
-    <script type="text/javascript">
-        // consultar();
-    </script>
