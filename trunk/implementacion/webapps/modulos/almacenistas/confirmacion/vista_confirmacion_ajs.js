@@ -202,6 +202,89 @@ app.controller('vistaConfirmarDesalojo', function(BASEURL, ID, $scope, $http){
 						$("#inputestiba").val('');
 					}
 					break;
+				case '4':
+					if (estiba >= 100 & estiba <= 199 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+						$("#inputestiba").val('');
+					}
+					break;
+				case '5':
+					if (estiba >= 700 & estiba <= 799 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+						$("#inputestiba").val('');
+					}
+					break;
+				case '6':
+					if (estiba >= 400 & estiba <= 499 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+						$("#inputestiba").val('');
+					}
+					break;
+				case '7':
+					if (estiba >= 500 & estiba <= 599 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+					}
+					break;
+				case '8':
+					if (estiba >= 800 & estiba <= 899 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+						$("#inputestiba").val('');
+					}
+					break;
+				case '9':
+					if (estiba >= 900 & estiba <= 999 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+						$("#inputestiba").val('');
+					}
+					break;
+				case '10':
+					if (estiba >= 1 & estiba <= 99 ) {
+						$scope.confirmar();
+					}else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Estiba',
+							text: 'El numero de estiba no corresponde al producto'
+						})
+						$("#inputestiba").val('');
+					}
+					break;
 			}
 		}
 	}

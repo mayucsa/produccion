@@ -9,7 +9,7 @@ function dd($var){
     }
 }
 function validaFolio($dbcon, $folio){
-	$sql = "SELECT CFOLIO, ad.CIDDOCUMENTO, CRAZONSOCIAL, CTEXTOEXTRA2, CIDPRODUCTO, CNOMBREPRODUCTO, CVALORCLASIFICACION, CUNIDADESCAPTURADAS, ESTATUS_DOCUMENTO 
+	$sql = "SELECT CFOLIO, ad.CIDDOCUMENTO, CRAZONSOCIAL, CTEXTOEXTRA2, CIDPRODUCTO, CNOMBREPRODUCTO, CVALORCLASIFICACION, CUNIDADESCAPTURADASO, CUNIDADESCAPTURADAS, CUNIDADMEDIDA, ESTATUS_DOCUMENTO 
 			FROM admDocumentos_detalle add2
 			INNER JOIN admDocumentos ad ON ad.CIDDOCUMENTO = add2.CIDDOCUMENTO 
 			WHERE CVALORCLASIFICACION = 'BLOQUERA' AND CFOLIO = ".$folio." ORDER BY ESTATUS_DOCUMENTO ASC";
@@ -66,55 +66,76 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 	}
 }
 function despacharProducto($dbcon, $datos, $folio){
+	$clasificacion = 'BLOQUERA';
 	$fecha = date('Y-m-d H:i:s');
-	$completo = count($datos);
+	$conn = $dbcon->conn();
+	// $completo = count($datos);
 	// Actualizar cantidad_estiba
+	// foreach ($datos as $i => $val) {
+	// 	if ($val->ESTATUS_DOCUMENTO == 3) {
+	// 		$sql = "UPDATE seg_inventario_estibas 
+	// 		SET cantidad_estiba = cantidad_estiba - ".$val->cantidad_salida."
+	// 		WHERE numero_estiba = ".$val->estiba." AND nombre_producto = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."')";
+	// 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+	// 			dd([
+	// 				'code' => 400,
+	// 				'msj' => 'Error al actualizar cantidad_estiba',
+	// 				'sql' => $sql
+	// 			]);
+	// 		}
+	// 		$sql = "UPDATE seg_inventario_patios 
+	// 		SET cantidad_inventario = cantidad_inventario - ".$val->cantidad_salida."
+	// 		WHERE cve_bloquera = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."') ";
+	// 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+	// 			dd([
+	// 				'code' => 400,
+	// 				'msj' => 'Error al actualizar cantidad_inventario',
+	// 				'sql' => $sql
+	// 			]);
+	// 		}
+	// 		// Insertar salidas
+	// 		$sql = "INSERT INTO seg_salidas_bloquera
+	// 		(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
+	// 		VALUES(
+	// 			".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
+	// 			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
+	// 		)";
+	// 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+	// 			dd([
+	// 				'code' => 400,
+	// 				'msj' => 'Error al insertar datos salidas',
+	// 				'sql' => $sql
+	// 			]);
+	// 		}
+	// 		$sql = "UPDATE admDocumentos_detalle 
+	// 			SET ";
+	// 		if ( (floatval($val->CUNIDADESCAPTURADAS) - floatval($val->cantidad_salida)) == 0) {
+	// 			$sql .= " ESTATUS_DOCUMENTO = 4, ";
+	// 		}
+	// 		$sql .= " CUNIDADESCAPTURADAS = CUNIDADESCAPTURADAS - ".$val->cantidad_salida.", FECHA_SURTIDO = '".$fecha."' 
+	// 		WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
+	// 		AND CVALORCLASIFICACION = 'BLOQUERA' AND CIDPRODUCTO = '".$val->CIDPRODUCTO."'";
+	// 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+	// 			dd([
+	// 				'code' => 400,
+	// 				'msj' => 'Error al Actualizar CUNIDADESCAPTURADAS, estatus_documento y fecha_surtido',
+	// 				'sql' => $sql
+	// 			]);
+	// 		}
+	// 	}
+	// }
+
+	$select = "SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio." ";
+	$select = $dbcon->qBuilder($conn, 'first', $select);
+
+	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."' WHERE CIDDOCUMENTO = ".$select->CIDDOCUMENTO." AND CVALORCLASIFICACION = '".$clasificacion."' ";
+	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+
 	foreach ($datos as $i => $val) {
-		if ($val->ESTATUS_DOCUMENTO == 3) {
-			$sql = "UPDATE seg_inventario_estibas 
-			SET cantidad_estiba = cantidad_estiba - ".$val->cantidad_salida."
-			WHERE numero_estiba = ".$val->estiba." AND nombre_producto = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."')";
-			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-				dd([
-					'code' => 400,
-					'msj' => 'Error al actualizar cantidad_estiba',
-					'sql' => $sql
-				]);
-			}
-			// Insertar salidas
-			$sql = "INSERT INTO seg_salidas_bloquera
-			(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
-			VALUES(
-				".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
-				".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
-			)";
-			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-				dd([
-					'code' => 400,
-					'msj' => 'Error al insertar datos salidas',
-					'sql' => $sql
-				]);
-			}
-			$sql = "UPDATE admDocumentos_detalle 
-				SET ";
-			if ( (floatval($val->CUNIDADESCAPTURADAS) - floatval($val->cantidad_salida)) == 0) {
-				$sql .= " ESTATUS_DOCUMENTO = 4, ";
-			}
-			$sql .= " CUNIDADESCAPTURADAS = CUNIDADESCAPTURADAS - ".$val->cantidad_salida.", FECHA_SURTIDO = '".$fecha."' 
-			WHERE CIDDOCUMENTO = (SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio.")
-			AND CVALORCLASIFICACION = 'BLOQUERA' AND CIDPRODUCTO = '".$val->CIDPRODUCTO."'";
-			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
-				dd([
-					'code' => 400,
-					'msj' => 'Error al Actualizar CUNIDADESCAPTURADAS, estatus_documento y fecha_surtido',
-					'sql' => $sql
-				]);
-			}
-		}
 		$sql = "UPDATE seg_inventario_patios 
 		SET cantidad_inventario = cantidad_inventario - ".$val->cantidad_salida."
 		WHERE cve_bloquera = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->CIDPRODUCTO."') ";
-		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+		if (!$dbcon->qBuilder($conn, 'do', $sql)) {
 			dd([
 				'code' => 400,
 				'msj' => 'Error al actualizar cantidad_inventario',
@@ -123,9 +144,9 @@ function despacharProducto($dbcon, $datos, $folio){
 		}
 		// Insertar salidas
 		$sql = "INSERT INTO seg_salidas_bloquera
-		(CFOLIO, cod_producto, numero_estiba, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
+		(CFOLIO, cod_producto, CUNIDADESCAPTURADASO, CUNIDADESCAPTURADAS, usuario, estatus_salida, fecha_registro)
 		VALUES(
-			".$folio.", '".$val->CIDPRODUCTO."', ".$val->estiba.", ".$val->CUNIDADESCAPTURADAS.",
+			".$folio.", '".$val->CIDPRODUCTO."', ".$val->CUNIDADESCAPTURADAS.",
 			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
 		)";
 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
@@ -139,8 +160,80 @@ function despacharProducto($dbcon, $datos, $folio){
 	// ok
 	dd([
 		'code' => 200,
-		'msj' => 'Se ha generado el despacho de producto con éxito.'
+		'msj' => 'Se ha generado el surtido de producto con éxito.'
 	]);
+}
+function descontarEstiba($dbcon, $datos, $folio){
+	$clasificacion = 'BLOQUERA';
+	$fecha = date('Y-m-d H:i:s');
+	$conn = $dbcon->conn();
+	$completo = count($datos);
+	// Actualizar cantidad_estiba
+	foreach ($datos as $i => $val) {
+		if ($val->estatus_salida == 1) {
+			$sql = "UPDATE seg_inventario_estibas 
+			SET cantidad_estiba = cantidad_estiba - ".$val->cantidad_salida."
+			WHERE numero_estiba = ".$val->estiba." AND nombre_producto = (SELECT cve_bloquera FROM seg_producto_bloquera WHERE cod_producto = '".$val->cod_producto."')";
+			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+				dd([
+					'code' => 400,
+					'msj' => 'Error al actualizar cantidad_estiba',
+					'sql' => $sql
+				]);
+			}
+			// Insertar salidas
+			$sql = "INSERT INTO seg_salidas_bloquera_ctrl_estiba
+			(CFOLIO, cod_producto, numero_estiba, cantidad_salida, usuario, estatus_salida, fecha_registro)
+			VALUES(
+				".$folio.", '".$val->cod_producto."', ".$val->estiba.", ".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
+			)";
+			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+				dd([
+					'code' => 400,
+					'msj' => 'Error al insertar datos salidas',
+					'sql' => $sql
+				]);
+			}
+			$sql = "UPDATE seg_salidas_bloquera 
+				SET ";
+			if ( (floatval($val->CUNIDADESCAPTURADAS) - floatval($val->cantidad_salida)) == 0) {
+				$sql .= " estatus_salida = 2, ";
+			}
+			$sql .= " CUNIDADESCAPTURADAS = CUNIDADESCAPTURADAS - ".$val->cantidad_salida."
+			WHERE CFOLIO = ".$val->CFOLIO."
+			AND cod_producto = '".$val->cod_producto."'";
+			if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
+				dd([
+					'code' => 400,
+					'msj' => 'Error al Actualizar cantidad_salida y estatus_salida',
+					'sql' => $sql
+				]);
+			}
+		}
+	}
+	// ok
+	dd([
+		'code' => 200,
+		'msj' => 'Se ha generado el descuento del producto en inventario estibas con éxito.',
+		'sql' => $sql
+	]);
+}
+function tSalidasBloquera($dbcon){
+	$sql = "SELECT cve_salida, ssb.CFOLIO, ad.CRAZONSOCIAL, ad.CTEXTOEXTRA2, cod_producto, CUNIDADESCAPTURADAS, CUNIDADESCAPTURADASO, estatus_salida, fecha_registro
+			FROM seg_salidas_bloquera ssb
+			INNER JOIN admDocumentos ad ON ad.CFOLIO = ssb.CFOLIO
+			WHERE estatus_salida = 1
+			GROUP BY ssb.CFOLIO ";
+	$datos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
+	dd($datos);
+}
+function tEstibasBloquera($dbcon, $CFOLIO){
+	$sql = "SELECT * 
+			FROM seg_salidas_bloquera ssb
+			INNER JOIN seg_producto_bloquera spb ON spb.cod_producto = ssb.cod_producto  
+			WHERE estatus_salida = 1 AND CFOLIO = ".$CFOLIO;
+	$datos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
+	dd($datos);
 }
 
 include_once "../../../dbconexion/conn.php";
@@ -166,6 +259,15 @@ switch ($tarea){
 		break;
 	case 'despacharProducto':
 		despacharProducto($dbcon, $objDatos->datos, $objDatos->folio);
+		break;
+	case 'descontarEstiba':
+		descontarEstiba($dbcon, $objDatos->datos, $objDatos->folio);
+		break;
+	case 'tSalidasBloquera':
+		tSalidasBloquera($dbcon);
+		break;
+	case 'tEstibasBloquera':
+		tEstibasBloquera($dbcon, $objDatos->CFOLIO);
 		break;
 }
 

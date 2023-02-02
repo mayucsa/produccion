@@ -58,13 +58,18 @@ function generarEstiba($dbcon, $Datos){
 	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 	// dd($sql);
 
-	$sqlu = "UPDATE seg_inventario_patios SET cantidad_inventario = cantidad_inventario + ".$cBuilder->cantidad_total." + ".$cBuilder->cantidad_despuntados." + ".$cBuilder->cantidad_rotura." WHERE cve_bloquera = ".$cBuilder->cve_bloquera." ";
+	$sqlu = "UPDATE seg_inventario_patios SET cantidad_inventario = cantidad_inventario + ".$cBuilder->cantidad_total." WHERE cve_bloquera = ".$cBuilder->cve_bloquera." ";
+	// $sqlu = "UPDATE seg_inventario_patios SET cantidad_inventario = cantidad_inventario + ".$cBuilder->cantidad_total." + ".$cBuilder->cantidad_despuntados." + ".$cBuilder->cantidad_rotura." WHERE cve_bloquera = ".$cBuilder->cve_bloquera." ";
 	$uBuilder = $dbcon->qBuilder($conn, 'do', $sqlu);
 	// dd($sqlu);
 
-	$sqlestiba = "UPDATE seg_inventario_estibas SET cantidad_estiba = cantidad_estiba + ".$cBuilder->cantidad_total." + ".$cBuilder->cantidad_despuntados." + ".$cBuilder->cantidad_rotura." WHERE numero_estiba = ".$Datos->estiba." ";
+	$sqlestiba = "UPDATE seg_inventario_estibas SET cantidad_estiba = cantidad_estiba + ".$cBuilder->cantidad_total." WHERE numero_estiba = ".$Datos->estiba." ";
 	$estibaBuilder = $dbcon->qBuilder($conn, 'do', $sqlestiba);
 	// dd($sqlestiba);
+
+	$sqldes = "UPDATE seg_despuntados SET cantidad_despuntados = cantidad_despuntados  + ".$cBuilder->cantidad_despuntados." WHERE cve_despuntados = ".$cBuilder->cve_bloquera." ";
+	$uBuilder = $dbcon->qBuilder($conn, 'do', $sqldes);
+	// dd($sqldes);
 }
 function editar($dbcon, $Datos){
 	$status = 'VIG';

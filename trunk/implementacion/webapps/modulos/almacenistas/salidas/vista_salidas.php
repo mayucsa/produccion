@@ -40,11 +40,11 @@
                     <h3>Verificación de producto</h3>
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="documento" id="inputdocumento" name="inputdocumento" class="form-control form-control-md validanumericos" disabled>
                                 <label>CIDDOCUMENTO</label>
                             </div>
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="foliov" id="inputfoliov" name="inputfoliov" class="form-control form-control-md validanumericos" disabled>
                                 <label>Folio</label>
                             </div>
@@ -52,11 +52,11 @@
                     </div>
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="clientev" id="inputclientev" name="inputclientev" class="form-control form-control-md validanumericos" disabled>
                                 <label>Cliente</label>
                             </div>
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="placasv" id="inputplacasv" name="inputplacasv" class="form-control form-control-md validanumericos" disabled>
                                 <label>Chofer / placas</label>
                             </div>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12 col-md-12 text-right">
-                    <button class="btn btn-success" ng-click="verificar()">Verificar</button>
+                    <button class="btn btn-success" ng-click="verificar()">Confirmar nota de venta</button>
                     <button class="btn btn-danger" ng-click="setModalMisRequ()">Cerrar</button>
                 </div>
             </div>
@@ -100,24 +100,25 @@
                         <div class="card-body">
                             <div class="row form-group form-group-sm">
                                 <div class="col-lg-12 d-lg-flex">
-                                    <div style="width: 33%;" class="form-floating mx-1">
-                                        <input type="text" ng-model="folio" ng-blur="validaFolio(folio)" id="nextFocusHeader0" name="inputfolio" class="form-control form-control-sm validanumericos" ng-keyup="$event.keyCode == 13 ? inputCharacters(0) : null">
+                                    <div style="width: 100%;" class="form-floating mx-1">
+                                        <input type="number" ng-model="folio" id="nextFocusHeader0" class="form-control form-control-sm validanumericos" ng-keypress="($event.charCode==13)?validaFolio(folio):return">
                                         <label>Folio</label>
                                     </div>
-                                    <div style="width: 33%;" class="form-floating mx-1">
-                                        <input type="text" ng-model="cliente" id="nextFocusHeader1" name="inputcliente" class="form-control form-control-sm validanumericos" readonly>
+                                    <div style="width: 100%;" class="form-floating mx-1">
+                                        <input type="text" ng-model="cliente" id="nextFocusHeader1" name="inputcliente" class="form-control form-control-sm validanumericos" disabled>
                                         <label>Cliente</label>
                                     </div>
-                                    <div style="width: 33%;" class="form-floating mx-1">
-                                        <input type="text" ng-model="placas" id="inputplacas" name="inputplacas" class="form-control form-control-sm validanumericos" disabled>
+                                    <div style="width: 100%;" class="form-floating mx-1">
+                                        <input type="text" ng-model="placas" id="nextFocusHeader2" name="inputplacas" class="form-control form-control-sm validanumericos" disabled>
                                         <label>Chofer / placas</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="row form-group form-group-sm border-top">
                                 <div class="col-sm-12" align="center">
-                                    <input type="submit" value="Despachar producto" href="#" ng-click="validacionCampos()" ng-show="admDocumentosDetalle.length > 0" class="btn btn-primary" style="margin-bottom: -25px !important">
+                                    <input type="submit" value="Surtir pedido" href="#" ng-click="validacionCampos()" ng-show="admDocumentosDetalle.length > 0" class="btn btn-primary" style="margin-bottom: -25px !important">
                                     <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
+                                    <input type="submit" value="Ver salidas" onclick="location.href='ver_salidas.php'; " class="btn btn-info" style="margin-bottom: -25px !important">
                                 </div>
                             </div>
                         </div>
@@ -145,8 +146,8 @@
                                                 <th class="text-center">Clave Producto</th>
                                                 <th class="text-center">Producto</th>
                                                 <th class="text-center">Cantidad</th>
-                                                <th class="text-center">Indicar cant a surtir</th>
-                                                <th class="text-center">Estiba</th>
+                                                <!-- <th class="text-center">Indicar cant a surtir</th> -->
+                                                <!-- <th class="text-center">Estiba</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -154,13 +155,13 @@
                                                 <td class="text-center">{{obj.CFOLIO}}</td>
                                                 <td class="text-center">{{obj.CIDPRODUCTO}}</td>
                                                 <td class="text-center">{{obj.CNOMBREPRODUCTO}}</td>
-                                                <td class="text-center">{{obj.CUNIDADESCAPTURADAS}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center">{{obj.CUNIDADESCAPTURADAS}} {{obj.CUNIDADMEDIDA}}</td>
+                                                <!-- <td class="text-center">
                                                     <input type="text" ng-model="obj.cantidad_salida" class="form-control text-right" ng-keyup="checkCantSalidas(i)">
                                                 </td>
                                                 <td class="text-center">
                                                     <input type="text" ng-model="obj.estiba" ng-blur="validaEstiba(i)" ng-keyup="obj.estiba = setNumerico(obj.estiba)" class="form-control text-right">
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         </tbody>
                                     </table>

@@ -1,5 +1,67 @@
 app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 	$scope.folio = '';
+	$scope.folioe = '';
+	angular.element('#nextFocusHeader0').focus();
+	$scope.modalMisEstiba = false;
+
+	$http.post('Controller.php', {
+		'task': 'tSalidasBloquera'
+	}).then(function (response){
+		response = response.data;
+		console.log('tSalidasBloquera', response);
+		$scope.tSalidasBloquera = response;
+		setTimeout(function(){
+			$('#tableSalidasBloquera').DataTable({
+		        "processing": true,
+		        "bDestroy": true,
+				"order": [0, 'desc'],
+				"lengthMenu": [[30, 50, 75], [30, 50, 75]],
+			     "language": {
+			         "lengthMenu": "Mostrar _MENU_ registros por página.",
+			         "zeroRecords": "No se encontró registro.",
+			         "info": "  _START_ de _END_ (_TOTAL_ registros totales).",
+			         "infoEmpty": "0 de 0 de 0 registros",
+			         "infoFiltered": "(Encontrado de _MAX_ registros)",
+			         "search": "Buscar: ",
+			         "processing": "Procesando...",
+			                  "paginate": {
+			             "first": "Primero",
+			             "previous": "Anterior",
+			             "next": "Siguiente",
+			             "last": "Último"
+			         }
+			     }
+			});
+		},800);
+	},function(error){
+		console.log('error', error);
+	});
+
+	$scope.setModalEstiba = function(CFOLIO){
+		if ($scope.modalMisEstiba == false) {
+			$scope.modalMisEstiba = true;
+			$scope.modalestiba(CFOLIO);
+	    // $.getJSON("modelo_confirmacion.php?consultar="+cve_desalojo, function(registros){
+	    //     console.log(registros);
+	    // });
+		}else{
+			$scope.modalMisEstiba = false;
+			$scope.estiba = '';
+		}
+		// console.log($scope.modalMisRequ);
+	}
+
+	$scope.modalestiba = function(CFOLIO){
+		$http.post('Controller.php', {
+			'task': 'tEstibasBloquera',
+			'CFOLIO': CFOLIO,
+		}).then(function (response) {
+			response = response.data;
+			console.log('tEstibasBloquera', response);
+			$scope.folioe = CFOLIO;
+			$scope.tEstibasBloquera = response;
+		})
+	}
 
 	$scope.setModalMisRequ = function(response){
 		if ($scope.modalMisRequ == true) {
@@ -59,9 +121,19 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 			console.log('admDocumentosDetalle: ', response.data);
 			// $scope.admDocumentosDetalle = response.data;
 			if (response.data.length == 0) {
-				Swal.fire('Sin información','No existe información asociada al folio ingresado. ','error');
-				$scope.folio = '';
-				// $scope.setModalMisRequ();
+				Swal.fire({
+					title: 'Sin información',
+					html: 'No existe información asociada al <b>folio '+ folio +'</b> ingresado.',
+					icon: 'error',
+				}).then((result) => {
+					  if (result.dismiss === Swal.DismissReason.timer) {
+				    	angular.element('#nextFocusHeader0').focus();
+						$('#nextFocusHeader0').val('');
+					  }else{
+					  	angular.element('#nextFocusHeader0').focus();
+					  	$('#nextFocusHeader0').val('');
+					  }
+				})
 			}else{
 				switch (response.data[0].ESTATUS_DOCUMENTO) {
 				case '1':
@@ -97,18 +169,21 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 					// $scope.setModalMisRequ();
 					break;
 				case '4':
-					Swal.fire('Pedido entregado','El folio <b>'+ folio +'</b> ya fue entregado','error');
+					Swal.fire('Pedido surtido','El folio <b>'+ folio +'</b> ya fue surtido, favor de verificar la información','error');
+						angular.element('#nextFocusHeader0').focus();
+					  	$('#nextFocusHeader0').val('');
 					break;
-			}
-
-
-				// if (response.data[0].ESTATUS_DOCUMENTO == 1){
-				// 		// Swal.fire('Sin información','No existe información asociada al folio ingresado. ','info');
-				// 		// $scope.admDocumentosDetalle = response.data;
-				// 		$scope.setModalMisRequ();
-				// }if (response.data[0].ESTATUS_DOCUMENTO == 2) {
-				// 	$scope.admDocumentosDetalle = response.data;
-				// }
+				case '5':
+					// $scope.setModalMisRequ();
+					Swal.fire('Revisión','El folio <b>'+ folio +'</b> ya registro salida en planta','error');
+						angular.element('#nextFocusHeader0').focus();
+					  	$('#nextFocusHeader0').val('');
+					break;
+				default:
+					Swal.fire('Sin Movimientos','El folio <b>'+ $scope.folio +'</b> no registro movimientos en planta','error');
+						angular.element('#nextFocusHeader0').focus();
+					  	$('#nextFocusHeader0').val('');
+				}
 			}
 		}, function(caseError){
 			jsRemoveWindowLoad();
@@ -178,17 +253,17 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 		})
 	}
 	$scope.validaExistencia =  function(i){
-		const estiba = $scope.admDocumentosDetalle[i].estiba;
-		const idproducto = $scope.admDocumentosDetalle[i].CIDPRODUCTO;
-		const cantidad = parseFloat($scope.admDocumentosDetalle[i].cantidad_salida);
-		console.log('validaExistencia', $scope.admDocumentosDetalle[i]);
+		const estiba = $scope.tEstibasBloquera[i].estiba;
+		const idproducto = $scope.tEstibasBloquera[i].cod_producto;
+		const cantidad = parseFloat($scope.tEstibasBloquera[i].cantidad_salida);
+		console.log('validaExistencia', $scope.tEstibasBloquera[i]);
 		if (cantidad > 0) {
 			// console.log('cantidades', cantidad)
 			jsShowWindowLoad('Validando cantidades...');
 			$http.post('Controller.php', {
 				'task': 'validaExistencia',
 				'idproducto': idproducto,
-				'estiba': $scope.admDocumentosDetalle[i].estiba,
+				'estiba': $scope.tEstibasBloquera[i].estiba,
 				'cantidad': cantidad,
 			}).then(function(response){
 				response = response.data;
@@ -200,7 +275,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 						icon: 'error'
 					});
 					$scope.$apply(function(){
-						$scope.admDocumentosDetalle[i].estiba = '';
+						$scope.tEstibasBloquera[i].estiba = '';
 					}, 500);
 				}
 				if (response.msj != 'ok') {
@@ -214,11 +289,11 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 					}).then((result) => {
 						if (response.cantidad > 0) {
 							$scope.$apply(function(){
-								$scope.admDocumentosDetalle[i].cantidad_salida = response.cantidad;
+								$scope.tEstibasBloquera[i].cantidad_salida = response.cantidad;
 							}, 500);
 						}else{
 							$scope.$apply(function(){
-								$scope.admDocumentosDetalle[i].estiba = '';
+								$scope.tEstibasBloquera[i].estiba = '';
 							}, 500);
 						}
 					})
@@ -230,8 +305,8 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 		}
 	}
 	$scope.validaEstiba = function(i){
-		const estiba = $scope.admDocumentosDetalle[i].estiba;
-		const idproducto = $scope.admDocumentosDetalle[i].CIDPRODUCTO;
+		const estiba = $scope.tEstibasBloquera[i].estiba;
+		const idproducto = $scope.tEstibasBloquera[i].cod_producto;
 		if (estiba > 0) {
 			switch (idproducto) {
 				case 'B201':
@@ -243,6 +318,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B304':
@@ -254,6 +330,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B301':
@@ -265,6 +342,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B101':
@@ -276,6 +354,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B206':
@@ -287,6 +366,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B401':
@@ -298,7 +378,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
-						$scope.estiba = '';
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B501':
@@ -310,6 +390,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B801':
@@ -321,6 +402,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B901':
@@ -332,6 +414,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 				case 'B001':
@@ -343,6 +426,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 							title: 'Estiba',
 							text: 'El numero de estiba no corresponde al producto'
 						})
+						$scope.tEstibasBloquera[i].estiba = '';
 					}
 					break;
 			}
@@ -365,47 +449,47 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 		return aux;
 	}
 	$scope.checkCantSalidas = function(i){
-		$scope.admDocumentosDetalle[i].cantidad_salida = $scope.setNumerico($scope.admDocumentosDetalle[i].cantidad_salida);
-		if (	parseFloat($scope.admDocumentosDetalle[i].CUNIDADESCAPTURADAS) 
+		$scope.tEstibasBloquera[i].cantidad_salida = $scope.setNumerico($scope.tEstibasBloquera[i].cantidad_salida);
+		if (	parseFloat($scope.tEstibasBloquera[i].CUNIDADESCAPTURADAS) 
 				< 
-				parseFloat($scope.admDocumentosDetalle[i].cantidad_salida)	) {
+				parseFloat($scope.tEstibasBloquera[i].cantidad_salida)	) {
 			Swal.fire({
 				icon: 'warning',
 				title: 'Cantidad  excedente',
 				text: 'El campo cantidad a surtir no puede ser mayor al campo cantidad.'
 			});
-			$scope.admDocumentosDetalle[i].cantidad_salida = $scope.admDocumentosDetalle[i].CUNIDADESCAPTURADAS;
+			$scope.tEstibasBloquera[i].cantidad_salida = $scope.tEstibasBloquera[i].CUNIDADESCAPTURADAS;
 			return;
 		}
 	}
 	$scope.validacionCampos = function(){
-		for (var i = 0; i < $scope.admDocumentosDetalle.length; i++) {
-			if ($scope.admDocumentosDetalle[i].ESTATUS_DOCUMENTO == 3) {
-				const cantidades = $scope.admDocumentosDetalle[i].cantidad_salida;
-				if (parseFloat(cantidades) <= 0 || cantidades == undefined) {
-					console.log('cantidades', cantidades, parseFloat(cantidades));
-					Swal.fire({
-						icon: 'warning',
-						title: 'Cantidad  a surtir',
-						text: 'Éste campo debe contener un dato correcto.'
-					});
-					return;
-				}
-				const estibas = $scope.admDocumentosDetalle[i].estiba;
-				console.log('estiba', estibas);
-				if (parseFloat(estibas) <= 0 || estibas == undefined) {
-					Swal.fire({
-						icon: 'warning',
-						title: 'Estiba',
-						text: 'Éste campo debe contener un dato correcto.'
-					});
-					return;
-				}
-			}
-		}
+		// for (var i = 0; i < $scope.admDocumentosDetalle.length; i++) {
+		// 	if ($scope.admDocumentosDetalle[i].ESTATUS_DOCUMENTO == 3) {
+		// 		const cantidades = $scope.admDocumentosDetalle[i].cantidad_salida;
+		// 		if (parseFloat(cantidades) <= 0 || cantidades == undefined) {
+		// 			console.log('cantidades', cantidades, parseFloat(cantidades));
+		// 			Swal.fire({
+		// 				icon: 'warning',
+		// 				title: 'Cantidad  a surtir',
+		// 				text: 'Éste campo debe contener un dato correcto.'
+		// 			});
+		// 			return;
+		// 		}
+		// 		const estibas = $scope.admDocumentosDetalle[i].estiba;
+		// 		console.log('estiba', estibas);
+		// 		if (parseFloat(estibas) <= 0 || estibas == undefined) {
+		// 			Swal.fire({
+		// 				icon: 'warning',
+		// 				title: 'Estiba',
+		// 				text: 'Éste campo debe contener un dato correcto.'
+		// 			});
+		// 			return;
+		// 		}
+		// 	}
+		// }
 		Swal.fire({
-			title: 'Despachar producto',
-			html: '¿Realmente deseas despachar el producto?',
+			title: 'Surtir producto',
+			html: '¿Realmente deseas surtir el pedido de la nota <b>'+ $scope.folio +'</b> ?',
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: 'green',
@@ -414,7 +498,7 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 			cancelButtonText: 'Cancelar'
 		}).then((result) => {
 			if (result.isConfirmed) {
-				jsShowWindowLoad('Despachando...');
+				jsShowWindowLoad('Surtiendo pedido...');
 				$http.post('Controller.php', {
 					'task': 'despacharProducto',
 					'datos': $scope.admDocumentosDetalle,
@@ -439,9 +523,77 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 					jsRemoveWindowLoad();
 					console.log('Error', errorLog);
 				});
-			}else{
-				console.log('sin Confirmar');
 			}
+			// else{
+			// 	console.log('sin Confirmar');
+			// }
+		});
+	}
+	$scope.validacionEstiba = function(){
+		for (var i = 0; i < $scope.tEstibasBloquera.length; i++) {
+			// if ($scope.tEstibasBloquera[i].ESTATUS_DOCUMENTO == 3) {
+				const cantidades = $scope.tEstibasBloquera[i].cantidad_salida;
+				if (parseFloat(cantidades) <= 0 || cantidades == undefined) {
+					console.log('cantidades', cantidades, parseFloat(cantidades));
+					Swal.fire({
+						icon: 'warning',
+						title: 'Cantidad  a surtir',
+						text: 'Éste campo debe contener un dato correcto.'
+					});
+					return;
+				}
+				const estibas = $scope.tEstibasBloquera[i].estiba;
+				console.log('estiba', estibas);
+				if (parseFloat(estibas) <= 0 || estibas == undefined) {
+					Swal.fire({
+						icon: 'warning',
+						title: 'Estiba',
+						text: 'Éste campo debe contener un dato correcto.'
+					});
+					return;
+				}
+			// }
+		}
+		Swal.fire({
+			title: 'Descontar estiba',
+			html: '¿Esta correcta la información de la nota <b>'+ $scope.folioe +'</b> ?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: 'green',
+			confirmButtonText: 'Aceptar',
+			cancelButtonColor: 'red',
+			cancelButtonText: 'Cancelar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				jsShowWindowLoad('Descontando inventario de estibas...');
+				$http.post('Controller.php', {
+					'task': 'descontarEstiba',
+					'datos': $scope.tEstibasBloquera,
+					'folio': $scope.folioe
+				}).then(function(response){
+					response = response.data;
+					console.log('response', response);
+					jsRemoveWindowLoad();
+					if (response.code == 200) {
+						Swal.fire({
+						  title: '¡Éxito!',
+						  text: response.msj,
+						  icon: 'success',
+						  showCancelButton: false,
+						  confirmButtonColor: 'green',
+						  confirmButtonText: 'Aceptar'
+						}).then((result) => {
+							location.reload();
+						});
+					}
+				}, function(errorLog){
+					jsRemoveWindowLoad();
+					console.log('Error', errorLog);
+				});
+			}
+			// else{
+			// 	console.log('sin Confirmar');
+			// }
 		});
 	}
 	$scope.inputCharacters = function(i) {
@@ -457,4 +609,23 @@ app.controller('vistaDespachoBloqueras', function(BASEURL, ID, $scope, $http){
 			// return;
 		// }
 	}
+
+	$scope.inputCharacteres = function(i, cliente = '') {
+		i++;
+		if (cliente != '') {
+			if (i == 1) {
+				$('#nextFocusHeader1').focus();
+				$('#nextFocusHeader1').click();
+			}else{
+				$('#nextFocusHeader'+i).focus();
+			}
+			return;
+		}
+		if (i == $scope.ordenCompraDetalle.length ) {
+			$('#nextFocusHeader0').focus();
+		}else{
+			$('#nextFocus'+i).focus();
+		}
+	}
+
 })

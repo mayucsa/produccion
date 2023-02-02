@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12 d-lg-flex">
-                    <div style="width: 33%;" class="form-floating mx-1">
+                    <div style="width: 100%;" class="form-floating mx-1">
                        <select class="form-control form-control-sm" ng-model="productoe" id="selectproductoe" name="selectproductoe" disabled>
                               <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
                                     <?php foreach (ModeloProducto::showProducto() as $value) { ?>
@@ -43,15 +43,15 @@
             </div>
             <div class="row form-group form-group-sm">
                 <div class="col-lg-12 d-lg-flex">
-                    <div style="width: 33%;" class="form-floating mx-1">
+                    <div style="width: 100%;" class="form-floating mx-1">
                         <input type="text" ng-model="desalojoe" id="inputdesalojoe" name="inputdesalojoe" class="form-control form-control-md validanumericos">
                         <label>Cantidad de desalojo</label>
                     </div>
-                    <div style="width: 33%;" class="form-floating mx-1">
+                    <div style="width: 100%;" class="form-floating mx-1">
                         <input type="text" ng-model="despuntadose" id="inputdespuntadose" name="inputdespuntadose" class="form-control form-control-md validanumericos">
                         <label>Cantidad despuntados</label>
                     </div>
-                    <div style="width: 33%;" class="form-floating mx-1">
+                    <div style="width: 100%;" class="form-floating mx-1">
                         <input type="text" ng-model="roturae" id="inputroturae" name="inputroturae" class="form-control form-control-md validanumericos" ng-blur="validaExistencia(producto, desalojo, despuntados, rotura)">
                         <label>Cantidad de rotura</label>
                     </div>
@@ -72,7 +72,7 @@
                     <h3>Confirmacion</h3>
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex" ng-show="false">
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="idproducto" id="inputidproducto" name="inputidproducto" class="form-control form-control-md validanumericos" disabled>
                                 <label>Producto</label>
                             </div>
@@ -80,15 +80,15 @@
                     </div>
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="folio" id="inputfolio" name="inputfolio" class="form-control form-control-md validanumericos" disabled>
                                 <label>Folio</label>
                             </div>
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="producto" id="inputproducto" name="inputproducto" class="form-control form-control-md validanumericos" disabled>
                                 <label>Producto</label>
                             </div>
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="desalojo" id="inputdesalojo" name="inputdesalojo" class="form-control form-control-md validanumericos" disabled>
                                 <label>Cantidad desalojada</label>
                             </div>
@@ -96,15 +96,15 @@
                     </div>
                     <div class="row form-group form-group-sm">
                         <div class="col-lg-12 d-lg-flex">
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="despuntado" id="inputdespuntado" name="inputdespuntado" class="form-control form-control-md validanumericos" disabled>
                                 <label>Cantidad de despuntados</label>
                             </div>
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="rotura" id="inputrotura" name="inputrotura" class="form-control form-control-md validanumericos" disabled>
                                 <label>Cantidad de rotura</label>
                             </div>
-                            <div style="width: 33%;" class="form-floating mx-1">
+                            <div style="width: 100%;" class="form-floating mx-1">
                                 <input type="text" ng-model="estiba" id="inputestiba" name="inputestiba" class="form-control form-control-md validanumericos" ng-blur="validaEstiba(estiba)">
                                 <label>Número de estiba</label>
                             </div>
