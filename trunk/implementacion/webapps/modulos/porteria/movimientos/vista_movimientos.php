@@ -11,6 +11,47 @@
         </head>
 
 <div ng-controller="vistaMovtosPorteria">
+
+            <!-- MODAL DE DESPACHO -->
+            <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modalMisRequ == true">
+                <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">
+                    <h3>Salida de producto</h3>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="documento" id="inputdocumento" name="inputdocumento" class="form-control form-control-md validanumericos" disabled>
+                                <label>CIDDOCUMENTO</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="foliov" id="inputfoliov" name="inputfoliov" class="form-control form-control-md validanumericos" disabled>
+                                <label>Folio</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="clientev" id="inputclientev" name="inputclientev" class="form-control form-control-md validanumericos" disabled>
+                                <label>Cliente</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="placasv" id="inputplacasv" name="inputplacasv" class="form-control form-control-md validanumericos" disabled>
+                                <label>Chofer / placas</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaModal">
+
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 text-right">
+                    <button class="btn btn-success" ng-click="verificar()">Confirmar salida</button>
+                    <button class="btn btn-danger" ng-click="setModalMisRequ()">Cerrar</button>
+                </div>
+            </div>
+
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -21,7 +62,6 @@
               <li class="breadcrumb-item"><a href="vista_movimientos.php"> Movimientos porteria</a></li>
             </ul>
         </div>
-
       <div class="row">
         <div class="col-md-12">
           <div class="tile">
@@ -38,9 +78,14 @@
                     <div class="card-body">
                         <div class="row form-group form-group-sm">
                             <div class="col-lg-12 d-lg-flex">
-                                <div style="width: 25%;" class="form-floating mx-1">
-                                    <input type="text" ng-model="folio" id="inputfolio" name="inputfolio" class="form-control form-control-md validanumericos">
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <!-- <input type="number" ng-model="folio" id="nextFocusHeader0" class="form-control form-control-md validanumericos" maxlength="6" ng-blur="validaFolio(folio)" ng-keyup="$event.keyCode == 13 ? inputCharacters(0) : null"> -->
+                                    <input type="number" ng-model="folio" id="nextFocusHeader0" class="form-control form-control-md validanumericos" ng-keypress="($event.charCode==13)?validaFolio(folio):return">
                                     <label>Folio</label>
+                                </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input type="text" ng-model="Cliente" id="nextFocusHeader1" class="form-control form-control-md validanumericos" maxlength="500" disabled>
+                                    <label>Cliente</label>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +174,3 @@
     <script src="../../../includes/js/data_tables_js/vfs_fonts.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
-
-    <script type="text/javascript">
-        // consultar();
-    </script>
