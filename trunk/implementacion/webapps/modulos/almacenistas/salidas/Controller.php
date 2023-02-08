@@ -65,7 +65,8 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 		]);
 	}
 }
-function despacharProducto($dbcon, $datos, $folio){
+function despacharProducto($dbcon, $datos, $folio, $firma){
+	$firma = str_replace('data:image/png;base64,', '', $firma);
 	$clasificacion = 'BLOQUERA';
 	$fecha = date('Y-m-d H:i:s');
 	$conn = $dbcon->conn();
@@ -144,10 +145,10 @@ function despacharProducto($dbcon, $datos, $folio){
 		}
 		// Insertar salidas
 		$sql = "INSERT INTO seg_salidas_bloquera
-		(CFOLIO, cod_producto, CUNIDADESCAPTURADASO, CUNIDADESCAPTURADAS, usuario, estatus_salida, fecha_registro)
+		(CFOLIO, cod_producto, CUNIDADESCAPTURADASO, CUNIDADESCAPTURADAS, usuario, estatus_salida, fecha_registro, firma)
 		VALUES(
 			".$folio.", '".$val->CIDPRODUCTO."', ".$val->CUNIDADESCAPTURADAS.",
-			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."'
+			".$val->cantidad_salida.", ".$_SESSION['id'].", 1, '".$fecha."', '".$firma."'
 		)";
 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
 			dd([
@@ -258,7 +259,7 @@ switch ($tarea){
 		validaExistencia($dbcon, $objDatos->estiba, $objDatos->idproducto, $objDatos->cantidad);
 		break;
 	case 'despacharProducto':
-		despacharProducto($dbcon, $objDatos->datos, $objDatos->folio);
+		despacharProducto($dbcon, $objDatos->datos, $objDatos->folio, $objDatos->firma);
 		break;
 	case 'descontarEstiba':
 		descontarEstiba($dbcon, $objDatos->datos, $objDatos->folio);

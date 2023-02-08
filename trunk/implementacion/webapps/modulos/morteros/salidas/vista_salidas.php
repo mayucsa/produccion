@@ -6,6 +6,12 @@
         <head>
             <title>Captura de Producci&oacute;n</title>
             <style type="text/css">
+                canvas {
+                    width: 500px;
+                    height: 300px;
+                    background-color: white;
+                    border: solid 1px;
+                }
                 body{
                     background-color: #f7f6f6;
                 }
@@ -33,7 +39,29 @@
         </head>
 
 <div ng-controller="vistaSalidasMorteros">
-
+    <!-- Modal firma -->
+    <div class="modal fade" id="firmasModal" tabindex="-1" aria-labelledby="firmasModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="firmasModalLabel">Firmar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6 offset-md-2">
+                    <canvas id="pizarra"></canvas>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-light" onclick="limpiar()">Limpiar firma</button>
+            <button type="button" class="btn btn-danger" ng-click="cancelarFirma()">Cancelar</button>
+            <button class="btn btn-success" ng-click="aceptarFirma()">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
             <!-- MODAL DE DESPACHO -->
             <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modalMisRequ == true">
                 <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">

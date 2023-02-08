@@ -66,7 +66,8 @@ function validaExistencia($dbcon, $estiba, $idproducto, $cantidad){
 		]);
 	}
 }
-function despacharProducto($dbcon, $datos, $folio){
+function despacharProducto($dbcon, $datos, $folio, $firma){
+	$firma = str_replace('data:image/png;base64,', '', $firma);
 	$clasificacion = 'MORTERO';
 	$clasificacioni = 'IMPERMAT';
 	$fecha = date('Y-m-d H:i:s');
@@ -90,8 +91,8 @@ function despacharProducto($dbcon, $datos, $folio){
 			}
 
 		$sql = "INSERT INTO seg_salidas
-		(CFOLIO, cod_producto, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro)
-		VALUES(".$folio.", '".$val->CIDPRODUCTO."', ".$val->CUNIDADESCAPTURADAS.", ".$val->CUNIDADESCAPTURADAS.", ".$_SESSION['id'].", 1, '".$fecha."' )";
+		(CFOLIO, cod_producto, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro, firma)
+		VALUES(".$folio.", '".$val->CIDPRODUCTO."', ".$val->CUNIDADESCAPTURADAS.", ".$val->CUNIDADESCAPTURADAS.", ".$_SESSION['id'].", 1, '".$fecha."', '".$firma."' )";
 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
 			dd([
 				'code' => 400,
@@ -129,7 +130,7 @@ switch ($tarea){
 		validaExistencia($dbcon, $objDatos->estiba, $objDatos->idproducto, $objDatos->cantidad);
 		break;
 	case 'despacharProducto':
-		despacharProducto($dbcon, $objDatos->datos, $objDatos->folio);
+		despacharProducto($dbcon, $objDatos->datos, $objDatos->folio, $objDatos->firma);
 		break;
 }
 
