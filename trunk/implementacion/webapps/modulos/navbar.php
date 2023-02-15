@@ -195,8 +195,19 @@
 ?>
           <ul class="app-menu">
             <!-- dashboard -->
-            <li ng-show="perfilUsu.dashboard_principal == 1">
-              <a class="app-menu__item" href="../../dashboard/dashboard/dashboard.php"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
+            <li class="treeview" ng-show="perfilUsu.dashboard_principal == 1">
+              <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span><i class="treeview-indicator fas fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                  <li>
+                    <a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Morteros</a>
+                  </li>
+                  <li>
+                    <a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Bloqueras</a>
+                  </li>
+                  <li>
+                    <a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Trituradora</a>
+                  </li>
+                </ul>
             </li>
             <!-- Inventario -->
             <li class="treeview" ng-show="perfilUsu.inventario_principal == 1">
@@ -305,10 +316,10 @@
                     <a class="treeview-item" href="../../trituradora/produccion/linea2_vista.php"><i class="icon fa fa-circle-o"></i> Producción Línea 2</a>
                   </li>
                   <li ng-show="perfilUsu.tperdido_trituradoral1_vista == 1">
-                    <a class="treeview-item" href="../../trituradora/tiempoperdido/tiempoperdidol1_vista.php"><i class="icon fa fa-circle-o"></i> Tiempo pérdido Línea 1</a>
+                    <a class="treeview-item" href="../../trituradora/tiempoperdido/tiempoperdidol1_vista.php"><i class="icon fa fa-circle-o"></i> Tiempo perdido Línea 1</a>
                   </li>
                   <li ng-show="perfilUsu.tperdido_trituradoral2_vista == 1">
-                    <a class="treeview-item" href="../../trituradora/tiempoperdido/tiempoperdidol2_vista.php"><i class="icon fa fa-circle-o"></i> Tiempo pérdido Línea 2</a>
+                    <a class="treeview-item" href="../../trituradora/tiempoperdido/tiempoperdidol2_vista.php"><i class="icon fa fa-circle-o"></i> Tiempo perdido Línea 2</a>
                   </li>
                   <li ng-show="perfilUsu.salidas_trituradora_vista == 1">
                     <a class="treeview-item" href="../../trituradora/salidas/vista_salidas.php"><i class="icon fa fa-circle-o"></i> Salidas</a>
