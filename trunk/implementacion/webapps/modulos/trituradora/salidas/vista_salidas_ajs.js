@@ -59,6 +59,28 @@ app.controller('vistaDespachoTrituradora', function(BASEURL, ID, $scope, $http){
 					  	$('#nextFocusHeader0').val('');
 					break;
 				case '2':
+					// $scope.admDocumentosDetalle = response.data;
+					$scope.setModalMisRequ(response);
+					$("#tablaModal").html('');
+						$scope.documento = response.data[0].CIDDOCUMENTO;
+						$scope.foliov = response.data[0].CFOLIO;
+						$scope.clientev = response.data[0].CRAZONSOCIAL;
+						$scope.placasv = response.data[0].CTEXTOEXTRA2;
+
+				        $("#tablaModal").html( '<thead> <tr>     <th class="text-center">Cve producto</th>'+
+				                                                '<th class="text-center">Producto</th>'+
+				                                                '<th class="text-center">Cantidad</th>'+
+				                                    '</thead>');
+				        for (i = 0; i < response.data.length; i++){
+				             $("#tablaModal").append('<tr>' + 
+				                '<td style="dislay: none;">' + response.data[i].CIDPRODUCTO + '</td>'+
+				                '<td style="dislay: none;">' + response.data[i].CNOMBREPRODUCTO + '</td>'+
+				                '<td style="dislay: none;">' + response.data[i].CUNIDADESCAPTURADAS + '</td>'+ 
+				                '</td>'
+				                +'</tr>');
+				        }
+					break;
+				case '3':
 					$scope.documento = response.data[0].CIDDOCUMENTO;
 					$scope.cliente = response.data[0].CRAZONSOCIAL;
 					$scope.placas = response.data[0].CTEXTOEXTRA2;

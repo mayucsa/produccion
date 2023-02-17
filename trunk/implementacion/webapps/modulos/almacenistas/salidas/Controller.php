@@ -28,7 +28,7 @@ function verificarFolio($dbcon, $Datos){
 	$clasificacion = 'BLOQUERA';
 	$fecha = date('Y-m-d H:i:s');
 	$conn = $dbcon->conn();
-	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 3, FECHA_VERIFICACION = '".$fecha."' WHERE CIDDOCUMENTO = ".$Datos->documento." AND CVALORCLASIFICACION = '".$clasificacion."'";
+	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 3, FECHA_VERIFICACION = '".$fecha."', FECHA_ENTRADA = '".$fecha."' WHERE CIDDOCUMENTO = ".$Datos->documento." AND CVALORCLASIFICACION = '".$clasificacion."'";
 	$detalle = $dbcon->qBuilder($dbcon->conn(), 'do', $sql);
 	dd($detalle);
 }

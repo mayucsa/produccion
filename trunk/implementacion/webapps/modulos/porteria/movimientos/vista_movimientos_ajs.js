@@ -182,7 +182,7 @@ app.controller('vistaMovtosPorteria', function(BASEURL, ID, $scope, $http){
 					// })
 					break;
 				case '2':
-						Swal.fire('Revisar','El <b>folio '+ folio+'</b> ya ingreso a planta. Verificar la información. ','info');
+						Swal.fire('Revisar','El <b>folio '+ folio+'</b> puede ingresar directo al área correspondiente. Verificar la información. ','info');
 						angular.element('#nextFocusHeader0').focus();
 					  	$('#nextFocusHeader0').val('');
 					break;

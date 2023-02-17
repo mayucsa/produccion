@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12 col-md-12 text-right">
-                    <button class="btn btn-success" ng-click="verificar()">Verificar</button>
+                    <button class="btn btn-success" ng-click="verificar()">Confirmar nota de ventas</button>
                     <button class="btn btn-danger" ng-click="setModalMisRequ()">Cerrar</button>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                             </div>
                             <div class="row form-group form-group-sm border-top">
                                 <div class="col-sm-12" align="center">
-                                    <input type="submit" value="Surtir pedido" href="#" ng-click="despachar()"class="btn btn-primary" style="margin-bottom: -25px !important">
+                                    <input type="submit" value="Surtir pedido" href="#" ng-click="despachar()" ng-show="admDocumentosDetalle.length > 0" class="btn btn-primary" style="margin-bottom: -25px !important">
                                     <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                                     <!-- <input type="submit" value="prueba" href="#" ng-click="prueba()" class="btn btn-success" style="margin-bottom: -25px !important"> -->
                                 </div>

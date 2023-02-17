@@ -29,7 +29,7 @@ function verificarFolio($dbcon, $Datos){
 	$clasificacioni = 'IMPERMAT';
 	$fecha = date('Y-m-d H:i:s');
 	$conn = $dbcon->conn();
-	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 3, FECHA_VERIFICACION = '".$fecha."' WHERE CIDDOCUMENTO = ".$Datos->documento." AND CVALORCLASIFICACION IN ( '".$clasificacion."', '".$clasificacioni."') ";
+	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 3, FECHA_VERIFICACION = '".$fecha."', FECHA_ENTRADA = '".$fecha."' WHERE CIDDOCUMENTO = ".$Datos->documento." AND CVALORCLASIFICACION IN ( '".$clasificacion."', '".$clasificacioni."') ";
 	$detalle = $dbcon->qBuilder($dbcon->conn(), 'do', $sql);
 	dd($sql);
 }
