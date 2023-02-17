@@ -1,4 +1,5 @@
 <?php 
+session_start();
 date_default_timezone_set('America/Mexico_City');
 function dd($var){
     if (is_array($var) || is_object($var)) {
@@ -34,12 +35,42 @@ function verificarFolio($dbcon, $Datos){
 
 }
 function despacharProducto($dbcon, $Datos){
+	$firma = str_replace('data:image/png;base64,', '', $Datos->firma);
 	$clasificacion = 'AGREGADOS';
 	$fecha = date('Y-m-d H:i:s');
 	$conn = $dbcon->conn();
 	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."' WHERE CIDDOCUMENTO = '".$Datos->documento."' AND CVALORCLASIFICACION = '".$clasificacion."' ";
-	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
-	dd($sql);
+	if(!$dbcon->qBuilder($conn, 'do', $sql)){
+		dd([
+			'code' => 400,
+			'msj' => 'Error al actualizar datos detalle',
+			'sql' => $sql
+		]);
+	}
+	$datos = $Datos->datos;
+	foreach ($datos as $i => $val) {
+		$sql = "INSERT INTO seg_salidas_trituradora(CFOLIO, cod_producto, CUNIDADESCAPTURADAS, cantidad_salida, usuario, estatus_salida, fecha_registro, firma) VALUES(
+			'".$val->CFOLIO."',
+			'".$val->CIDPRODUCTO."',
+			'".$val->CUNIDADESCAPTURADAS."',
+			'".$val->CUNIDADESCAPTURADAS."',
+			'".$_SESSION['id']."',
+			1,
+			'".$fecha."',
+			'".$firma."'
+		)";
+		if(!$dbcon->qBuilder($conn, 'do', $sql)){
+			dd([
+				'code' => 400,
+				'msj' => 'Error al insertar datos salidas',
+				'sql' => $sql
+			]);
+		}
+	}
+	dd([
+		'code' => 200,
+		'msj' => 'ok'
+	]);
 
 }
 

@@ -1,7 +1,9 @@
 app.controller('vistaDespachoTrituradora', function(BASEURL, ID, $scope, $http){
 	$scope.folio = '';
 	angular.element('#nextFocusHeader0').focus();
-
+	let myModal = new bootstrap.Modal(document.getElementById('firmasModal'), {
+	  keyboard: false
+	})
 	$scope.setModalMisRequ = function(response){
 		if ($scope.modalMisRequ == true) {
 			$scope.modalMisRequ = false;
@@ -174,6 +176,75 @@ app.controller('vistaDespachoTrituradora', function(BASEURL, ID, $scope, $http){
 			}
 		})
 	}
+	$scope.validacionDatosFinal = function(){
+		if (lineas.length == 0) {
+			Swal.fire({
+				icon: 'warning',
+				title: 'Sin firma',
+				text: 'Es necesario ingresar su firma'
+			});
+			myModal.show();
+			return;
+		}
+		myModal.hide();
+		jsShowWindowLoad('Despachando producto de agregador...');
+		const miFirma = miCanvas.toDataURL();
+		$http.post('Controller.php', {
+			'task': 'despacharProducto',
+			'folio': $scope.folio,
+			'documento': $scope.documento,
+			'id': ID,
+			'firma': miFirma,
+			'datos': $scope.admDocumentosDetalle
+		}).then(function(response){
+			response = response.data;
+			console.log('response', response);
+			jsRemoveWindowLoad();
+			if (response.code == 200) {
+				let timerInterval
+				Swal.fire({
+				  title: '¡Éxito!',
+				  html: 'El despacho el producto se generó correctamente.',
+				  timer: 4000,
+				  timerProgressBar: true,
+				  didOpen: () => {
+				    Swal.showLoading()
+				    const b = Swal.getHtmlContainer().querySelector('b')
+				    timerInterval = setInterval(() => {
+				      // b.textContent = Swal.getTimerLeft()
+				    }, 100)
+				  },
+				  willClose: () => {
+				    clearInterval(timerInterval)
+				  }
+				}).then((result) => {
+				  /* Read more about handling dismissals below */
+				  if (result.dismiss === Swal.DismissReason.timer) {
+				    // console.log('I was closed by the timer')
+				    location.reload();
+				  }else{
+				  	location.reload();
+				  }
+				})
+			}else{
+				Swal.fire(
+				  'Error en controlador',
+				  'Revisar la consola',
+				  'warning'
+				);
+				return;
+			}
+		}, function(error){
+			console.log('error', error);
+			jsRemoveWindowLoad();
+		})
+	}
+	$scope.cancelarFirma = function(){
+		myModal.hide();
+	}
+	$scope.aceptarFirma = function(){
+		$scope.validacionDatosFinal();
+	}
 	$scope.despachar = function(){
 		if ($scope.folio == '' || $scope.folio == null) {
 			Swal.fire(
@@ -194,45 +265,8 @@ app.controller('vistaDespachoTrituradora', function(BASEURL, ID, $scope, $http){
 		  cancelButtonText: 'Cancelar'
 		}).then((result) => {
 			if (result.isConfirmed) {
-				jsShowWindowLoad('Despachando producto de agregador...');
-				$http.post('Controller.php', {
-					'task': 'despacharProducto',
-					'folio': $scope.folio,
-					'documento': $scope.documento,
-					'id': ID,
-				}).then(function(response){
-					response = response.data;
-					console.log('response', response);
-					jsRemoveWindowLoad();
-					let timerInterval
-					Swal.fire({
-					  title: '¡Éxito!',
-					  html: 'El despacho el producto se generó correctamente.',
-					  timer: 4000,
-					  timerProgressBar: true,
-					  didOpen: () => {
-					    Swal.showLoading()
-					    const b = Swal.getHtmlContainer().querySelector('b')
-					    timerInterval = setInterval(() => {
-					      // b.textContent = Swal.getTimerLeft()
-					    }, 100)
-					  },
-					  willClose: () => {
-					    clearInterval(timerInterval)
-					  }
-					}).then((result) => {
-					  /* Read more about handling dismissals below */
-					  if (result.dismiss === Swal.DismissReason.timer) {
-					    // console.log('I was closed by the timer')
-					    location.reload();
-					  }else{
-					  	location.reload();
-					  }
-					})
-				}, function(error){
-					console.log('error', error);
-					jsRemoveWindowLoad();
-				})
+				myModal.show();
+				return;
 			}
 		})
 	}
@@ -267,3 +301,104 @@ app.controller('vistaDespachoTrituradora', function(BASEURL, ID, $scope, $http){
 	}
 
 })
+//======================================================================
+// VARIABLES
+//======================================================================
+let miCanvas = document.querySelector('#pizarra');
+let lineas = [];
+let correccionX = 0;
+let correccionY = 0;
+let pintarLinea = false;
+// Marca el nuevo punto
+let nuevaPosicionX = 0;
+let nuevaPosicionY = 0;
+
+let posicion = miCanvas.getBoundingClientRect()
+correccionX = posicion.x;
+correccionY = posicion.y;
+
+miCanvas.width = 500;
+miCanvas.height = 300;
+
+//======================================================================
+// FUNCIONES
+//======================================================================
+
+/**
+ * Funcion que empieza a dibujar la linea
+ */
+function empezarDibujo() {
+    pintarLinea = true;
+    lineas.push([]);
+};
+/**
+ * Funcion que guarda la posicion de la nueva línea
+ */
+function guardarLinea() {
+    lineas[lineas.length - 1].push({
+        x: nuevaPosicionX,
+        y: nuevaPosicionY
+    });
+}
+
+/**
+ * Funcion dibuja la linea
+ */
+function dibujarLinea(event) {
+    event.preventDefault();
+    if (pintarLinea) {
+        let ctx = miCanvas.getContext('2d')
+        // Estilos de linea
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.lineWidth = 2;
+        // Color de la linea
+        ctx.strokeStyle = 'black';
+        // Marca el nuevo punto
+        if (event.changedTouches == undefined) {
+            // Versión ratón
+            nuevaPosicionX = event.layerX;
+            nuevaPosicionY = event.layerY;
+        } else {
+            // Versión touch, pantalla tactil
+            nuevaPosicionX = event.changedTouches[0].pageX - correccionX;
+            nuevaPosicionY = event.changedTouches[0].pageY - correccionY;
+        }
+        // Guarda la linea
+        guardarLinea();
+        // Redibuja todas las lineas guardadas
+        ctx.beginPath();
+        lineas.forEach(function (segmento) {
+            ctx.moveTo(segmento[0].x, segmento[0].y);
+            segmento.forEach(function (punto, index) {
+                ctx.lineTo(punto.x, punto.y);
+            });
+        });
+        ctx.stroke();
+    }
+}
+function limpiar(){
+	lineas = [];
+	let ctx = miCanvas.getContext('2d')
+	ctx.clearRect(0, 0, miCanvas.width, miCanvas.height);
+}
+/**
+ * Funcion que deja de dibujar la linea
+ */
+function pararDibujar () {
+    pintarLinea = false;
+    guardarLinea();
+}
+
+//======================================================================
+// EVENTOS
+//======================================================================
+
+// Eventos raton
+miCanvas.addEventListener('mousedown', empezarDibujo, false);
+miCanvas.addEventListener('mousemove', dibujarLinea, false);
+miCanvas.addEventListener('mouseup', pararDibujar, false);
+
+// Eventos pantallas táctiles
+miCanvas.addEventListener('touchstart', empezarDibujo, false);
+miCanvas.addEventListener('touchmove', dibujarLinea, false);
+
