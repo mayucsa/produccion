@@ -7,6 +7,115 @@ function dd($var){
         die($var);
     }
 }
+function getReporte($dbcon, $Datos){
+	$repo = $Datos->repo;
+	$tipo = $Datos->tipo;	
+	$fecha = $Datos->datos->fecha;
+	$turno = $Datos->datos->turno;
+	if ($repo == 1) {
+		if ($tipo == 'global') {
+			$sql = "SELECT cve_pt, cu.nombre, cu.apellido, cm.capacidad_m3, nombre_maq, cmt.cve_alterna, nombre_material, capturado_por, cp.fecha_registro , '' Turno 
+			FROM captura_producciontrituradora cp
+			INNER JOIN cat_maquinas cm ON cm.cve_maq = cp.cve_maq
+			INNER JOIN cat_material_trituradora cmt ON cmt.cve_mt = cp.cve_mt
+			INNER JOIN cat_usuarios cu ON cu.cve_usuario = cp.capturado_por
+		    WHERE cp.estatus = 'VIG' AND linea = 1
+		    ORDER BY cve_pt DESC ";
+			$fecha = '';
+			$turno = '';
+		}else{
+			$whereBetween = '';
+			if ( $turno == 3 ){
+				$whereBetween = "cp.fecha_registro >= '".$fecha." 23:00:00' AND cp.fecha_registro <= '".$fecha." 06:59:59'";
+		    }
+		    if ( $turno == 2 ){
+				$whereBetween = "cp.fecha_registro >= '".$fecha." 15:00:00' AND cp.fecha_registro < '".$fecha." 23:00:00'";
+		    }
+
+		    if ( $turno == 1 ){
+				$whereBetween = "cp.fecha_registro >= '".$fecha." 07:00:00' AND cp.fecha_registro < '".$fecha." 15:00:00'";
+		    } 
+		    $sql = "SELECT cve_pt, cu.nombre, cu.apellido, cm.capacidad_m3, nombre_maq, cmt.cve_alterna, nombre_material, capturado_por, cp.fecha_registro , '' Turno 
+			FROM captura_producciontrituradora cp
+			INNER JOIN cat_maquinas cm ON cm.cve_maq = cp.cve_maq
+			INNER JOIN cat_material_trituradora cmt ON cmt.cve_mt = cp.cve_mt
+			INNER JOIN cat_usuarios cu ON cu.cve_usuario = cp.capturado_por
+		    WHERE cp.estatus = 'VIG' AND linea = 1 AND ".$whereBetween." 
+		    ORDER BY cve_pt DESC ";
+		    $turno = '/ '.$Datos->datos->turnoDesc;
+		}
+		$getDatos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
+	    $datos = [];
+	    $aux = 0;
+	    $w = 0;
+	    foreach ($getDatos as $i => $row) {
+	    	$row->Turno = getTurno($row->fecha_registro);
+	    	if($i == 55){
+				$aux++; $w = 0;
+			}
+			if(($i - 55 ) % 65 == 0){
+				$aux++; $w = 0;
+			}
+			$datos[$aux][$w] = $row;
+			$w++;
+	    }
+	}
+	if ($repo == 2) {
+		if ($tipo == 'global') {
+			$sql = "SELECT cve_pt, cu.nombre, cu.apellido, cm.capacidad_m3, nombre_maq, cmt.cve_alterna, nombre_material, capturado_por, cp.fecha_registro , '' Turno 
+			FROM captura_producciontrituradora cp
+			INNER JOIN cat_maquinas cm ON cm.cve_maq = cp.cve_maq
+			INNER JOIN cat_material_trituradora cmt ON cmt.cve_mt = cp.cve_mt
+			INNER JOIN cat_usuarios cu ON cu.cve_usuario = cp.capturado_por
+		    WHERE cp.estatus = 'VIG' AND linea = 2
+		    ORDER BY cve_pt DESC ";
+		    $fecha = '';
+			$turno = '';
+		}else{
+			$whereBetween = '';
+			if ( $turno == 3 ){
+				$whereBetween = "cp.fecha_registro >= '".$fecha." 23:00:00' AND cp.fecha_registro <= '".$fecha." 06:59:59'";
+		    }
+		    if ( $turno == 2 ){
+				$whereBetween = "cp.fecha_registro >= '".$fecha." 15:00:00' AND cp.fecha_registro < '".$fecha." 23:00:00'";
+		    }
+
+		    if ( $turno == 1 ){
+				$whereBetween = "cp.fecha_registro >= '".$fecha." 07:00:00' AND cp.fecha_registro < '".$fecha." 15:00:00'";
+		    } 
+			$sql = "SELECT cve_pt, cu.nombre, cu.apellido, cm.capacidad_m3, nombre_maq, cmt.cve_alterna, nombre_material, capturado_por, cp.fecha_registro , '' Turno 
+			FROM captura_producciontrituradora cp
+			INNER JOIN cat_maquinas cm ON cm.cve_maq = cp.cve_maq
+			INNER JOIN cat_material_trituradora cmt ON cmt.cve_mt = cp.cve_mt
+			INNER JOIN cat_usuarios cu ON cu.cve_usuario = cp.capturado_por
+		    WHERE cp.estatus = 'VIG' AND linea = 2 AND ".$whereBetween." 
+		    ORDER BY cve_pt DESC ";
+		    $turno = '/ '.$Datos->datos->turnoDesc;
+		}
+	    $getDatos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
+	    $datos = [];
+	    $aux = 0;
+	    $w = 0;
+	    foreach ($getDatos as $i => $row) {
+	    	$row->Turno = getTurno($row->fecha_registro);
+	    	if($i == 55){
+				$aux++; $w = 0;
+			}
+			if(($i - 55 ) % 65 == 0){
+				$aux++; $w = 0;
+			}
+			$datos[$aux][$w] = $row;
+			$w++;
+	    }
+	}
+	dd([
+		'repo' => $repo,
+		'tipo' => $tipo,
+		'fecha' => $fecha,
+		'turno' => $turno,
+		'datos' => $datos
+	]);
+}
 function getMaquinas($dbcon){
 	$sql = "SELECT cve_maq, cve_alterna, nombre_maq FROM cat_maquinas WHERE estatus_maq = 'VIG' AND produccion_trituradora = 1 ";
 	$Maquinas = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
@@ -184,6 +293,9 @@ switch ($tarea){
 		break;
 	case 'EditarProduccion':
 		EditarProduccion($dbcon, $objDatos);
+		break;
+	case 'getReporte':
+		getReporte($dbcon, $objDatos);
 		break;
 }
 

@@ -3,15 +3,17 @@
         // include_once"modelo_tiempoperdido.php";
         // include_once"enviar_mail.php";
 ?>
-        <head>
-            <title>Captura de Producci&oacute;n</title>
+    <head>
+        <title>Captura de Producci&oacute;n</title>
 
-            <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
-            <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
-            <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
-            <link rel="stylesheet" type="text/css" href="../../../includes/timepicker/bootstrap-clockpicker.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
+        <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../includes/timepicker/bootstrap-clockpicker.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../includes/datapicker/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="../../../includes/datapicker/jquery-ui.min.css">
 
-        </head>
+    </head>
 
 <div ng-controller="VistaProduccionLinea1">
 <!-- MODAL REPORTE -->
@@ -31,7 +33,7 @@
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <div class="input-group-text">
-                    <input type="checkbox" ng-model="entradas" aria-label="Checkbox for following text input" checked>
+                    <input type="checkbox" ng-model="repoGlobal" ng-click="checkTipoRepo(1)">
                   </div>
                 </div>
                 <input type="text" placeholder="Global" class="form-control" aria-label="Text input with checkbox" disabled>
@@ -42,7 +44,7 @@
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <div class="input-group-text">
-                    <input type="checkbox" ng-model="salidas" aria-label="Checkbox for following text input" checked>
+                    <input type="checkbox" ng-model="repoDetallado" ng-change="checkTipoRepo(2)">
                   </div>
                 </div>
                 <input type="text" placeholder="Detallado" class="form-control" aria-label="Text input with checkbox" disabled>
@@ -50,25 +52,25 @@
             </div>
           </div>
         </div>
-        <div class="row form-group form-group-sm">
+        <div class="row form-group form-group-sm" ng-show="repoDetallado">
           <div class="col-lg-12 d-lg-flex">
             <div style="width: 100%;" class="form-floating mx-1">
-              <input class="date-picker form-control" ng-model="fechainicioMov" id="fechainicioMov">
+              <input class="date-picker form-control" min="2022-11-27" ng-model="fechaRepo" id="fechaRepo" ng-blur="checkFecha(fechaRepo, 2)">
               <label>Fecha</label>
             </div>
             <div style="width: 100%;" class="form-floating mx-1">
-                <select class="form-control form-group-md" ng-model="maquinae"  id="selectmaquinae" name="selectmaquinae">
-                    <option selected="selected" value="0">[Seleccione una opción..]</option>
-                    <option  value="1">1er turno</option>
-                    <option  value="2">2do turno</option>
-                    <option  value="3">3er turno</option>
+                <select class="form-control form-group-md" ng-model="turnoRepo" id="turnoRepo">
+                    <option value="">[Seleccione una opción..]</option>
+                    <option value="1">1er turno</option>
+                    <option value="2">2do turno</option>
+                    <option value="3">3er turno</option>
                 </select>
             </div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="">Imprimir <i class="fas fa-print"></i></button>
+        <button type="button" class="btn btn-primary" ng-click="getReporte()" ng-disabled="repoDetallado && fechaRepo == '' && turnoRepo == ''">Imprimir <i class="fas fa-print"></i></button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
       </div>
     </div>
@@ -230,7 +232,8 @@
           </div>
         </div>
     </div> <!--FIN DE DIV ROW--->
-      <?php include_once "../../footer.php";  ?>
+        <?php include_once "reporte.html";  ?>
+        <?php include_once "../../footer.php";  ?>
     </main>
 </div>
 
@@ -244,7 +247,6 @@
 <?php 
 include_once "../../inferior.php";
 ?>
-
     <!-- <script src="vista_besser.js"></script> -->
 
     <script src="../../../includes/js/jquery331.min.js"></script>
@@ -266,3 +268,21 @@ include_once "../../inferior.php";
     <script src="../../../includes/js/data_tables_js/vfs_fonts.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
+
+    <script type="text/javascript" src="../../../includes/datapicker/jquery-ui.min.js"></script>
+    <script>
+        $('.date-picker').datepicker({
+            closeText: 'Cerrar',
+            prevText: '<Ant',
+            nextText: 'Sig>',
+            currentText: 'Hoy',
+            monthNamesShort: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            // minDate: tomorrow,
+            // changeDay: true,
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'yy-mm-dd',
+            showDays: false,
+        });
+    </script>

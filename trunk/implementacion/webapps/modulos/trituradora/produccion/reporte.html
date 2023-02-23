@@ -1,0 +1,67 @@
+<div class="container" style="display: none;">
+	<div class="row" id="reporteProd">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>
+						REPORTE PRODUCCION LINEA {{repoProduccionLinea.repo}} <br>
+						Reporte {{repoProduccionLinea.tipo}} 
+						
+						{{repoProduccionLinea.fecha}} {{repoProduccionLinea.turno}}
+						
+					</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, raw) in repoProduccionLinea.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border:solid 1px;font-size:10px;text-align:center">Folio</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Máquina</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Material</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">M3</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Supervisor</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Fecha captura</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Turno</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, obj) in raw track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">
+							{{obj.cve_pt}}
+						</td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                        	{{obj.nombre_maq}}
+                        </td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                        	{{obj.cve_alterna}} - {{obj.nombre_material}}
+                        </td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                        	{{obj.capacidad_m3}}
+                        </td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                        	{{obj.nombre}} {{obj.apellido}}
+                        </td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                        	{{obj.fecha_registro}}
+                        </td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                            <span class= "badge badge-success">
+                                {{obj.Turno}}
+                            </span>
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>

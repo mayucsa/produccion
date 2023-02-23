@@ -1,6 +1,12 @@
 app.controller('VistaProduccionLinea1', function(BASEURL, ID, $scope, $http){
 	$scope.maquina = '';
 	$scope.nmaquina = '';
+	$scope.repoDetallado = false;
+	$scope.repoGlobal = true;
+	$scope.fechaRepo = '';
+	$scope.turnoRepo = '';
+	var fechaActual = new Date();
+	$scope.fechaActual = fechaActual.toLocaleDateString('en-ZA');
 	angular.element('#inputmaquina').focus();
 
 	$http.post('Controller.php', {
@@ -271,7 +277,53 @@ app.controller('VistaProduccionLinea1', function(BASEURL, ID, $scope, $http){
 			})
 		})
 	}
+	$scope.checkTipoRepo = function(tipo){
+		if (tipo == 1) {
+			$scope.repoGlobal = true;
+			$scope.repoDetallado = false;
+		}else{
+			$scope.repoDetallado = true;
+			$scope.repoGlobal = false;
+		}
+	}
+	$scope.checkFecha = function(fecha, test){
+		setTimeout(function(){
+			$scope.fechaRepo = $('#fechaRepo').val();
+		}, 500);
+	}
+	$scope.getReporte = function(){
+		// console.log( $("#turnoRepo option:selected").text());
+		jsShowWindowLoad('Creando reporte producción en Linea 1...');
+		$http.post('Controller.php', {
+			'task': 'getReporte',
+			'repo': 1,
+			'tipo': ($scope.repoDetallado?'detalle':'global'),
+			'datos': {
+				'fecha': $scope.fechaRepo,
+				'turno': $scope.turnoRepo,
+				'turnoDesc': $("#turnoRepo option:selected").text()
+			}
+		}).then(function (response){
+			response = response.data;
+			$scope.repoProduccionLinea = response;
+			console.log('repoProduccionLinea', response);
+			jsRemoveWindowLoad();
+			if (response.datos.length > 0) {
+				setTimeout(function(){
+					imprSelec('reporteProd');
+				},350);
+			}else{
+				Swal.fire(
+				  'Sin resultados',
+				  '',
+				  'warning'
+				);
+			}
 
+		},function(error){
+			console.log('error', error);
+		});
+	}
 });
 
 // LINEA 2
@@ -279,6 +331,12 @@ app.controller('VistaProduccionLinea1', function(BASEURL, ID, $scope, $http){
 app.controller('VistaProduccionLinea2', function(BASEURL, ID, $scope, $http){
 	$scope.maquina = '';
 	$scope.nmaquina = '';
+	$scope.repoDetallado = false;
+	$scope.repoGlobal = true;
+	$scope.fechaRepo = '';
+	$scope.turnoRepo = '';
+	var fechaActual = new Date();
+	$scope.fechaActual = fechaActual.toLocaleDateString('en-ZA');
 	angular.element('#inputmaquina').focus();
 
 	$http.post('Controller.php', {
@@ -549,5 +607,58 @@ app.controller('VistaProduccionLinea2', function(BASEURL, ID, $scope, $http){
 			})
 		})
 	}
-
+	$scope.checkTipoRepo = function(tipo){
+		if (tipo == 1) {
+			$scope.repoGlobal = true;
+			$scope.repoDetallado = false;
+		}else{
+			$scope.repoDetallado = true;
+			$scope.repoGlobal = false;
+		}
+	}
+	$scope.checkFecha = function(fecha, test){
+		setTimeout(function(){
+			$scope.fechaRepo = $('#fechaRepo').val();
+		}, 500);
+	}
+	$scope.getReporte = function(){
+		jsShowWindowLoad('Creando reporte producción en Linea 2...');
+		$http.post('Controller.php', {
+			'task': 'getReporte',
+			'repo': 2,
+			'tipo': ($scope.repoDetallado?'detalle':'global'),
+			'datos': {
+				'fecha': $scope.fechaRepo,
+				'turno': $scope.turnoRepo,
+				'turnoDesc': $("#turnoRepo option:selected").text()
+			}
+		}).then(function (response){
+			response = response.data;
+			$scope.repoProduccionLinea = response;
+			jsRemoveWindowLoad();
+			if (response.datos.length > 0) {
+				setTimeout(function(){
+					imprSelec('reporteProd');
+				},350);
+			}else{
+				Swal.fire(
+				  'Sin resultados',
+				  '',
+				  'warning'
+				);
+			}
+		},function(error){
+			console.log('error', error);
+		});
+	}
 })
+
+function imprSelec(id) {
+	var div = document.getElementById(id);
+    var ventimp = window.open(' ', 'popimpr');
+    ventimp.document.write( div.innerHTML );
+    ventimp.document.close();
+    ventimp.print( );
+    ventimp.close();
+    console.log('ok');
+}
