@@ -308,7 +308,7 @@ app.controller('VistaProduccionLinea1', function(BASEURL, ID, $scope, $http){
 			$scope.repoProduccionLinea = response;
 			console.log('repoProduccionLinea', response);
 			jsRemoveWindowLoad();
-			if (response.datos.length > 0) {
+			if (response.datos && response.datos.length > 0) {
 				setTimeout(function(){
 					imprSelec('reporteProd');
 				},350);

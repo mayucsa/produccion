@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <div class="row form-group form-group-sm" ng-show="repoDetallado">
+        <div class="row form-group form-group-sm">
           <div class="col-lg-12 d-lg-flex">
             <div style="width: 100%;" class="form-floating mx-1">
               <input class="date-picker form-control" min="2022-11-27" ng-model="fechaRepo" id="fechaRepo" ng-blur="checkFecha(fechaRepo, 2)">
@@ -70,7 +70,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="getReporte()" ng-disabled="repoDetallado && fechaRepo == '' && turnoRepo == ''">Imprimir <i class="fas fa-print"></i></button>
+        <button type="button" class="btn btn-primary" ng-click="getReporte()" ng-disabled="fechaRepo == '' && turnoRepo == ''">Imprimir <i class="fas fa-print"></i></button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
       </div>
     </div>

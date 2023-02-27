@@ -2,7 +2,7 @@
 	<div class="row" id="reporteProd">
 		<table>
 			<tr>
-				<td colspan="2" style="text-align: right;">
+				<td colspan="3" style="text-align: right;">
 					{{fechaActual}}
 				</td>
 			</tr>
@@ -10,13 +10,16 @@
 				<td style="width: 30%">
 					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
 				</td>
-				<td style="width:70%; text-align: center; padding-top: 10px;">
+				<td style="width:30%; text-align: left; padding-top: 10px;"></td>
+				<td style="width:40%; text-align: left; padding-top: 10px;">
 					<h4>
-						REPORTE PRODUCCION LINEA {{repoProduccionLinea.repo}} <br>
-						Reporte {{repoProduccionLinea.tipo}} 
-						
-						{{repoProduccionLinea.fecha}} {{repoProduccionLinea.turno}}
-						
+						<b>REPORTE PRODUCCION LINEA {{repoProduccionLinea.repo}}</b>
+						<br>
+						Reporte {{repoProduccionLinea.tipo}}
+						<br>
+						Fecha: {{repoProduccionLinea.fecha}}
+						<br>
+						Turno: {{repoProduccionLinea.turno}}
 					</h4>
 				</td>
 			</tr>
@@ -25,40 +28,27 @@
 			<table style="width:100%; border-collapse: collapse;">
 				<thead>
 					<tr>
-						<th style="border:solid 1px;font-size:10px;text-align:center">Folio</th>
                         <th style="border:solid 1px;font-size:10px;text-align:center">Máquina</th>
-                        <th style="border:solid 1px;font-size:10px;text-align:center">Material</th>
                         <th style="border:solid 1px;font-size:10px;text-align:center">M3</th>
-                        <th style="border:solid 1px;font-size:10px;text-align:center">Supervisor</th>
-                        <th style="border:solid 1px;font-size:10px;text-align:center">Fecha captura</th>
-                        <th style="border:solid 1px;font-size:10px;text-align:center">Turno</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Material</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="(k, obj) in raw track by k">
 						<td style="border: solid 1px; font-size: 10px; text-align: center;">
-							{{obj.cve_pt}}
+							{{obj.nombre_maq}}
 						</td>
-                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
-                        	{{obj.nombre_maq}}
+                        <td style="border: solid 1px; font-size: 10px; text-align: right;">
+                        	{{obj.cant}}
                         </td>
                         <td style="border: solid 1px; font-size: 10px; text-align: center;">
-                        	{{obj.cve_alterna}} - {{obj.nombre_material}}
+                        	{{obj.nombre_material}}
                         </td>
-                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
-                        	{{obj.capacidad_m3}}
-                        </td>
-                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
-                        	{{obj.nombre}} {{obj.apellido}}
-                        </td>
-                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
-                        	{{obj.fecha_registro}}
-                        </td>
-                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
-                            <span class= "badge badge-success">
-                                {{obj.Turno}}
-                            </span>
-                        </td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{repoProduccionLinea.total}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;"></td>
 					</tr>
 				</tbody>
 			</table>
