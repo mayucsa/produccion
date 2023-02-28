@@ -12,11 +12,15 @@ function getReporte($dbcon, $Datos){
 	$tipo = $Datos->tipo;	
 	$fecha = $Datos->datos->fecha;
 	$turno = $Datos->datos->turno;
+	$fechaSig = explode(' ', $fecha);
+	$fechaSig = new DateTime($fechaSig[0]);
+	$fechaSig->add(new DateInterval('P1D'));
+	$fechaSig = $fechaSig->format('Y-m-d');
 	$total = 0;
 	if ($repo == 1) {
 		$whereBetween = '';
 		if ( $turno == 3 ){
-			$whereBetween = "cp.fecha_registro >= '".$fecha." 23:00:00' AND cp.fecha_registro <= '".$fecha." 06:59:59'";
+			$whereBetween = "cp.fecha_registro >= '".$fecha." 23:00:00' AND cp.fecha_registro <= '".$fechaSig." 06:59:59'";
 	    }
 	    if ( $turno == 2 ){
 			$whereBetween = "cp.fecha_registro >= '".$fecha." 15:00:00' AND cp.fecha_registro < '".$fecha." 23:00:00'";
@@ -65,7 +69,7 @@ function getReporte($dbcon, $Datos){
 	if ($repo == 2) {
 		$whereBetween = '';
 		if ( $turno == 3 ){
-			$whereBetween = "cp.fecha_registro >= '".$fecha." 23:00:00' AND cp.fecha_registro <= '".$fecha." 06:59:59'";
+			$whereBetween = "cp.fecha_registro >= '".$fecha." 23:00:00' AND cp.fecha_registro <= '".$fechaSig." 06:59:59'";
 	    }
 	    if ( $turno == 2 ){
 			$whereBetween = "cp.fecha_registro >= '".$fecha." 15:00:00' AND cp.fecha_registro < '".$fecha." 23:00:00'";
@@ -84,7 +88,7 @@ function getReporte($dbcon, $Datos){
 	    /*cp.estatus = 'VIG' AND */
 	    linea = 2 AND ".$whereBetween." GROUP BY cp.cve_maq";
 		}else{
-			$sql .= "SUM(cm.capacidad_m3) as cant, cmt.nombre_material
+			$sql .= "cm.capacidad_m3 as cant, cmt.nombre_material
 		FROM captura_producciontrituradora cp
 		INNER JOIN cat_maquinas cm ON cm.cve_maq = cp.cve_maq 
 		INNER JOIN cat_material_trituradora cmt ON cmt.cve_mt = cp.cve_mt
