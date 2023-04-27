@@ -350,6 +350,24 @@
 
                 </ul>
             </li>
+            <!-- Reportes -->
+            <li class="treeview" ng-show="perfilUsu.reportes_principal == 1">
+              <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fas fa-clipboard-list"></i><span class="app-menu__label">Reportes</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                  <li >
+                    <a class="treeview-item" href="../../reportes/ventas/vista_ventas.php"><i class="icon fa fa-circle-o"></i> Ventas</a>
+                  </li>
+                </ul>
+            </li>
+            <!-- Seguridad -->
+            <li class="treeview" ng-show="perfilUsu.seguridad_principal == 1">
+              <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fas fa-cog"></i><span class="app-menu__label">Seguridad</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                  <li ng-show="perfilUsu.crear_usuarios_vista == 1">
+                    <a class="treeview-item" href="../../almacenistas/inventario/inventario_bloquera.php"><i class="icon fa fa-circle-o"></i> Usuarios</a>
+                  </li>
+                </ul>
+            </li>
             <!-- mis datos -->
             <li class="treeview">
               <a class="app-menu__item" href="#" data-toggle="treeview">

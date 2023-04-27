@@ -1,0 +1,247 @@
+<?php  ?>
+<!-- FORMATO PDF VENTAS BLOQUERA -->
+<div class="container" style="display: none;">
+	<div class="row" id="pdfVentasBloquera">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>REPORTE VENTAS BLOCK / BOVEDILLAS <br>{{ventasBloquera.fecha}}</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, obj) in ventasBloquera.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border: solid 1px; font-size: 10px;">Folio</th>
+						<th style="border: solid 1px; font-size: 10px;">Besser/BK12/2C</th>
+						<th style="border: solid 1px; font-size: 10px;">Besser/BK15/2C</th>
+						<th style="border: solid 1px; font-size: 10px;">Besser/BK15/3C</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BK10</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BK12</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BK15/2C</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BK15/3C</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BK20</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BV15</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/BV20</th>
+						<th style="border: solid 1px; font-size: 10px;">Vibro/Tabique</th>
+						<th style="border: solid 1px; font-size: 10px;">Cliente</th>
+						<th style="border: solid 1px; font-size: 10px;">Chofer / placas</th>
+						<th style="border: solid 1px; font-size: 10px;">Fecha / hora</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, raw) in obj track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CFOLIO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B11}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CRAZONSOCIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CTEXTOEXTRA2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.fecha_registro}}</td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasBloquera.total11}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>
+<!-- FORMATO PDF VENTAS TRITURADORA -->
+<div class="container" style="display: none;">
+	<div class="row" id="pdfVentasTrituradora">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>REPORTE VENTAS TRITURADORA <br>{{ventasTrituradora.fecha}}</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, obj) in ventasTrituradora.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border: solid 1px; font-size: 10px;">Folio</th>
+						<th style="border: solid 1px; font-size: 10px;">Polvo</th>
+						<th style="border: solid 1px; font-size: 10px;">Grava</th>
+						<th style="border: solid 1px; font-size: 10px;">Gravilla</th>
+						<th style="border: solid 1px; font-size: 10px;">Material BF</th>
+						<th style="border: solid 1px; font-size: 10px;">Cliente</th>
+						<th style="border: solid 1px; font-size: 10px;">Chofer / placas</th>
+						<th style="border: solid 1px; font-size: 10px;">Fecha / hora</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, raw) in obj track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CFOLIO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.POLVO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.GRAVA}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.GRAVILLA}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.MATERIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CRAZONSOCIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CTEXTOEXTRA2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.fecha_registro}}</td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasTrituradora.total1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasTrituradora.total2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasTrituradora.total3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasTrituradora.total4}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>
+<!-- FORMATO PDF VENTAS MORTEROS -->
+<div class="container" style="display: none;">
+	<div class="row" id="pdfVentasMortero">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>REPORTE VENTAS MORTEROS <br>{{ventasMortero.fecha}}</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, obj) in ventasMortero.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border: solid 1px; font-size: 10px;">Folio</th>
+						<th style="border: solid 1px; font-size: 10px;">PB/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">PB/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">PC/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">PC/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MG/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MG/GR/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MF/GRIS/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MF/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MF/BCO/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MF/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">MF/FIBRA/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">FINETEX/GRIS/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">FINETEX/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">FINETEX/BCO/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">FINETEX/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">ADHEMAT/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">ADHEMAT/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">PORCELAMAT/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">PORCELAMAT/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">LOSAMAT/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">PASTACEMENTOSA/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">POLVOFINO/40KG</th>
+						<th style="border: solid 1px; font-size: 10px;">POLVOFINO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">CHUKUM/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">Cliente</th>
+						<th style="border: solid 1px; font-size: 10px;">Chofer / placas</th>
+						<th style="border: solid 1px; font-size: 10px;">Fecha / hora</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, raw) in obj track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CFOLIO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B11}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B12}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B13}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B14}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B15}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B16}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B17}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B18}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B19}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B20}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B21}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B22}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B23}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.B24}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CRAZONSOCIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CTEXTOEXTRA2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.fecha_registro}}</td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>	
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total11}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total12}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total13}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total14}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total15}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total16}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total17}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total18}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total19}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total20}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total21}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total22}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total23}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{ventasMortero.total24}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>
