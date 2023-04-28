@@ -25,7 +25,7 @@ function ventasbloquera($dbcon, $fecha){
 	$total9 = 0;
 	$total10 = 0;
 	$total11 = 0;
-	$sql = " 	SELECT ssb.CFOLIO, spb.area, ssb.cod_producto,
+	$sql = " 	SELECT CAST(ssb.CFOLIO as int) as CFOLIO, spb.area, ssb.cod_producto,
 				CASE
 					WHEN ssb.cod_producto = 'B201' THEN
 						IFNULL(CUNIDADESCAPTURADASO, 0) ELSE 0 END AS B1,
@@ -113,7 +113,7 @@ function ventastrituradora($dbcon, $fecha){
 	$total2 = 0;
 	$total3 = 0;
 	$total4 = 0;
-	$sql = " 	SELECT sst.CFOLIO,sst.cod_producto, 
+	$sql = " 	SELECT CAST(sst.CFOLIO as int) as CFOLIO,sst.cod_producto, 
 				CASE
 					WHEN sst.cod_producto = 'T210' OR sst.cod_producto = 'T211' THEN
 						IFNULL(sst.CUNIDADESCAPTURADAS , 0) ELSE 0 END AS POLVO,
@@ -185,7 +185,7 @@ function ventasmortero($dbcon, $fecha){
 	$total22 = 0;
 	$total23 = 0;
 	$total24 = 0;
-	$sql = " 	SELECT ss.CFOLIO, ss.cod_producto,
+	$sql = " 	SELECT CAST(ss.CFOLIO as int) as CFOLIO, ss.cod_producto,
 				CASE
 					WHEN ss.cod_producto = 'M510' THEN
 						IFNULL(ss.CUNIDADESCAPTURADAS, 0) ELSE 0 END AS B1,
