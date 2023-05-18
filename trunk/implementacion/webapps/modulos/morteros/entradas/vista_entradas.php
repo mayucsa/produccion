@@ -31,6 +31,53 @@
             </div>
         </div>
     </div>
+<div ng-controller="vistaEntradasMorteros">
+
+<!-- MODAL EDITAR ENTRADA -->
+<div id="modalEditar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <input ng-show="false" type="text" ng-model="cve_tpe" class="form-control" id="inputidedit" name="inputidedit" disabled >
+          <div class="row form-group form-group-sm">
+              <div class="col-lg-12 d-lg-flex">
+                    <div style="width: 25%;" class="form-floating mx-1">
+                        <input class="date-picker form-control validanumericos" ng-model="folioe" id="folioe" autocomplete="off" ng-disabled="true">
+                        <label>Cantidad</label>
+                    </div>
+              </div>
+              <div class="col-lg-12 d-lg-flex">
+                    <div style="width: 100%;" class="form-floating mx-1">
+                        <select class="form-control form-group-md" ng-model="emateriaprima" id="emateriaprima" ng-disabled="true">
+                            <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
+                            <option ng-repeat="(i, obj) in mp" value="{{obj.cve_mpmorteros}}">{{obj.cod_materiaprima}} - {{obj.nombre_materiaprima}}</option>
+                        </select>
+                        <label>Materia prima</label>
+                    </div>
+                    <div style="width: 100%;" class="form-floating mx-1">
+                        <input class="date-picker form-control validanumericos" ng-model="cantidade" id="cantidade" autocomplete="off">
+                        <label>Cantidad</label>
+                    </div>
+                    <div style="width: 100%;" class="form-floating mx-1" ng-show="false">
+                        <input class="date-picker form-control validanumericos" ng-model="cantoriginal" id="cantoriginal" autocomplete="off">
+                        <label>Cantidad</label>
+                    </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <input type="button" value="Actualizar" ng-click="editar()" class="btn btn-primary">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <main class="app-content">
         <div class="app-title">
@@ -60,40 +107,30 @@
                     <div class="card-body">
                         <div class="row form-group form-group-sm">
                             <div class="col-lg-12 d-lg-flex">
-                                <div style="width: 30%;" class="form-floating mx-1">
-                                    <select required id="comb_mat_prima" name="comb_mat_prima" class="js-example-basic-single form-control">
-                                        <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                        <?php   
-                                            $sql        = "SELECT * FROM seg_materia_prima";
-                                            $query      = $stmt -> prepare ($sql);
-                                            $query      -> execute();
-                                            $resultado  = $query -> fetchAll();
-
-                                            foreach ($resultado as $resultado) {
-                                                echo '<option>'.$resultado["nombre_materia_prima"].'</option>';
-                                            }
-                                         ?>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <select class="form-control form-group-md" ng-model="materiaprima">
+                                        <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
+                                        <option ng-repeat="(i, obj) in mp" value="{{obj.cve_mpmorteros}}">{{obj.cod_materiaprima}} - {{obj.nombre_materiaprima}}</option>
                                     </select>
-                                    <label for="iptCategoria">Producto</label>
+                                    <label>Materia prima</label>
                                 </div>
-                                <div style="width: 30%;" class="form-floating mx-1">
-                                    <input required type="text" class="form-control validanumericos" ng-model="cantidad" id="comb_cantidad" name="comb_cantidad">
-                                    <label for="iptCategoria">Cantidad</label>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="cantidad" id="cantidad" autocomplete="off">
+                                    <label>Cantidad</label>
                                 </div>
-                                <span hidden id="spanuser" name="spanuser" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $id?></span>
-                            </div>
+                            </div>                            
                         </div>
                         <div class="row form-group form-group-sm border-top">
                             <div class="col-sm-12" align="center">
-                                <input type="submit" value="Guardar" href="#" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
+                                <input type="submit" value="Guardar" href="#" ng-click="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
+                                <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title">CRITERIOS DE BÚSQUEDA</h3>
+                        <h3 class="card-title">TABLA GLOBAL DE ENTRADAS</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
@@ -101,57 +138,38 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-12 d-lg-flex" style="display: flex; justify-content: flex-end">
-                                <div style="width: 20%;" class="form-floating mx-1">
-                                    <input 
-                                            type="text" 
-                                            id="iptNombre"
-                                            class="form-control"
-                                            data-index="0">
-                                    <label for="iptNombre">Nombre</label>
-                                </div>
-                                <div style="width: 20%;" class="form-floating mx-1">
-                                    <input 
-                                            type="text" 
-                                            id="iptFecha"
-                                            class="form-control"
-                                            data-index="2">
-                                    <label for="iptFecha">Fecha</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- ./ end card-body -->
-                </div> <!-- ./ end card-info -->
-                <div class="card card-info">
-                    <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tableMatPrima">
+                            <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaEntradas">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Folio</th>
+                                        <th class="text-center">Tipo</th>
                                         <th class="text-center">Nombre</th>
                                         <th class="text-center">Cantidad</th>
-                                        <!-- <th class="text-center">Categoria</th> -->
                                         <th class="text-center">Fecha de registro</th>
                                         <th class="text-center">Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <!-- <td></td> -->
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="(i, obj) in datosMateriaPrima track by i">
+                                        <td class="text-center">{{obj.cve_entrada}}</td>
+                                        <td class="text-center">{{obj.categoria}}</td>
+                                        <td class="text-center">{{obj.nombre_materiaprima}}</td>
+                                        <td class="text-center">{{obj.cantidad_entrada}}</td>
+                                        <td class="text-center">{{obj.fecha_registro}}</td>
+                                        <td nowrap="nowrap" class="text-center">
+                                            <span class= "btn btn-warning btn-sm" ng-show="perfilUsu.entradas_morteros_edit == 1" ng-click="consultar(obj.cve_entrada, obj.cve_, obj.cantidad_entrada)" title="Editar" data-toggle="modal" data-target="#modalEditar" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.entradas_morteros_edit == 1" ng-click="eliminar(obj.cve_entrada, obj.cantidad_entrada, obj.cve_)" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>
+                                            <!-- <span class= "btn btn-warning btn-sm" ng-show="perfilUsu.entradas_morteros_edit == 0" ng-click="sinacceso()" title="Editar"><i class="fas fa-edit"></i> </span> -->
+                                            <!-- <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.entradas_morteros_edit == 0" ng-click="sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span> -->
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div><!-- ./ end card -->
+            </div>
           </div>
         </div>
       </div>
@@ -199,5 +217,5 @@
 </script> -->
 
 <script type="text/javascript">
-        consultar();
+        // consultar();
 </script>

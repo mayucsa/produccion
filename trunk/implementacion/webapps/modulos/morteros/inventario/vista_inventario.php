@@ -9,6 +9,8 @@
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
         </head>
+
+<div ng-controller="vistaInventarioMorteros">
     <main class="app-content">
       <div class="app-title">
         <div>
@@ -29,17 +31,20 @@
                     <div class="card-body">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active border" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><strong>Producto</strong> </a>
+                                <a class="nav-link active border" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><strong>Producto finalizado</strong> </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link border" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><strong>Materia Prima</strong></a>
+                                <a class="nav-link border" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><strong>Materia prima</strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link border" id="pills-user-tab" data-toggle="pill" href="#pills-user" role="tab" aria-controls="pills-user" aria-selected="false"><strong>Saqueria</strong></a>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                                 <div class="card card-info">
                                     <div class="card-header">
-                                        <h3 class="card-title">CRITERIOS DE BÚSQUEDA</h3>
+                                        <h3 class="card-title">INVENTARIO DE PRODUCTO FINALIZADO ENVASADO / MORTEROS</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -47,49 +52,24 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12 d-lg-flex" style="display: flex; justify-content: flex-end">
-                                                <div style="width: 20%;" class="form-floating mx-1">
-                                                    <input 
-                                                            type="text" 
-                                                            id="iptNombre"
-                                                            class="form-control"
-                                                            data-index="0">
-                                                    <label for="iptNombre">Nombre</label>
-                                                </div>
-                                                <div style="width: 20%;" class="form-floating mx-1">
-                                                    <input 
-                                                            type="text" 
-                                                            id="iptPresentacion"
-                                                            class="form-control"
-                                                            data-index="1">
-                                                    <label for="iptPresentacion">Presentación</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> <!-- ./ end card-body -->
-                                </div> <!-- ./ end card-info -->
-
-                                <div class="card card-info">
-                                    <div class="card-body">
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tProduct">
+                                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaProducto">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">Producto</th>
-                                                        <th class="text-center">Presentación</th>
+                                                        <th class="text-center">Codigo</th>
+                                                        <th class="text-center">Nombre de producto</th>
                                                         <th class="text-center">Cantidad en tonelada</th>
                                                         <th class="text-center">Cantidad en KG</th>
                                                         <th class="text-center">Cantidad en sacos</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                    <tr ng-repeat="(i, obj) in datosProductoFinalizado track by i">
+                                                        <td align="center">{{obj.cod_producto}}</td>
+                                                        <td align="center">{{obj.nombre_producto}}</td>
+                                                        <td align="center">{{obj.tonelada}}</td>
+                                                        <td align="center">{{obj.cantidad}}</td>
+                                                        <td align="center">{{obj.saco}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -100,7 +80,7 @@
                             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                 <div class="card card-info">
                                     <div class="card-header">
-                                        <h3 class="card-title">CRITERIOS DE BÚSQUEDA</h3>
+                                        <h3 class="card-title">INVENTARIO DE MATERIA PRIMA ENVASADO / MORTEROS</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -108,44 +88,52 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12 d-lg-flex" style="display: flex; justify-content: flex-end">
-                                                <div style="width: 20%;" class="form-floating mx-1">
-                                                    <input 
-                                                            type="text" 
-                                                            id="iptCodigo"
-                                                            class="form-control"
-                                                            data-index="0">
-                                                    <label for="iptCodigo">Código</label>
-                                                </div>
-                                                <div style="width: 20%;" class="form-floating mx-1">
-                                                    <input 
-                                                            type="text" 
-                                                            id="iptNombremp"
-                                                            class="form-control"
-                                                            data-index="1">
-                                                    <label for="iptNombremp">Nombre</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> <!-- ./ end card-body -->
-                                </div> <!-- ./ end card-info -->
-                                <div class="card card-info">
-                                    <div class="card-body">
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover w-100 shadow" style="width: 100%;" id="tMatPrim">
+                                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaMateriaPrima">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">Código</th>
-                                                        <th class="text-center">Materia Prima</th>
-                                                        <th class="text-center">Cantidad</th>   
+                                                        <th class="text-center">Codigo</th>
+                                                        <th class="text-center">Nombre</th>
+                                                        <th class="text-center">Cantidad</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <tr ng-repeat="(i, obj) in datosMateriaPrima track by i">
+                                                        <td align="center">{{obj.cod_materiaprima}}</td>
+                                                        <td align="center">{{obj.nombre_materiaprima}}</td>
+                                                        <td align="center">{{obj.cantidad_materiaprima}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-user" role="tabpanel" aria-labelledby="pills-user-tab">
+                                <div class="card card-info">
+                                    <div class="card-header">
+                                        <h3 class="card-title">SAQUERIA DE ENVASADO / MORTEROS</h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaSacos">
+                                                <thead>
                                                     <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <th class="text-center">Codigo</th>
+                                                        <th class="text-center">Nombre</th>
+                                                        <th class="text-center">Cantidad</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="(i, obj) in datosSacos track by i">
+                                                        <td align="center">{{obj.cod_saco}}</td>
+                                                        <td align="center">{{obj.nombre_saco}}</td>
+                                                        <td align="center">{{obj.cantidad}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -165,11 +153,13 @@
         <?php include_once "../../footer.php" ?>
 
     </main>
+</div>
     <script src="../../../includes/js/adminlte.min.js"></script>
 
 <?php include_once "../../inferior.php" ?>
 
-    <script src="vista_inventario.js"></script>
+    <!-- <script src="vista_inventario.js"></script> -->
+    <script src="vista_inventario_ajs.js"></script>
 
     <script src="../../../includes/js/jquery331.min.js"></script>
 
@@ -192,6 +182,6 @@
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
 
     <script type="text/javascript">
-        consultarProducto();
-        consultarMP();
+        // consultarProducto();
+        // consultarMP();
     </script>

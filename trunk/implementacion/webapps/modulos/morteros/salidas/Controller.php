@@ -1,6 +1,6 @@
 <?php 
 session_start();
-date_default_timezone_set('America/Mexico_City');
+date_default_timezone_set('America/Chihuahua');
 function dd($var){
     if (is_array($var) || is_object($var)) {
         die(json_encode($var));
@@ -76,11 +76,72 @@ function despacharProducto($dbcon, $datos, $folio, $firma){
 	$select = "SELECT CIDDOCUMENTO FROM admDocumentos WHERE CFOLIO = ".$folio." ";
 	$select = $dbcon->qBuilder($conn, 'first', $select);
 	
-	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."' WHERE CIDDOCUMENTO = ".$select->CIDDOCUMENTO." AND CVALORCLASIFICACION = '".$clasificacion."' ";
+	$sql = "UPDATE admDocumentos_detalle SET ESTATUS_DOCUMENTO = 4, FECHA_SURTIDO = '".$fecha."' WHERE CIDDOCUMENTO = ".$select->CIDDOCUMENTO." AND CVALORCLASIFICACION IN ('".$clasificacion."', '".$clasificacioni."') ";
 	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 	// dd($sql);
 
 	foreach ($datos as $i => $val) {
+		if ($val->CIDPRODUCTO == 'M511' || $val->CIDPRODUCTO == 'M512' || $val->CIDPRODUCTO == 'M513' || $val->CIDPRODUCTO == 'M514' || $val->CIDPRODUCTO == 'M515' || $val->CIDPRODUCTO == 'M517' || $val->CIDPRODUCTO == 'M518' || $val->CIDPRODUCTO == 'M600' || $val->CIDPRODUCTO == 'M601' || $val->CIDPRODUCTO == 'M602' || $val->CIDPRODUCTO == 'M603' || $val->CIDPRODUCTO == 'M604' || $val->CIDPRODUCTO == 'M605') {
+			$val->CIDPRODUCTO = 'M510';
+		}
+		if ($val->CIDPRODUCTO == 'M606' || $val->CIDPRODUCTO == 'M598') {
+			$val->CIDPRODUCTO = 'M516';
+		}
+		if ($val->CIDPRODUCTO == 'M521' || $val->CIDPRODUCTO == 'M522' || $val->CIDPRODUCTO == 'M523' || $val->CIDPRODUCTO == 'M524' || $val->CIDPRODUCTO == 'M525' || $val->CIDPRODUCTO == 'M526' || $val->CIDPRODUCTO == 'M620' || $val->CIDPRODUCTO == 'M621' || $val->CIDPRODUCTO == 'M622' || $val->CIDPRODUCTO == 'M623') {
+			$val->CIDPRODUCTO = 'M520';
+		}
+		if ($val->CIDPRODUCTO == 'M626') {
+			$val->CIDPRODUCTO = 'M599';
+		}
+		if ($val->CIDPRODUCTO == 'M531' || $val->CIDPRODUCTO == 'M532' || $val->CIDPRODUCTO == 'M533' || $val->CIDPRODUCTO == 'M534' || $val->CIDPRODUCTO == 'M535' || $val->CIDPRODUCTO == 'M630' || $val->CIDPRODUCTO == 'M631' || $val->CIDPRODUCTO == 'M632' || $val->CIDPRODUCTO == 'M633' || $val->CIDPRODUCTO == 'M634' || $val->CIDPRODUCTO == 'M635') {
+			$val->CIDPRODUCTO = 'M530';
+		}
+		if ($val->CIDPRODUCTO == 'M584' || $val->CIDPRODUCTO == 'M591') {
+			$val->CIDPRODUCTO = 'M586';
+		}
+		if ($val->CIDPRODUCTO == 'M638') {
+			$val->CIDPRODUCTO = 'M596';
+		}
+		if ($val->CIDPRODUCTO == 'M541' || $val->CIDPRODUCTO == 'M542' || $val->CIDPRODUCTO == 'M543' || $val->CIDPRODUCTO == 'M544' || $val->CIDPRODUCTO == 'M545' || $val->CIDPRODUCTO == 'M640' || $val->CIDPRODUCTO == 'M641' || $val->CIDPRODUCTO == 'M642' || $val->CIDPRODUCTO == 'M643' || $val->CIDPRODUCTO == 'M644' || $val->CIDPRODUCTO == 'M645') {
+			$val->CIDPRODUCTO = 'M540';
+		}
+		if ($val->CIDPRODUCTO == 'M546' || $val->CIDPRODUCTO == 'M647' || $val->CIDPRODUCTO == 'M646') {
+			$val->CIDPRODUCTO = 'M581';
+		}
+		if ($val->CIDPRODUCTO == 'M551' || $val->CIDPRODUCTO == 'M650' ||$val->CIDPRODUCTO == 'M651') {
+			$val->CIDPRODUCTO = 'M550';
+		}
+		if ($val->CIDPRODUCTO == 'M577' || $val->CIDPRODUCTO == 'M593' ||$val->CIDPRODUCTO == 'M671') {
+			$val->CIDPRODUCTO = 'M562';
+		}
+		if ($val->CIDPRODUCTO == 'M639') {
+			$val->CIDPRODUCTO = 'M563';
+		}
+		if ($val->CIDPRODUCTO == 'M564' || $val->CIDPRODUCTO == 'M565' || $val->CIDPRODUCTO == 'M566' ||$val->CIDPRODUCTO == 'M685') {
+			$val->CIDPRODUCTO = 'M587';
+		}
+		if ($val->CIDPRODUCTO == 'M687') {
+			$val->CIDPRODUCTO = 'M597';
+		}
+		if ($val->CIDPRODUCTO == 'M575' || $val->CIDPRODUCTO == 'M576' || $val->CIDPRODUCTO == 'M578' ||$val->CIDPRODUCTO == 'M670') {
+			$val->CIDPRODUCTO = 'M574';
+		}
+		if ($val->CIDPRODUCTO == 'M580' || $val->CIDPRODUCTO == 'M680') {
+			$val->CIDPRODUCTO = 'M579';
+		}
+		if ($val->CIDPRODUCTO == 'M682') {
+			$val->CIDPRODUCTO = 'M588';
+		}
+		if ($val->CIDPRODUCTO == 'M590' || $val->CIDPRODUCTO == 'M681') {
+			$val->CIDPRODUCTO = 'M582';
+		}
+		if ($val->CIDPRODUCTO == 'M683') {
+			$val->CIDPRODUCTO = 'M583';
+		}
+		if ($val->CIDPRODUCTO == 'M686') {
+			$val->CIDPRODUCTO = 'M589';
+		}
+
 		$sql = "UPDATE seg_producto SET cantidad = cantidad - ".$val->CUNIDADESCAPTURADAS." WHERE cod_producto = '".$val->CIDPRODUCTO."' ";
 		if (!$dbcon->qBuilder($dbcon->conn(), 'do', $sql)) {
 				dd([
