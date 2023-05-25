@@ -92,6 +92,21 @@ function guardarProduccion($dbcon, $Datos){
 		$sqltarima = $dbcon->qBuilder($conn, 'do', $sqltarima);
 		// dd($sqltarima);
 
+		/* 
+			Descontar la materia prima que se ocupa.
+			Obtenemos los materiales que ocupa cada mortero e itermaos para obtener la cantidad ocupada multiplicada por la cantidad pedida
+		*/
+		$mPrimaQry = "SELECT cve_mpmorteros, cantidad FROM materiaprima_usadapor_productomorteros WHERE cve_mortero = ".$Datos->producto;
+		$mPrimaQry = $dbcon->qBuilder($conn, 'ALL', $mPrimaQry);
+		foreach ($mPrimaQry as $i => $row) {
+			//cantidad de matería prima total
+			$cantidadMPT = floatval($Datos->cantidad) * floatval($row->cantidad);
+			$update = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$cantidadMPT." WHERE cve_mpmorteros = ".$row->cve_mpmorteros;
+			if (!$dbcon->qBuilder($conn, 'do', $update)) {
+				dd(['code'=>400,'msj'=>'Error al actualizar cantidad de materia prima', 'query'=>$update]);
+			}
+		}
+
 		$codsaco = "SELECT cve_sacos_morteros, presentacion FROM seg_producto_morteros WHERE cve_mortero = ".$Datos->producto." ";
 		$codsaco = $dbcon->qBuilder($conn, 'first', $codsaco);
 		$existenciasaco = "SELECT cantidad_materiaprima FROM seg_materiaprima_morteros WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
