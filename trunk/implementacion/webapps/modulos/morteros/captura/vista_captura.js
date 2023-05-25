@@ -14,7 +14,7 @@ function consultar(){
             "ajax": "serverSideproduccion.php",
             "lengthMenu": [[15, 30, 50, 100], [15, 30, 50, 100]],
             "pageLength": 15,
-            "order": [5, 'desc'],
+            // "order": [1, 'desc'],
             // "destroy": true,
             "searching": true,
             // bSort: false,

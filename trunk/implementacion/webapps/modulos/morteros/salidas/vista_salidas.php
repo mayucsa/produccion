@@ -50,7 +50,7 @@
           <div class="modal-body">
             <div class="row">
                 <div class="col-md-6 offset-md-2">
-                    <canvas id="pizarra"></canvas>
+                    <canvas class="img-fluid" id="pizarra"></canvas>
                 </div>
             </div>
           </div>
