@@ -711,12 +711,21 @@ function dibujarLinea(event) {
         // Marca el nuevo punto
         if (event.changedTouches == undefined) {
             // Versión ratón
-            nuevaPosicionX = event.layerX;
-            nuevaPosicionY = event.layerY;
+            nuevaPosicionX = (event.layerX*1.3);
+            if (nuevaPosicionX < 250) {
+            	nuevaPosicionX -= (event.layerX*0.01);
+            }
+            if (nuevaPosicionX > 250) {
+            	nuevaPosicionX += (event.layerX*0.01);
+            }
+            nuevaPosicionY = event.layerY*1.28;
+            if (nuevaPosicionY > 100) {
+            	nuevaPosicionX -= (event.layerY*0.05);
+            }
         } else {
             // Versión touch, pantalla tactil
-            nuevaPosicionX = event.changedTouches[0].pageX - correccionX;
-            nuevaPosicionY = event.changedTouches[0].pageY - correccionY;
+            nuevaPosicionX = event.changedTouches[0].pageX*1.15;
+            nuevaPosicionY = event.changedTouches[0].pageY*0.8;
         }
         // Guarda la linea
         guardarLinea();

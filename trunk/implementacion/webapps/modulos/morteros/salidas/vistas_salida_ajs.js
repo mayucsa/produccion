@@ -291,9 +291,17 @@ function dibujarLinea(event) {
         // Marca el nuevo punto
         if (event.changedTouches == undefined) {
             // Versión ratón
-            nuevaPosicionX = event.layerX*1.3;
+            nuevaPosicionX = (event.layerX*1.3);
+            if (nuevaPosicionX < 250) {
+            	nuevaPosicionX -= (event.layerX*0.01);
+            }
+            if (nuevaPosicionX > 250) {
+            	nuevaPosicionX += (event.layerX*0.01);
+            }
             nuevaPosicionY = event.layerY*1.28;
-            console.log('asd');
+            if (nuevaPosicionY > 100) {
+            	nuevaPosicionX -= (event.layerY*0.05);
+            }
         } else {
             // Versión touch, pantalla tactil
             nuevaPosicionX = event.changedTouches[0].pageX*1.15;
