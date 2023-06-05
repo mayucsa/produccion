@@ -12,6 +12,9 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 	$scope.sacosproduccion = '';
 	$scope.sacostotales = '';
 
+	$scope.tproducto = '';
+	$scope.tfecha = '';
+
 	$http.post('Controller.php', {
 		'task': 'getProducto'
 	}).then(function (response){
@@ -56,6 +59,32 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 		console.log('error', error);
 	});
 
+	$scope.getModalMP = function(cve_captura){
+		if ($scope.modaMisMp == false) {
+			$scope.modaMisMp = true;
+			$scope.modalMP(cve_captura);
+	    // $.getJSON("modelo_confirmacion.php?consultar="+cve_desalojo, function(registros){
+	    //     console.log(registros);
+	    // });
+		}else{
+			$scope.modaMisMp = false;
+		}
+		// console.log($scope.modalMisRequ);
+	}
+	$scope.modalMP = function(cve_captura){
+		$http.post('Controller.php', {
+			'task': 'tmpproducto',
+			'cve_captura': cve_captura,
+		}).then(function (response) {
+			response = response.data;
+			console.log('tmpproducto', response);
+			// console.log('producto', nombre_producto);
+			$scope.tproducto = response[0].nombre_producto;
+			$scope.tfecha = response[0].fecha_registro;
+			$scope.tmpproducto = response;
+		})
+	}
+
 	$scope.sinacceso = function(){
     Swal.fire({
         // confirmButtonColor: '#3085d6',
@@ -98,6 +127,53 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 			console.log('error', error);
 		})
 
+	}
+
+	$scope.validaExistenciaMP = function(producto, cantidad, tonelada){
+		if (cantidad > 0) {
+			jsShowWindowLoad('Validando existencia...');
+			console.log('producto', producto);
+			console.log('cantidad', cantidad);
+			$http.post('Controller.php', {
+				'task': 'getMateriaPrima',
+				'producto': producto,
+				'cantidad': cantidad,
+			}).then(function (response) {
+				response = response.data;
+				// console.log('getExistenciaMP', response);
+				jsRemoveWindowLoad();
+				if (response.msj != 'ok') {
+					Swal.fire({
+					  title: 'Sin existencia de materia prima',
+					  text: response.msj,
+					  icon: 'warning',
+					  showCancelButton: false,
+					  confirmButtonColor: 'green',
+					  confirmButtonText: 'Aceptar'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							$scope.cantidad = '';
+							$("#cantidad").val('');
+						}else{
+							$scope.cantidad = '';
+							$("#cantidad").val('');
+						}
+					});
+				}else{
+					$scope.toneladaporbarcada(cantidad, tonelada);
+				}
+			}, function(error){
+				console.log('error', error);
+			})
+		}else{
+	    	Swal.fire({
+	        // confirmButtonColor: '#3085d6',
+		        title: 'Cantidad no válida',
+		        text: 'Indique una cantidad mayor a cero (0)',
+		        icon: 'warning',
+		        confirmButtonColor: '#1A4672'
+	        });
+		}
 	}
 
 	$scope.toneladaporbarcada = function(tonelada, cantidad){
@@ -159,6 +235,14 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 			}, function(error){
 				console.log('error', error);
 			});
+		}else{
+	    	Swal.fire({
+	        // confirmButtonColor: '#3085d6',
+		        title: 'Cantidad no válida',
+		        text: 'Indique una cantidad mayor a cero (0)',
+		        icon: 'warning',
+		        confirmButtonColor: '#1A4672'
+	        });
 		}
 	}
 
@@ -280,10 +364,12 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 
 	}
 
-	$scope.eliminar = function(cve_captura, cve_mortero, kg_real){
+	$scope.eliminar = function(cve_captura, cve_mortero, kg_real, cantidad_barcadas, tarimas){
 		console.log('cve_captura', cve_captura);
 		console.log('producto', cve_mortero);
 		console.log('kg_real', kg_real);
+		console.log('barcadas', cantidad_barcadas);
+		console.log('tarimas', tarimas);
 		Swal.fire({
 			title: 'Eliminar producción',
 			html: '¿Realmente desea eliminar el <b>folio '+ cve_captura +'</b>?',
@@ -301,6 +387,9 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 					'cve_captura': cve_captura,
 					'producto': cve_mortero,
 					'kgreal': kg_real,
+					'barcadas': cantidad_barcadas,
+					'tarimas': tarimas,
+					'id': ID,
 				}).then(function(response){
 					response = response.data;
 					console.log('response', response);
@@ -324,6 +413,51 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 	    			jsRemoveWindowLoad();
 				})
 			}
+		})
+	}
+
+	$scope.minimoMP = function() {
+		jsShowWindowLoad('Enviando correo...');
+		$http.post('Controller.php', {
+			'task': 'getMinimo'
+		}).then(function (response){
+			// response = response.data;
+			// console.log('responde', response);
+			jsRemoveWindowLoad();
+			if (response.msj != 'ok') {
+				for (var i = 0; i < response.nombre; i++) {
+					console.log('nombre', response.nombre);
+					alert(response.nombre)
+				}
+				// console.log('responde', response.nombre);
+			}
+		}, function(error){
+			console.log('error', error);
+		});
+	}
+
+	$scope.envioCorreo = function(){
+		jsShowWindowLoad('Enviando correo...');
+		$http.post('Controller.php', {
+			'task': 'envioCorreo',
+		}).then(function (response) {
+			jsRemoveWindowLoad();
+				Swal.fire({
+				  title: 'Enviado correo con exito',
+				  text: 'msj',
+				  icon: 'warning',
+				  showCancelButton: false,
+				  confirmButtonColor: 'green',
+				  confirmButtonText: 'Aceptar'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						location.reload();
+					}else{
+						location.reload();
+					}
+				});
+		}, function(error){
+			console.log('error', error);
 		})
 	}
 

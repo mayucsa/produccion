@@ -11,6 +11,46 @@
             <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"> -->
         </head>
 <div ng-controller="vistaProduccionMorteros">
+            <!-- MODAL VER MATERIA PRIMA QUE UTILIZO -->
+            <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modaMisMp == true">
+                <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">
+                    <h3>Cantidad de materia prima</h3>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="tproducto" id="tproducto" name="tproducto" class="form-control form-control-md validanumericos" disabled>
+                                <label>Producto</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="tfecha" id="tfecha" name="tfecha" class="form-control form-control-md validanumericos" disabled>
+                                <label>Fecha de produccion</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaModalEstiba">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Materia prima</th>
+                                    <th class="text-center">Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(i, obj) in tmpproducto track by i">
+                                    <td class="text-center">{{obj.nombre_materiaprima}}</td>
+                                    <td class="text-center">{{obj.cantidad}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 text-right">
+                    <!-- <button class="btn btn-success" ng-click="verificar()">Confirmar salida</button> -->
+                    <button class="btn btn-danger" ng-click="getModalMP()">Cerrar</button>
+                </div>
+            </div>
+
+
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -57,7 +97,8 @@
                         <div class="row form-group form-group-sm">
                             <div class="col-lg-12 d-lg-flex">
                                 <div style="width: 100%;" class="form-floating mx-1">
-                                    <input class="date-picker form-control validanumericos" ng-model="cantidad" id="cantidad" autocomplete="off" ng-disabled="true" ng-blur="toneladaporbarcada(tonelada, cantidad)">
+                                    <!-- <input class="date-picker form-control validanumericos" ng-model="cantidad" id="cantidad" autocomplete="off" ng-disabled="true" ng-blur="toneladaporbarcada(tonelada, cantidad)"> -->
+                                    <input class="date-picker form-control validanumericos" ng-model="cantidad" id="cantidad" autocomplete="off" ng-disabled="true" ng-blur="validaExistenciaMP(producto, cantidad, tonelada)">
                                     <label>Cantidad de barcadas</label>
                                 </div>
                                 <div style="width: 100%;" class="form-floating mx-1">
@@ -98,6 +139,7 @@
                             <div class="col-sm-12" align="center">
                                 <input type="submit" value="Guardar producción" href="#" ng-click="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
                                 <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
+                                <input type="submit" value="Enviar correo" href="#" ng-click="envioCorreo()" class="btn btn-info" style="margin-bottom: -25px !important">
                             </div>
                         </div>
                     </div>
@@ -134,9 +176,10 @@
                                         <td class="text-center">{{obj.sacos_total}}</td>
                                         <td class="text-center">{{obj.fecha_registro}}</td>
                                         <td class="text-center">
+                                            <span class= "btn btn-info btn-sm" ng-click="getModalMP(obj.cve_captura)" title="Ver datos"><i class="fas fa-eye"></i> </span>
                                             <span class= "btn btn-warning btn-sm" ng-show="perfilUsu.produccion_morteros_edit == 1" ng-click="sinacceso()" title="Editar fecha"><i class="fas fa-calendar"></i> </span>
                                             <span class= "btn btn-danger btn-sm" title="Descargar PDF"><i class="fas fa-download"></i> </span>
-                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.produccion_morteros_edit == 1" ng-click="eliminar(obj.cve_captura, obj.cve_mortero, obj.kg_real)" title="Eliminar"><i class="fas fa-window-close"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.produccion_morteros_edit == 1" ng-click="eliminar(obj.cve_captura, obj.cve_mortero, obj.kg_real, obj.cantidad_barcadas, obj.tarimas_enproduccion)" title="Eliminar"><i class="fas fa-window-close"></i> </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -144,37 +187,6 @@
                         </div>
                     </div>
                 </div>
-
-<!--                 <div class="card card-info">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaCapturap">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Folio</th>
-                                        <th class="text-center">Nombre</th>
-                                        <th class="text-center">Cantidad de Barcadas</th>
-                                        <th class="text-center">KG ingresado</th>
-                                        <th class="text-center">Sacos utilizados</th>
-                                        <th class="text-center">Fecha de captura</th>
-                                        <th class="text-center">Eliminar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>

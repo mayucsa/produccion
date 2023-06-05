@@ -33,14 +33,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="img">
-                                <img class="rounded mx-auto d-block" src="../../../includes/imagenes/Mayucsap.png">
+                                <img class="rounded mx-auto d-block img" width="500" height="350" src="../../../includes/imagenes/Sysprom.png">
                             </div>
                             <div class="col-md-12 text-center mt-5 mb-5">
-                                <h1> Bienvenido(a) <?php echo $nombre." ".$apellido?> a nuestra Sistema de Producci&oacute;n (SYSPROD) <h1>
+                                <h1> Bienvenido(a) <?php echo $nombre." ".$apellido?> a nuestra Sistema de Producci&oacute;n. <h1>
                             </div>
                             <div class="col-md-12 text-center mt-5 mb-5">
                                 <!-- <p> <strong>Dashboard</strong> para brindarle un mejor servicio. Si lo necesita siempre puede contactarnos de los contrario en los siguientes días podra visualizar el modulo <strong>Dashboard</strong></p> -->
-                                <p>&mdash; SYSPROD &mdash;</p>
+                                <p>&mdash; SISTEMA DE PRODUCCI&Oacute;N MAYUCSA &mdash;</p>
                             </div>
                         </div>
                     </div>
