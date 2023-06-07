@@ -142,22 +142,25 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 				response = response.data;
 				// console.log('getExistenciaMP', response);
 				jsRemoveWindowLoad();
-				if (response.msj != 'ok') {
+				if (response != '') {
+
 					Swal.fire({
 					  title: 'Sin existencia de materia prima',
-					  text: response.msj,
+					  html: '<div style="text-align:left; padding:20px; overflow-y:auto; max-height:200px;">'+response+'</div>',
 					  icon: 'warning',
 					  showCancelButton: false,
 					  confirmButtonColor: 'green',
 					  confirmButtonText: 'Aceptar'
 					}).then((result) => {
-						if (result.isConfirmed) {
-							$scope.cantidad = '';
-							$("#cantidad").val('');
-						}else{
-							$scope.cantidad = '';
-							$("#cantidad").val('');
-						}
+						$scope.cantidad = '';
+						$("#cantidad").val('');
+						// if (result.isConfirmed) {
+						// 	$scope.cantidad = '';
+						// 	$("#cantidad").val('');
+						// }else{
+						// 	$scope.cantidad = '';
+						// 	$("#cantidad").val('');
+						// }
 					});
 				}else{
 					$scope.toneladaporbarcada(cantidad, tonelada);

@@ -52,6 +52,7 @@ function getMateriaPrima($dbcon, $Datos){
 	$conn = $dbcon->conn();
 	$sql = "SELECT cve_mpmorteros, cantidad FROM materiaprima_usadapor_productomorteros WHERE cve_mortero = ".$Datos->producto;
 	$sql = $dbcon->qBuilder($conn, 'ALL', $sql);
+	$mpSinExistencia = '';
 	// dd(['cantidad' => $sql,'msj' => 'Cantidad mayor a la existencia']);
 	foreach ($sql as $i => $row) {
 		$cantidadMP = floatval($Datos->cantidad) * floatval($row->cantidad);// Valor de Cantidad de barcadas por cantidad segun la materia prima que usa
@@ -62,21 +63,24 @@ function getMateriaPrima($dbcon, $Datos){
 		$cantidadInvTotal = floatval($cantidadInventario->cantidad_materiaprima);
 		// dd(['BarcadasPorKg' => $cantidadMP, 'CantidadDeInventario' => $cantidadInvTotal]);
 		if (floatval($cantidadInvTotal) < floatval($cantidadMP)) {
-			dd([
-				'BarcadasPorKg' => $cantidadMP,
-				'CantidadDeInventario' => $cantidadInvTotal,
-				'msj' => 'Revisar existencia de materia prima para producir'
-			]);
-		}else{
-			dd([
-				'BarcadasPorKg' => $cantidadMP,
-				'CantidadDeInventario' => $cantidadInvTotal,
-				'msj' => 'ok'
-			]);
+			// dd([
+			// 	'BarcadasPorKg' => $cantidadMP,
+			// 	'CantidadDeInventario' => $cantidadInvTotal,
+			// 	'msj' => 'Revisar existencia de materia prima para producir'
+			// ]);
+			$mpSinExistencia .= 'MP: '.$cantidadInventario->nombre_materiaprima.' | Excedido: '.(floatval($cantidadMP) - floatval($cantidadInvTotal)).'<br>';
 		}
+		// else{
+		// 	dd([
+		// 		'BarcadasPorKg' => $cantidadMP,
+		// 		'CantidadDeInventario' => $cantidadInvTotal,
+		// 		'msj' => 'ok'
+		// 	]);
+		// }
+		dd($mpSinExistencia);
 	}
 }
-function envioCorreo($dbcon){
+function envioCorreo($dbcon, $materiasPrimas = ''){
 	include_once "../../../correo/EnvioSMTP.php";
 	$envioSMTP = new EnvioSMTP;
 	// if ($aprobacion == '') {
@@ -87,7 +91,8 @@ function envioCorreo($dbcon){
 		$cuerpo = '<h1>Revisión de inventario de materia prima.</h1>';
 		$cuerpo .= '<br><hr style="width:30%;">'; 
 		$cuerpo .= '<br><p>MORTEROS</p>';
-		$cuerpo .= '<br>GENERAR UN FOR DONDE ENLISTE TODOS LAS MATERIA PRIMAS QUE SEAN MENOR O IGUAL A SU MINIMO';
+		// $cuerpo .= '<br>GENERAR UN FOR DONDE ENLISTE TODOS LAS MATERIA PRIMAS QUE SEAN MENOR O IGUAL A SU MINIMO';
+		$cuerpo .= $materiasPrimas;
 	// }
 	$Body = '<!doctype html>';
 	$Body .= '<html lang="es" >';
@@ -232,8 +237,8 @@ function guardarProduccion($dbcon, $Datos){
 		}
 
 		// $getId = $dbcon->qBuilder($conn, 'first', $getId);
-		dd(['code'=>200,'msj'=>'Carga ok', 'folio'=>$getId->cve_captura]);
 		getMinimo($dbcon);
+		dd(['code'=>200,'msj'=>'Carga ok', 'folio'=>$getId->cve_captura]);
 	}else{
 		dd(['code'=>300, 'msj'=>'error al crear folio.', 'sql'=>$sql]);
 	}
@@ -244,14 +249,17 @@ function getMinimo($dbcon, $Datos){
 	$sql = $dbcon->qBuilder($conn, 'ALL', $sql);
 	// $cantidad = floatval($sql->cantidad_materiaprima);
 	// dd(['sql' => $cantidad,'msj' => 'Cantidad mayor a la existencia']);
-
+	$materiasPrimas = '';
 	foreach ($sql as $i => $row) {
 		$inventario = floatval($row->cantidad_materiaprima);
 		$minimo = floatval($row->minimo_materiaprima);
 		if ($inventario <= $minimo) {
-			dd(['nombre' => $row->nombre_materiaprima,'inventario' => $inventario, 'minimo' => $minimo, 'msj' => 'Cantidad mayor a la existencia']);
-			envioCorreo($dbcon);
+			// dd(['nombre' => $row->nombre_materiaprima,'inventario' => $inventario, 'minimo' => $minimo, 'msj' => 'Cantidad mayor a la existencia']);
+			$materiasPrimas .= 'MP: '.$row->nombre_materiaprima.' | Inventario: '.$inventario.' | Mínimo: '.$minimo.'<br>';
 		}
+	}
+	if ($materiasPrimas != '') {
+		envioCorreo($dbcon, $materiasPrimas);
 	}
 }
 function eliminarProduccion($dbcon, $Datos){
