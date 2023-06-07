@@ -77,8 +77,8 @@ function getMateriaPrima($dbcon, $Datos){
 		// 		'msj' => 'ok'
 		// 	]);
 		// }
-		dd($mpSinExistencia);
 	}
+	dd($mpSinExistencia);
 }
 function envioCorreo($dbcon, $materiasPrimas = ''){
 	include_once "../../../correo/EnvioSMTP.php";
