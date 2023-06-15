@@ -119,9 +119,11 @@ function envioCorreo($dbcon, $materiasPrimas = ''){
 	// $correos = ['ilopez@lcdevelopers.com.mx'];
 	$email = $envioSMTP->correo($title, $Subject, $Body, $correos);
 	if ($email) {
-		dd(['code'=>200]);
+		// dd(['code'=>200]);
+		return true;
 	}else{
-		dd(['code'=>400, 'body'=>$Body]);
+		// dd(['code'=>400, 'body'=>$Body]);
+		return false;
 	}
 }
 function guardarProduccion($dbcon, $Datos){
