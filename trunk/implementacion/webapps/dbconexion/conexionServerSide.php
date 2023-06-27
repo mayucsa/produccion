@@ -23,7 +23,6 @@ $sql_details = array(
     'pass' => 'Sistemas$1',
     'db'   => 'mayucsademo',
     // 'host' => '192.168.1.6'
-    'host' => 'mayucsa.synology.me'
 );
 
 // $sql_details = array(

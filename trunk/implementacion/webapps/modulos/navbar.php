@@ -196,13 +196,13 @@
           <ul class="app-menu">
             <!-- dashboard -->
             <li class="treeview" ng-show="perfilUsu.dashboard_principal == 1">
-              <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span><i class="treeview-indicator fas fa-angle-right"></i></a>
+              <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-chart-line"></i><span class="app-menu__label">Dashboard</span><i class="treeview-indicator fas fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                   <li>
                     <a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Morteros</a>
                   </li>
                   <li>
-                    <a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Bloqueras</a>
+                    <a class="treeview-item" href="../../dashboard/bloqueras/dashboard_bloqueras.php"><i class="icon fa fa-circle-o"></i> Bloqueras</a>
                   </li>
                   <li>
                     <a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Trituradora</a>
