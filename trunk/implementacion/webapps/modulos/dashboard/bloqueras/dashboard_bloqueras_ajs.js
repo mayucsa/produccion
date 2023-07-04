@@ -102,7 +102,7 @@ app.controller('dashboardBloqueras', function(BASEURL, ID, $scope, $http){
     }).then(function(response){
         response = response.data;
         // console.log('datos para chart', response);
-        $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', '');
+        $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', 'dato');
     }, function(error){
         console.log('error', error);
     });
@@ -133,7 +133,7 @@ app.controller('dashboardBloqueras', function(BASEURL, ID, $scope, $http){
         }).then(function(response){
             response = response.data;
             // console.log('datos para chart', response);
-            $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', '');
+            $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', 'dato');
             jsRemoveWindowLoad();
         }, function(error){
             console.log('error', error);
