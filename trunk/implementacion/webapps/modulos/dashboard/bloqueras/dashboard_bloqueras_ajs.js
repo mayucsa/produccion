@@ -38,7 +38,7 @@ app.controller('dashboardBloqueras', function(BASEURL, ID, $scope, $http){
                 align: 'left'
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                pointFormat: '{series.name}: <b>{point.y} -> {point.percentage:.1f}%</b>'
             },
             accessibility: {
                 point: {
@@ -51,7 +51,7 @@ app.controller('dashboardBloqueras', function(BASEURL, ID, $scope, $http){
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        format: '<b>{point.name}</b>: {point.y} -> {point.percentage:.1f} %'
                     }
                 }
             },
@@ -102,7 +102,7 @@ app.controller('dashboardBloqueras', function(BASEURL, ID, $scope, $http){
     }).then(function(response){
         response = response.data;
         // console.log('datos para chart', response);
-        $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', 'Categorias');
+        $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', '');
     }, function(error){
         console.log('error', error);
     });
@@ -133,7 +133,7 @@ app.controller('dashboardBloqueras', function(BASEURL, ID, $scope, $http){
         }).then(function(response){
             response = response.data;
             // console.log('datos para chart', response);
-            $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', 'Categorias');
+            $scope.cargaChartPie('chartPieDashboard', response, 'Mi grafica de Pie', '');
             jsRemoveWindowLoad();
         }, function(error){
             console.log('error', error);
