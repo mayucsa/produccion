@@ -75,11 +75,12 @@
                                         <div class="dflex">
                                             <input class="date-picker" name="fproducinicio" id="fproducinicio" placeholder="Fecha Inicio">
                                             <input class="date-picker" name="fproducfin" id="fproducfin" placeholder="Fecha Fin">
-                                            <button type="button" class="btn btn-info btn-sm" onclick="VCProduccion()"><i class="fas fa-search"></i></button>
+                                            <button type="button" class="btn btn-info btn-sm" ng-click="VCProduccion()"><i class="fas fa-search"></i></button>
                                         </div>
+                                        <center>
+                                            <div id="chartPieDashboard"></div>
+                                        </center>
                                         <!-- <div id="produccionBloqueras" ng-model="produccionBloqueras" style="min-width: 310px; height: 400px; margin: 0 auto"></div> -->
-                                        <hc-chart options="produccionBloqueras" style="min-width: 1040px; height: 800px; margin: 0 auto">Placeholder for generic chart</hc-chart>
-                                        <hc-pie-chart title="Browser usage" data="pieData">Placeholder for pie chart</hc-pie-chart>
                                     </div>
                                 </div>
                             </div>
