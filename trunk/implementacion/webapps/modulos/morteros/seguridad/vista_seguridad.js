@@ -93,8 +93,10 @@ function consultar(){
 }
 
 function obtenerDatos(cve_producto) {
+    jsShowWindowLoad('Obteniendo materia prima...');
     $.getJSON("modelo_seguridad.php?consultar="+cve_producto, function(registros){
-        console.log(registros);
+        console.log(registros, cve_producto);
+        $('#cve_productoEdit').val(cve_producto);
 
         // var txt = 'Materia Prima ->';
         // var input = $('#inputcantidad').val();
@@ -103,20 +105,77 @@ function obtenerDatos(cve_producto) {
         // $('#comb_mat_primau').val(registros[0]['nombre']);
         // $('#comb_cantidadu').val(registros[0]['cantidad_entrada']);
 
-        $("#tablaModal").append( '<thead> <tr>  <th class="text-center">Materia Prima</th>' +
-                                                '<th class="text-center">Cantidad</th></tr>'+
+        $("#tablaModal").html( '<thead> <tr>  <th class="text-center">Materia Prima</th>' +
+                                                '<th class="text-center">Cantidad</th>'+
+                                                '<th class="text-center">Acciones</th></tr>'+
                                     '</thead>');
-    for (i = 0; i < registros.length; i++){
+
+        for (i = 0; i < registros.length; i++){
         // txt += $('#inputcantidad').val(registros[i]['Cantidad']);
         // $('#inputmp').text(registros[i]['MateriaPrima']) + $('#inputcantidad').val(registros[i]['Cantidad']);
          $("#tablaModal").append('<tr>' + 
             '<td style="dislay: none;">' + registros[i].MateriaPrima + '</td>'+
-            '<td align="center" style="dislay: none;">' + registros[i].Cantidad + '</td>'+'</tr>');
-    }
+            '<td align="center" style="dislay: none;">'+
+                '<input type="number" id="cantidad_'+i+'" value="'+ registros[i].Cantidad +'" step=".0001" class="form-control">'+
+            '</td>'+
+            '<td style="dislay: none; text-align:center; width:25%">'+
+                '<input type="button" value="Editar" class="btn btn-warning mr-2" onclick="editarMPrima('+i+', \''+registros[i].cve_materia_prima+'\', \''+cve_producto+'\')">'+
+                '<input type="button" value="Eliminar" class="btn btn-danger" onclick="eliminamPrima(\''+registros[i].cve_materia_prima+'\', \''+cve_producto+'\')">'
+            +'</td></tr>');
+        }
+        jsRemoveWindowLoad();
 
     });
 }
-
+function eliminamPrima(cve_materia_prima, cve_producto){
+    jsShowWindowLoad('Eliminando materia prima...');
+    var url = "modelo_seguridad.php?eliminamPrima=delete";
+    url += "&cve_materia_prima="+cve_materia_prima;
+    url += "&cve_producto="+cve_producto;
+    $.getJSON(url, function(respuesta){
+        console.log('respuesta', respuesta);
+        jsRemoveWindowLoad();
+        if (respuesta == true) {
+            Swal.fire(
+                '¡Eliminado!',
+                'Materia prima eliminada del producto',
+                'success'
+            )
+        }else{
+            Swal.fire(
+                '¡Error!',
+                'No se pudo eliminar',
+                'error'
+            )
+        }
+        obtenerDatos($('#cve_productoEdit').val());
+    });
+}
+function editarMPrima(i, cve_materia_prima, cve_producto){
+    const cantidad = $('#cantidad_'+i).val();
+    jsShowWindowLoad('Actualizando...');
+    var url = "modelo_seguridad.php?editarMPrima=update";
+    url += "&cantidad="+cantidad;
+    url += "&cve_materia_prima="+cve_materia_prima;
+    url += "&cve_producto="+cve_producto;
+    $.getJSON(url, function(respuesta){
+        console.log('respuesta', respuesta);
+        jsRemoveWindowLoad();
+        if (respuesta == true) {
+            Swal.fire(
+                '¡Actualizado!',
+                'Cantidad de materia prima actualizada',
+                'success'
+            )
+        }else{
+            Swal.fire(
+                '¡Error!',
+                'No se pudo actualizar',
+                'error'
+            )
+        }
+    });
+}
 function limpiarCampos() {
     $('#inputnameproducto').val("");
     $('#selectpresentacion').val("0");

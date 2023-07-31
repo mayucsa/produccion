@@ -212,9 +212,12 @@ if ( isset($_GET['accion']) == "insertar") {
 }
 
 if (isset($_GET["consultar"])) {
-	$cve_spf = $_GET["consultar"];
+	$CFOLIO = $_GET["consultar"];
 
-	$sql	= "	SELECT * FROM seg_salidas_bloquera WHERE cve_spf =" .$cve_spf;
+	$sql	= "	SELECT * 
+				FROM seg_salidas_bloquera ssb
+				INNER JOIN seg_producto_bloquera spb ON spb.cod_producto = ssb.cod_producto  
+				WHERE CFOLIO =" .$CFOLIO;
 	// $sql	= "	SELECT * FROM seg_entradas ORDER BY fecha_registro DESC";
 
 	$vquery = Conexion::conectar()->prepare($sql);
@@ -222,8 +225,8 @@ if (isset($_GET["consultar"])) {
 	$lista = $vquery->fetchAll(PDO::FETCH_ASSOC);
 	echo json_encode($lista);
 	exit();
-
 }
+
 
 if (isset($_GET['actualizar']) ) {
 	$cve_spf 			= $_POST['cve_spf'];

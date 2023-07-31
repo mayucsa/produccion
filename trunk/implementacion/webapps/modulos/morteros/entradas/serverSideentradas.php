@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once "../../../dbconexion/conexion.php";
 // include_once "vista_entradas.js";
 // header('Content-Type: application/json');dor 
@@ -18,50 +19,35 @@ $var    = "estatus_entrada = 'VIG'";
 $var2   = "categoria = 'Materia Prima'";
 // $varia = $var 'where' ;
 $columns = array(
-    array( 'db' => 'nombre',            'dt' => 0),
-    array( 'db' => 'cantidad_entrada',  'dt' => 1,
+    array( 'db' => 'cve_entrada',            'dt' => 0),
+    array( 'db' => 'nombre',            'dt' => 1),
+    array( 'db' => 'cantidad_entrada',  'dt' => 2,
         'formatter' => function( $d, $row ) {
             return number_format($d, 2, '.', ',').' Kg';
         }),
     // array( 'db' => 'categoria',         'dt' => 2),
     array(  'db' => 'fecha_registro',    
-            'dt' => 2,
+            'dt' => 3,
         'formatter' => function( $d, $row ) {
             return date( 'Y-m-d', strtotime($d));
         }
     ),
-    array( 'db' => 'cve_entrada',       'dt' => 3),
+    array( 'db' => 'cve_entrada',   'dt' => 4, 'formatter' => function($d, $row){
+        if ($_SESSION['entradas_morteros_edit'] == 1) {
+            return  '<span class= "btn btn-warning" onclick= "obtenerDatos('.$row[4].')" title="Editar" data-toggle="modal" data-target="#modalMatPrimaUpdate" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>'. ' '.
+                    '<span class= "btn btn-danger" onclick= "Eliminar('.$row[4].')" title="Eliminar" data-toggle="modal" data-target="#modalDeleteMP" data-whatever="getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
+        }else{
+            return  '<span class= "btn btn-warning" onclick= "sinacceso()" title="Editar"><i class="fas fa-edit"></i> </span>'.' '.
+                    '<span class= "btn btn-danger" onclick= "sinacceso()" title="Eliminar"><i class="fas fa-trash-alt"></i> </span>';
+        }
+    }),
     // array( 'db' => 'categoria',         'dt' => 4),
     // array(        'dt' => 4)
     // array( 'dt' => 5)
 );
  
 // SQL server connection information
-
-// $sql_details = array(
-//     'user' => 'root',
-//     'pass' => '',
-//     'db'   => 'produccionmayucsa',
-//     'host' => 'localhost'
-// );
-$sql_details = array(
-    'user' => 'mayucsac_root',
-    'pass' => '$oportemys#1',
-    'db'   => 'mayucsac_produccionmayucsa',
-    'host' => '162.241.62.122'
-);
-// $sql_details = array(
-//     'user' => 'mayucsac_root',
-//     'pass' => '$oportemys#1',
-//     'db'   => 'mayucsac_prue_produccion',
-//     'host' => '162.241.62.122'
-// );
-// $sql_details = array(
-//     'user' => 'mayucsac_root',
-//     'pass' => '$oportemys#1',
-//     'db'   => 'mayucsac_produccion',
-//     'host' => '162.241.62.122'
-// );
+include_once "../../../dbconexion/conexionServerSide.php";
  
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * If you just want to use the basic configuration for DataTables with PHP

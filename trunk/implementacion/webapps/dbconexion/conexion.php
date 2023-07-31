@@ -36,10 +36,13 @@
 		 	// $host			='mysql:dbname=mayucsac_produccionmayucsa;host=162.241.62.122';
 			// $usuario		='mayucsac_root';
 			// $contrasenia	='$oportemys#1';
-			$host			='mysql:dbname=produccionmayucsa;host=192.168.1.6';
+			// $host			='mysql:dbname=produccionmayucsa;host=192.168.1.6';
 			// $host			='mysql:dbname=produccionmayucsa;host=mayucsa.synology.me';
-			$usuario		='alfredochaan';
-			$contrasenia	='$oporteMys#1';
+			$host			='mysql:dbname=mayucsademo;host=mayucsa.synology.me';
+			// $usuario		='alfredochaan';
+			$usuario		='ismael';
+			// $contrasenia	='$oporteMys#1';
+			$contrasenia	='Sistemas$1';
 			// $dbname			='produccionmayucsa';
 			try {
 				$database =  new PDO($host, $usuario, $contrasenia);

@@ -2,13 +2,13 @@ function consultar(){
         var table;
         $(document).ready(function() {
         table = $('#tableMatPrima').DataTable( {
-            "dom": 'Bfrtip',
-            "buttons": [
-                 {"extend": 'excel',"text": '<i class="far fa-file-excel"> Exportar en Excel</i>', "title": 'Producción Morteros'}, 
-                 {"extend": 'pdf', "text": '<i class="far fa-file-pdf"> Exportar en PDF</i>', "title": 'Producción Morteros'}, 
-                 {"extend": 'print', "text": '<i class="fas fa-print"> Imprimir</i>', "title": 'Producción Morteros'},
-                 "pageLength",
-            ],
+            // "dom": 'Bfrtip',
+            // "buttons": [
+            //      {"extend": 'excel',"text": '<i class="far fa-file-excel"> Exportar en Excel</i>', "title": 'Producción Morteros'}, 
+            //      {"extend": 'pdf', "text": '<i class="far fa-file-pdf"> Exportar en PDF</i>', "title": 'Producción Morteros'}, 
+            //      {"extend": 'print', "text": '<i class="fas fa-print"> Imprimir</i>', "title": 'Producción Morteros'},
+            //      "pageLength",
+            // ],
             "processing": true,
             "serverSide": true,
             "ajax": "serverSideentradas.php",
@@ -23,7 +23,7 @@ function consultar(){
             "bDestroy": true,
             "columnDefs":[
                             {
-                                "targets": [1, 2, 3],
+                                "targets": [0, 2, 3, 4],
                                 "className": 'dt-body-center', /*alineacion al centro th de tbody de la table*/
                                 // "DefaultContent": '<span class= "btn btn-warning" data-toggle="modal" data-target="#modalMatPrimaUpdate" data-whatever="@getbootstrap"> </span>',
                                 // "targets": [4]
@@ -32,15 +32,11 @@ function consultar(){
                                 // "defaultContent": '<span class= "btn btn-warning" data-toggle="modal" data-target="#modalMatPrimaUpdate" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>'
                             },
                             {
-                                "targets": 3,
+                                "targets": 4,
                                 "render": function(data, type, row, meta){
-                                    // const primaryKey = data;
-                                    // "data": 'cve_entrada',
-                                    return  '<span class= "btn btn-warning" onclick= "obtenerDatos('+row[3]+')" title="Editar" data-toggle="modal" data-target="#modalMatPrimaUpdate" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>' + ' ' + 
-                                            '<span class= "btn btn-danger" title="Eliminar" data-toggle="modal" data-target="#modalDeleteProduccion" data-whatever="@getbootstrap"><i class="fas fa-trash-alt"></i> </span>';
+                                    return  row[4]
                                 }
-                                // "data": null,
-                                // "defaultContent": '<span class= "btn btn-warning" onclick= "obtenerDatos(".$value["cve_entrada"].")" data-toggle="modal" data-target="#modalMatPrimaUpdate" data-whatever="@getbootstrap"><i class="fas fa-edit"></i> </span>'
+
                             }
                         ],
 
@@ -228,7 +224,7 @@ function mostrar(){
 
 function obtenerDatos(cve_entrada) {
     $.getJSON("modelo_entradas.php?consultar="+cve_entrada, function(registros){
-        // console.log(registros);
+        console.log(registros);
 
         $('#comb_idu').val(registros[0]['cve_entrada']);
         $('#comb_mat_primau').val(registros[0]['nombre']);
@@ -240,10 +236,12 @@ function limpiarCampos() {
     $('#comb_mat_prima').val("0");
     $('#comb_cantidad').val("");
 }
+
 function limpiarCamposQ() {
     $('#comb_quimico').val("0");
     $('#comb_cantidadq').val("");
 }
+
 function limpiarCamposReproceso() {
     $('#comb_mat_primau').val("0");
     $('#comb_cantidadu').val("");
@@ -254,19 +252,18 @@ function cerrarModal(){
     $('body').removeClass('modal-open');
     $('.modal-backdrop').remove();
 }
+
 function cerrarModalEditar(){
     $('#modalMatPrimaUpdate').modal('hide');
     $('body').removeClass('modal-open');
     $('.modal-backdrop').remove();
 }
-    
-$(document).ready(function (vista_entradas){
-    $('#comb_cantidad').keypress(function(e) {
-        if (e.which == 13) { 
-            insertEntradas(); 
-        }
-    });
-});
+function cerrarModalEliminar(){
+    $('#modalDeleteMP').modal('hide');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+}
+
 function sinacceso(){
 
     Swal.fire({
@@ -302,47 +299,13 @@ function validacionCampos(){
 }
 
 function insertEntradas() {
-    // var select = $('#comb_mat_prima').val();
-    // var cantidad = $('#comb_cantidad').val();
-    // var msj = "";
-    // var msj1 = "";
-
-    // if (select == 0) {
-        // console.log(select);
-        // msj += '<li>Materia Prima</li>';
-    // }    
-    // if (cantidad == "") {
-        // console.log(cantidad);
-        // msj += '<li>Cantidad</li>';
-    // }
-
-    // if (msj.length != 0) {
-        // $('#encabezadoModal').html('Validación de datos');
-        // $('#cuerpoModal').html('Los siguientes campos son obligatorios:<ul>'+msj+'</ul>');
-        // $('#modalMensajes').modal('toggle');
-        // Swal.fire('Los siguientes campos son obligatorios:<ul>'+msj+'</ul>')
-        // alert("Ingrese Cantidad")
-    //     Swal.fire({
-    //             title: 'Los siguientes campos son obligatorios:',
-    //             html: msj,
-    //             icon: 'warning',
-    //             iconColor: '#d33',
-    //             showCancelButton: false,
-    //             confirmButtonColor: '#3085d6',
-    //             cancelButtonColor: '#d33',
-    //             confirmButtonText: 'Ok!'
-    //             }).then((result) => {
-    //             if (result.isConfirmed) {
-
-    //             }
-    //             });
-    // } else{
-
     var datos   = new FormData();
     datos.append('nombre', $('#comb_mat_prima').val());
     datos.append('cantidad_entrada', $('#comb_cantidad').val());
-    // console.log(datos.get('nombre_mat_prima'));
-    // console.log(datos.get('cantidad'));
+    datos.append('user', $('#spanuser').text());
+    console.log(datos.get('nombre'));
+    console.log(datos.get('cantidad_entrada'));
+    console.log(datos.get('user'));
 
     Swal.fire({
                 title: '¿Los datos son correctos?',
@@ -357,7 +320,7 @@ function insertEntradas() {
     }).then((result) => {
 
     if (result.isConfirmed) {
-
+    jsShowWindowLoad('Generando entrada de materia prima...');
         $.ajax({
                 type:"POST",
                 url:"modelo_entradas.php?accion=insertar",
@@ -367,15 +330,26 @@ function insertEntradas() {
         success:function(data){
             // $('#myLoading').modal('show');
                     // mostrar();
-                    consultar();
-                    limpiarCampos();
+                    // consultar();
+                    // location.reload();
+                    // limpiarCampos();
+                    jsRemoveWindowLoad();
                     cerrarModal();
                     // $('#myLoadingGral').modal('show');
-                    Swal.fire(
-                                '¡Agregado!',
-                                'Materia Prima Agregado con Exito !',
-                                'success'
-                            )
+                        Swal.fire({
+                          title: '¡Éxito!',
+                          html: 'Se capturo de manera exitosa la entrada de materia prima',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: 'green',
+                          confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            location.reload();
+                          }else{
+                            location.reload();
+                          }
+                        });
                     }
 
             })
@@ -392,7 +366,6 @@ function insertEntradas() {
     });
     // }
 }
-
 
 function insertEntradasQ() {
     var select = $('#comb_quimico').val();
@@ -488,7 +461,6 @@ function insertEntradasQ() {
     }
 }
 
-
 function editarEntradas(cve_entrada) {
     // var select = $('#comb_quimico').val();
     var cantidad = $('#comb_cantidadu').val();
@@ -548,6 +520,7 @@ function editarEntradas(cve_entrada) {
     }).then((result) => {
 
     if (result.isConfirmed) {
+        jsShowWindowLoad('Editando entrada de materia prima...');
         $.ajax({
                 type:"POST",
                 url:"modelo_entradas.php?actualizar=1",
@@ -557,6 +530,7 @@ function editarEntradas(cve_entrada) {
         success:function(r){
             // console.log(r);
             // mostrar();
+            jsRemoveWindowLoad();
             consultar();
             limpiarCamposReproceso();
             cerrarModalEditar();
@@ -581,5 +555,67 @@ function editarEntradas(cve_entrada) {
   }
     });
     }
+
+}
+
+function Eliminar(cve_entrada){
+    $.getJSON("modelo_entradas.php?consultar="+cve_entrada, function(registros){
+        console.log(registros);
+
+        $('#folio').val(registros[0]['cve_entrada']);
+        $('#nombre').val(registros[0]['nombre']);
+        $('#cantidad').val(registros[0]['cantidad_entrada']);
+    });
+}
+
+function eliminarEntrada(cve_entrada){
+        var datos   = new FormData();
+        datos.append('folio', $('#folio').val());
+        datos.append('nombre', $('#nombre').val());
+        datos.append('cantidad', $('#cantidad').val());
+        datos.append('user', $('#spanuser').text());
+        console.log(datos.get('folio'));
+        console.log(datos.get('nombre'));
+        console.log(datos.get('cantidad'));
+        console.log(datos.get('user'));
+
+        Swal.fire({
+                title: '¿Los datos son correctos?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Eliminar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                jsShowWindowLoad('Eliminando entrada...');
+                $.ajax({
+                    type:"POST",
+                    url:"modelo_entradas.php?accion=eliminar",
+                    data: datos,
+                    processData:false,
+                    contentType:false,
+                    success:function(data){
+                        jsRemoveWindowLoad();
+                        consultar();
+                        // cerrarModal();
+                        Swal.fire({
+                           title: '¡Éxito!',
+                           html: 'Se elimino la produccion',
+                           icon: 'success',
+                           showCancelButton: false,
+                           confirmButtonColor: 'green',
+                           confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                cerrarModalEliminar();
+                            }else{
+                                cerrarModalEliminar();
+                            }
+                        })
+                    }
+                })
+            }
+        });
 
 }

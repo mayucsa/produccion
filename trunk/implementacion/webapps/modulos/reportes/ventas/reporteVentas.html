@@ -1,0 +1,250 @@
+<?php  ?>
+<!-- FORMATO PDF VENTAS BLOQUERA -->
+<div class="container" style="display: none;">
+	<div class="row" id="pdfVentasBloquera">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>REPORTE VENTAS BLOCK / BOVEDILLAS <br>{{ventasBloquera.fecha}}</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, obj) in ventasBloquera.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border: solid 1px; font-size: 10px;">Folio</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total1>0?'':'display:none'}}">Besser/BK12/2C</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total2>0?'':'display:none'}}">Besser/BK15/2C</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total3>0?'':'display:none'}}">Besser/BK15/3C</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total4>0?'':'display:none'}}">Vibro/BK10</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total5>0?'':'display:none'}}">Vibro/BK12</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total6>0?'':'display:none'}}">Vibro/BK15/2C</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total7>0?'':'display:none'}}">Vibro/BK15/3C</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total8>0?'':'display:none'}}">Vibro/BK20</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total9>0?'':'display:none'}}">Vibro/BV15</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total10>0?'':'display:none'}}">Vibro/BV20</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasBloquera.total11>0?'':'display:none'}}">Vibro/Tabique</th>
+						<th style="border: solid 1px; font-size: 10px;">Cliente</th>
+						<th style="border: solid 1px; font-size: 10px;">Chofer / placas</th>
+						<th style="border: solid 1px; font-size: 10px;">Fecha / hora</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, raw) in obj track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CFOLIO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total1>0?'':'display:none'}}">{{raw.B1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total2>0?'':'display:none'}}">{{raw.B2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total3>0?'':'display:none'}}">{{raw.B3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total4>0?'':'display:none'}}">{{raw.B4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total5>0?'':'display:none'}}">{{raw.B5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total6>0?'':'display:none'}}">{{raw.B6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total7>0?'':'display:none'}}">{{raw.B7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total8>0?'':'display:none'}}">{{raw.B8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total9>0?'':'display:none'}}">{{raw.B9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total10>0?'':'display:none'}}">{{raw.B10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasBloquera.total11>0?'':'display:none'}}">{{raw.B11}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CRAZONSOCIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CTEXTOEXTRA2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.fecha_registro}}</td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total1>0?'':'display:none'}}">{{ventasBloquera.total1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total2>0?'':'display:none'}}">{{ventasBloquera.total2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total3>0?'':'display:none'}}">{{ventasBloquera.total3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total4>0?'':'display:none'}}">{{ventasBloquera.total4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total5>0?'':'display:none'}}">{{ventasBloquera.total5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total6>0?'':'display:none'}}">{{ventasBloquera.total6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total7>0?'':'display:none'}}">{{ventasBloquera.total7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total8>0?'':'display:none'}}">{{ventasBloquera.total8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total9>0?'':'display:none'}}">{{ventasBloquera.total9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total10>0?'':'display:none'}}">{{ventasBloquera.total10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasBloquera.total11>0?'':'display:none'}}">{{ventasBloquera.total11}}</td>
+						<td style="border: transparent;"></td>
+						<td style="border: transparent;"></td>
+						<td style="border: transparent;"></td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>
+<!-- FORMATO PDF VENTAS TRITURADORA -->
+<div class="container" style="display: none;">
+	<div class="row" id="pdfVentasTrituradora">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>REPORTE VENTAS TRITURADORA <br>{{ventasTrituradora.fecha}}</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, obj) in ventasTrituradora.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border: solid 1px; font-size: 10px;">Folio</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasTrituradora.total1>0?'':'display:none'}}">Polvo</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasTrituradora.total2>0?'':'display:none'}}">Grava</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasTrituradora.total3>0?'':'display:none'}}">Gravilla</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasTrituradora.total4>0?'':'display:none'}}">Material BF</th>
+						<th style="border: solid 1px; font-size: 10px;">Cliente</th>
+						<th style="border: solid 1px; font-size: 10px;">Chofer / placas</th>
+						<th style="border: solid 1px; font-size: 10px;">Fecha / hora</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, raw) in obj track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CFOLIO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasTrituradora.total1>0?'':'display:none'}}">{{raw.POLVO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasTrituradora.total2>0?'':'display:none'}}">{{raw.GRAVA}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasTrituradora.total3>0?'':'display:none'}}">{{raw.GRAVILLA}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasTrituradora.total4>0?'':'display:none'}}">{{raw.MATERIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CRAZONSOCIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CTEXTOEXTRA2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.fecha_registro}}</td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;{{ventasTrituradora.total1>0?'':'display:none'}}">{{ventasTrituradora.total1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;{{ventasTrituradora.total2>0?'':'display:none'}}">{{ventasTrituradora.total2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;{{ventasTrituradora.total3>0?'':'display:none'}}">{{ventasTrituradora.total3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;{{ventasTrituradora.total4>0?'':'display:none'}}">{{ventasTrituradora.total4}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>
+<!-- FORMATO PDF VENTAS MORTEROS -->
+<div class="container" style="display: none;">
+	<div class="row" id="pdfVentasMortero">
+		<table>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:70%; text-align: center; padding-top: 10px;">
+					<h4>REPORTE VENTAS MORTEROS <br>{{ventasMortero.fecha}}</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, obj) in ventasMortero.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+						<th style="border: solid 1px; font-size: 10px;">Folio</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total1>0?'':'display:none'}}">PB/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total2>0?'':'display:none'}}">PB/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total3>0?'':'display:none'}}">PC/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total4>0?'':'display:none'}}">PC/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total5>0?'':'display:none'}}">MG/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total6>0?'':'display:none'}}">MG/GR/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total7>0?'':'display:none'}}">MF/GRIS/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total8>0?'':'display:none'}}">MF/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total9>0?'':'display:none'}}">MF/BCO/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total10>0?'':'display:none'}}">MF/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total11>0?'':'display:none'}}">MF/FIBRA/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total12>0?'':'display:none'}}">FINETEX/GRIS/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total13>0?'':'display:none'}}">FINETEX/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total14>0?'':'display:none'}}">FINETEX/BCO/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total15>0?'':'display:none'}}">FINETEX/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total16>0?'':'display:none'}}">ADHEMAT/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total17>0?'':'display:none'}}">ADHEMAT/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total18>0?'':'display:none'}}">PORCELAMAT/GRIS/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total19>0?'':'display:none'}}">PORCELAMAT/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total20>0?'':'display:none'}}">LOSAMAT/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total21>0?'':'display:none'}}">PASTACEMENTOSA/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total22>0?'':'display:none'}}">POLVOFINO/40KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total23>0?'':'display:none'}}">POLVOFINO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px; {{ventasMortero.total24>0?'':'display:none'}}">CHUKUM/BCO/20KG</th>
+						<th style="border: solid 1px; font-size: 10px;">Cliente</th>
+						<th style="border: solid 1px; font-size: 10px;">Chofer / placas</th>
+						<th style="border: solid 1px; font-size: 10px;">Fecha / hora</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, raw) in obj track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CFOLIO}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total1>0?'':'display:none'}}">{{raw.B1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total2>0?'':'display:none'}}">{{raw.B2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total3>0?'':'display:none'}}">{{raw.B3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total4>0?'':'display:none'}}">{{raw.B4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total5>0?'':'display:none'}}">{{raw.B5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total6>0?'':'display:none'}}">{{raw.B6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total7>0?'':'display:none'}}">{{raw.B7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total8>0?'':'display:none'}}">{{raw.B8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total9>0?'':'display:none'}}">{{raw.B9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total10>0?'':'display:none'}}">{{raw.B10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total11>0?'':'display:none'}}">{{raw.B11}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total12>0?'':'display:none'}}">{{raw.B12}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total13>0?'':'display:none'}}">{{raw.B13}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total14>0?'':'display:none'}}">{{raw.B14}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total15>0?'':'display:none'}}">{{raw.B15}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total16>0?'':'display:none'}}">{{raw.B16}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total17>0?'':'display:none'}}">{{raw.B17}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total18>0?'':'display:none'}}">{{raw.B18}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total19>0?'':'display:none'}}">{{raw.B19}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total20>0?'':'display:none'}}">{{raw.B20}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total21>0?'':'display:none'}}">{{raw.B21}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total22>0?'':'display:none'}}">{{raw.B22}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total23>0?'':'display:none'}}">{{raw.B23}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center; {{ventasMortero.total24>0?'':'display:none'}}">{{raw.B24}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CRAZONSOCIAL}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.CTEXTOEXTRA2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">{{raw.fecha_registro}}</td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>	
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total1>0?'':'display:none'}}">{{ventasMortero.total1}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total2>0?'':'display:none'}}">{{ventasMortero.total2}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total3>0?'':'display:none'}}">{{ventasMortero.total3}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total4>0?'':'display:none'}}">{{ventasMortero.total4}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total5>0?'':'display:none'}}">{{ventasMortero.total5}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total6>0?'':'display:none'}}">{{ventasMortero.total6}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total7>0?'':'display:none'}}">{{ventasMortero.total7}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total8>0?'':'display:none'}}">{{ventasMortero.total8}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total9>0?'':'display:none'}}">{{ventasMortero.total9}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total10>0?'':'display:none'}}">{{ventasMortero.total10}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total11>0?'':'display:none'}}">{{ventasMortero.total11}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total12>0?'':'display:none'}}">{{ventasMortero.total12}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total13>0?'':'display:none'}}">{{ventasMortero.total13}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total14>0?'':'display:none'}}">{{ventasMortero.total14}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total15>0?'':'display:none'}}">{{ventasMortero.total15}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total16>0?'':'display:none'}}">{{ventasMortero.total16}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total17>0?'':'display:none'}}">{{ventasMortero.total17}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total18>0?'':'display:none'}}">{{ventasMortero.total18}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total19>0?'':'display:none'}}">{{ventasMortero.total19}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total20>0?'':'display:none'}}">{{ventasMortero.total20}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total21>0?'':'display:none'}}">{{ventasMortero.total21}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total22>0?'':'display:none'}}">{{ventasMortero.total22}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total23>0?'':'display:none'}}">{{ventasMortero.total23}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right; {{ventasMortero.total24>0?'':'display:none'}}">{{ventasMortero.total24}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>

@@ -17,7 +17,7 @@ set_time_limit(0); ?>
     <link rel="stylesheet" type="text/css" href="../../../includees/css/main.css">
 
     <script src="../../../includes/js/jquery351.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
     <!-- <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>  -->
     <script src="../../../includes/js/popper.js"></script>
     <script src="../../../includes/js/popper.min.js"></script>
@@ -33,7 +33,7 @@ set_time_limit(0); ?>
     <script type="text/javascript" src="../../../includes/js/isloading.js"></script>
     <!-- fin Angular JS -->
     <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
     <script src="../../../includes/js/fontawesome.js"></script>
 
@@ -100,7 +100,7 @@ set_time_limit(0); ?>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
             <!-- <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li> -->
             <!-- <li><a class="dropdown-item" href="../../password/vista_password.php"><i class="fa fa-user fa-lg" style="font-size:12px"></i>Cambiar contraseña</a></li> -->
-            <li><a class="dropdown-item" href="../../logout.php">
+            <li><a class="dropdown-item" href="javascript:void(0)" ng-click="cerrarsesion()">
                   <i class="fa fa-sign-out fa-lg"></i><font>Cerrar Sesi&oacute;n</font>
                 </a>
             </li>

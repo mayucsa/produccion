@@ -36,13 +36,16 @@ class Modelo_login{
 	}
 
     function consulta_vigencia_persona($usuario) {
+        $resultado = false;
         try {
             $dbcon = new MysqlConn;
             $con = $dbcon->conn();
-            $sql = "SELECT  estatus_usuario
+            $sql = "SELECT  *
                     FROM    cat_usuarios
-                    WHERE   nombre_usuario = '".$usuario."'";
+                    WHERE   nombre_usuario = '".$usuario."' AND estatus_usuario = 1";
             $vig = $dbcon->qBuilder($con, 'first', $sql);
+            // dd($sql);
+            // echo ('$vig');
             if ($vig) {
                 $resultado = true;
             }
@@ -57,7 +60,8 @@ class Modelo_login{
             $dbcon = new MysqlConn;
             $con = $dbcon->conn();
             $sql = "SELECT 	*
-            		FROM 	cat_usuarios
+            		FROM cat_usuarios cu
+                    INNER JOIN permisos_produccion pp ON pp.cve_usuario =cu.cve_usuario
             		WHERE 	nombre_usuario = '".$usuario."' AND contrasenia = '".$contrasenia."'";
             $persona = $dbcon->qBuilder($con, 'first', $sql);
             if ($persona) {

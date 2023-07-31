@@ -10,23 +10,45 @@
             <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
             <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"> -->
         </head>
-
-<div class="modal fade" id="modalMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top:10%; overflow-y:visible;" >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header modal-danger">
-                <h5 class="modal-title" id="encabezadoModal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div ng-controller="vistaProduccionMorteros">
+            <!-- MODAL VER MATERIA PRIMA QUE UTILIZO -->
+            <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modaMisMp == true">
+                <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">
+                    <h3>Cantidad de materia prima</h3>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="tproducto" id="tproducto" name="tproducto" class="form-control form-control-md validanumericos" disabled>
+                                <label>Producto</label>
+                            </div>
+                            <div style="width: 100%;" class="form-floating mx-1">
+                                <input type="text" ng-model="tfecha" id="tfecha" name="tfecha" class="form-control form-control-md validanumericos" disabled>
+                                <label>Fecha de produccion</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaModalEstiba">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Materia prima</th>
+                                    <th class="text-center">Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(i, obj) in tmpproducto track by i">
+                                    <td class="text-center">{{obj.nombre_materiaprima}}</td>
+                                    <td class="text-center">{{obj.cantidad}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 text-right">
+                    <!-- <button class="btn btn-success" ng-click="verificar()">Confirmar salida</button> -->
+                    <button class="btn btn-danger" ng-click="getModalMP()">Cerrar</button>
+                </div>
             </div>
-            <div class="modal-body" id="cuerpoModal"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
     <main class="app-content">
@@ -42,290 +64,135 @@
 
     <div class="row">
         <div class="col-md-12">
-          <div class="tile">
-            <div class="card card-info">
-                <div class="card-header">
-                     <h3 class="card-title">CAPTURA DE DATOS</h3>
-                     <div class="card-tools">
-                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                             <i class="fas fa-minus"></i>
-                         </button>
-                     </div>
-                </div>
-                <div class="card-body">
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active border" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><strong>Producción</strong> </a>
-                        </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link border" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><strong>Producción Especial</strong></a>
-                        </li> -->
-                        <li class="nav-item">
-                            <a class="nav-link border" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false"><strong>Reproceso</strong></a>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content" id="pills-tabContent">
-                            <!-- PANEL DE CAPTURA DE PRODUCCIÓN -->
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                            <form novalidate id="tablaCaptura" onsubmit="return false" autocomplete="off" method="POST">
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-lg-12 d-lg-flex">
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <select class="form-control form-group-md" id="selectproducto" name="selectproducto" onchange="selectProducto()">
-                                                <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                                <?php   
-                                                    $sql        = ModeloProducto::showProducto();
-            
-                                                        foreach ($sql as $value) {
-                                                        echo '<option value="'.$value["cve_producto"].'">'.$value["nombre_producto"].'</option>';
-                                                        }
-                                                    ?>
-                                            </select>
-                                            <label>Producto</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <select class="form-control form-group-md" id="selectpresentacion" name="selectpresentacion" onchange="multiplicar();" disabled>
-                                                <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                            </select>
-                                            <label>Presentación</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spantonelada" name="spantonelada" class="form-control" style="background-color: #E9ECEF;" onchange="multiplicar();"></span>
-                                            <label>Tonelada</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-lg-12 d-lg-flex">
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <input type="text" id="inputbarcadas" name="inputbarcadas" class="form-control form-control-md validanumericos" onchange="multiplicar();">
-                                            <label>Cantidad de Barcadas</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <input type="text" id="inputkgreal" name="inputkgreal" class="form-control form-control-md validanumericos" onchange="multiplicar();">
-                                            <label>KG Real</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <input type="text" id="inputSacoRotos" name="inputSacoRotos" class="form-control form-control-md validanumericos" onchange="multiplicar();">
-                                            <label>Sacos Rotos</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <!-- <input type="text" id="inputtarimas" name="inputtarimas" class="form-control form-control-md validanumericos" onchange="validacionTarimas();"> -->
-                                            <input type="text" id="inputtarimas" name="inputtarimas" class="form-control form-control-md validanumericos">
-                                            <label>Tarimas utilizadas</label>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-lg-12 d-lg-flex">
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spTotal" name="spTotal" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label>KG por Formula</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spDiferencia" name="spDiferencia" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label>Diferencia</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spSacosUsados" name="spSacosUsados" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label>Sacos Usados</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spSacoTotal" name="spSacoTotal" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label>Sacos Totales</label>
-                                        </div>
-                                        <span hidden  id="spanuser" name="spanuser" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
-                                    </div>
-                                </div>
-
-                                <div class="row form-group form-group-sm border-top">
-                                    <div class="col-sm-12" align="center">
-                                    <?php
-                                        if ($captura_mortero == 1) {
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }else{
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }
-                                    ?>
-                                        <!-- <input type="submit" value="Guardar" href="#" onclick="insertCaptura()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
-                                        <input type="submit" value="Limpiar" href="#" onclick="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
-                                    </div>
-                                </div>
-                            </form>
+            <div class="tile">
+                <div class="card card-info" ng-show="perfilUsu.produccion_morteros_captura == 1">
+                    <div class="card-header">
+                        <h3 class="card-title">CAPTURA DE PRODUCCI&Oacute;N</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
                         </div>
-
-                        <!-- <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"> -->
-                                
-                        <!-- </div> -->
-
-                        <!-- PANEL DE CAPTURA DE REPROCESO -->
-                        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                            <form novalidate id="tablaReproceso" onsubmit="return false" autocomplete="off" method="POST">
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-lg-12 d-lg-flex">
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <select class="form-control form-group-sm" id="selectproduct" name="selectproduct" onchange="selectProduct()">
-                                                <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                                    <?php
-                                                            $sql        = ModeloProducto::showProducto();
-
-                                                        foreach ($sql as $key =>$value) {
-                                                        echo '<option value="'.$value["cve_producto"].'">'.$value["nombre_producto"].'</option>';
-                                                        }
-                                                    ?>
-                                            </select>
-                                            <label for="iptCategoria">Producto</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <select class="form-control form-group-sm" id="selectpresent" name="selectpresent" disabled>
-                                                <option selected="selected" value="0">[Seleccione una opción..]</option>
-                                            </select>
-                                            <label for="iptCategoria">Presentación</label>
-                                        </div>
-                                    </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row form-group form-group-sm">
+                            <div class="col-lg-12 d-lg-flex">
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <select class="form-control form-group-md" ng-model="producto" ng-blur="habilitarinput()">
+                                        <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
+                                        <option ng-repeat="(i, obj) in prod" value="{{obj.cve_mortero}}">{{obj.cod_producto}} - {{obj.nombre_producto}}</option>
+                                    </select>
+                                    <label>Producto</label>
                                 </div>
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-lg-12 d-lg-flex">
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <input type="text" id="inputingrer" name="inputingrer" class="form-control form-control-md validanumericos">
-                                            <label for="iptCategoria">KG ingresado</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <input type="text" id="inputkgrealr" name="inputkgrealr" class="form-control form-control-md validanumericos" onchange="multiplicarrp();">
-                                            <label for="iptCategoria">KG producido</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <input type="text" id="inputSacoRotosr" name="inputSacoRotosr" class="form-control form-control-md validanumericos" onchange="multiplicarrp();">
-                                            <label for="iptCategoria">Rotura</label>
-                                        </div>
-                                    </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="tonelada" id="tonelada" autocomplete="off" disabled>
+                                    <label>Tonelada</label>
                                 </div>
-                                <div class="row form-group form-group-sm">
-                                    <div class="col-lg-12 d-lg-flex">
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spDiferenciar" name="spDiferenciar" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label for="iptCategoria">Diferencia</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spSacosUsadosr" name="spSacosUsadosr" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label for="iptCategoria">Sacos Usados</label>
-                                        </div>
-                                        <div style="width: 25%;" class="form-floating mx-1">
-                                            <span id="spSacoTotalr" name="spSacoTotalr" class="form-control" style="background-color: #E9ECEF;"></span>
-                                            <label for="iptCategoria">Sacos Totales</label>
-                                        </div>
-                                    </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="presentacion" id="presentacion" autocomplete="off" disabled>
+                                    <label>presentacion</label>
                                 </div>
-                                <div class="row form-group form-group-sm border-top">
-                                    <div class="col-sm-12" align="center">
-                                    <?php
-                                        if ($captura_mortero == 1) {
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }else{
-                                    ?>
-                                            <input type="submit" value="Guardar" href="#" onclick="sinacceso()" class="btn btn-primary" style="margin-bottom: -25px !important">
-                                    <?php
-                                        }
-                                    ?>
-                                        <!-- <input type="submit" value="Guardar" href="#" onclick="insertReproceso()" class="btn btn-primary" style="margin-bottom: -25px !important"> -->
-                                        <input type="submit" value="Limpiar" href="#" onclick="limpiarCamposReproceso()" class="btn btn-warning" style="margin-bottom: -25px !important">
-                                    </div>
+                            </div>
+                        </div>
+                        <div class="row form-group form-group-sm">
+                            <div class="col-lg-12 d-lg-flex">
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <!-- <input class="date-picker form-control validanumericos" ng-model="cantidad" id="cantidad" autocomplete="off" ng-disabled="true" ng-blur="toneladaporbarcada(tonelada, cantidad)"> -->
+                                    <input class="date-picker form-control validanumericos" ng-model="cantidad" id="cantidad" autocomplete="off" ng-disabled="true" ng-blur="validaExistenciaMP(producto, cantidad, tonelada)">
+                                    <label>Cantidad de barcadas</label>
                                 </div>
-                            </form>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="kgreal" id="kgreal" autocomplete="off" ng-disabled="true" ng-blur="realmenosformula(kgreal, kgformula, presentacion)">
+                                    <label>KG Real</label>
+                                </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="sacosrotos" id="sacosrotos" autocomplete="off" ng-disabled="true" ng-blur="sacosusadosmasrotos(sacosproduccion, sacosrotos)">
+                                    <label>Sacos Rotos</label>
+                                </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="tarimas" id="tarimas" autocomplete="off" ng-disabled="true" ng-blur="existenciatarimas(tarimas)">
+                                    <label>Tarimas en producción</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group form-group-sm">
+                            <div class="col-lg-12 d-lg-flex">
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="kgformula" id="kgformula" autocomplete="off" ng-disabled="true">
+                                    <label>KG por fórmula</label>
+                                </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="diferencia" id="diferencia" autocomplete="off" ng-disabled="true">
+                                    <label>Diferencia de KG</label>
+                                </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="sacosproduccion" id="sacosproduccion" autocomplete="off" ng-disabled="true">
+                                    <label>Sacos en producción</label>
+                                </div>
+                                <div style="width: 100%;" class="form-floating mx-1">
+                                    <input class="date-picker form-control validanumericos" ng-model="sacostotales" id="sacostotales" autocomplete="off" ng-disabled="true">
+                                    <label>Sacos totales usados</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group form-group-sm border-top">
+                            <div class="col-sm-12" align="center">
+                                <input type="submit" value="Guardar producción" href="#" ng-click="validacionCampos()" class="btn btn-primary" style="margin-bottom: -25px !important">
+                                <input type="submit" value="Limpiar" href="#" ng-click="limpiarCampos()" class="btn btn-warning" style="margin-bottom: -25px !important">
+                                <input type="submit" value="Enviar correo" href="#" ng-click="envioCorreo()" class="btn btn-info" style="margin-bottom: -25px !important">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">PRODUCCIONES MORTEROS</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaProduccion">
+                                <thead>
+                                    <tr>
+                                        <th>Folio</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad barcadas</th>
+                                        <th>KG producido</th>
+                                        <th>Sacos usados</th>
+                                        <th>Fecha de captura</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(i, obj) in ssProduccionMorteros track by i">
+                                        <td class="text-center">{{obj.cve_captura}}</td>
+                                        <td>{{obj.nombre_producto}}</td>
+                                        <td class="text-center">{{obj.cantidad_barcadas}}</td>
+                                        <td class="text-center">{{obj.kg_real}}</td>
+                                        <td class="text-center">{{obj.sacos_total}}</td>
+                                        <td class="text-center">{{obj.fecha_registro}}</td>
+                                        <td class="text-center">
+                                            <span class= "btn btn-info btn-sm" ng-click="getModalMP(obj.cve_captura)" title="Ver datos"><i class="fas fa-eye"></i> </span>
+                                            <span class= "btn btn-warning btn-sm" ng-show="perfilUsu.produccion_morteros_edit == 1" ng-click="sinacceso()" title="Editar fecha"><i class="fas fa-calendar"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" title="Descargar PDF"><i class="fas fa-download"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.produccion_morteros_edit == 1" ng-click="eliminar(obj.cve_captura, obj.cve_mortero, obj.kg_real, obj.cantidad_barcadas, obj.tarimas_enproduccion)" title="Eliminar"><i class="fas fa-window-close"></i> </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">CRITERIOS DE BÚSQUEDA</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12 d-lg-flex" style="display: flex; justify-content: flex-end">
-                            <div style="width: 20%;" class="form-floating mx-1">
-                                <input 
-                                        type="text" 
-                                        id="iptNombre"
-                                        class="form-control"
-                                        data-index="0">
-                                <label for="iptNombre">Nombre</label>
-                            </div>
-                            <div style="width: 20%;" class="form-floating mx-1">
-                                <input 
-                                        type="text" 
-                                        id="iptPresentacion"
-                                        class="form-control"
-                                        data-index="1">
-                                <label for="iptPresentacion">Presentación</label>
-                            </div>
-                            <div style="width: 20%;" class="form-floating mx-1">
-                                <input 
-                                        type="text" 
-                                        id="iptFecha"
-                                        class="form-control"
-                                        data-index="5">
-                                <label for="iptFecha">Fecha</label>
-                            </div>
-<!--                             <div style="display: inline-flex;">
-                                <input type="submit" value="Limpiar" href="#" onclick="limpiarCriterios()" class="btn btn-warning">
-                            </div> -->
-                        </div>
-                    </div>
-                </div> <!-- ./ end card-body -->
-            </div> <!-- ./ end card-info -->
-
-            <div class="card card-info">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover w-100 shadow" id="tablaCapturap">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Presentación</th>
-                                    <th class="text-center">Cantidad de Barcadas</th>
-                                    <th class="text-center">KG ingresado</th>
-                                    <th class="text-center">Sacos utilizados</th>
-                                    <th class="text-center">Fecha de captura</th>
-                                    <th class="text-center">Eliminar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> <!-- ./ end card-body -->
-            </div> <!-- ./ end card-info -->
-
-          </div>
         </div>
-    </div> <!--FIN DE DIV ROW--->
+    </div>
       <?php include_once "../../footer.php" ?>
     </main>
-
+</div>
 
 
 <!-- <script src="vista_captura.js"></script> -->
@@ -413,12 +280,13 @@
 
     <script src="../../../includes/js/jquery351.min.js"></script>
 
-    <script src="vista_captura.js"></script>
+    <!-- <script src="vista_captura.js"></script> -->
 
 <?php 
     include_once "../../inferior.php"; 
     include_once "modal_deleteproduccion.php"; 
 ?>
+    <script src="vista_captura_ajs.js"></script>
 
     <script src="vista_captura.js"></script>
 
@@ -434,13 +302,6 @@
 
     <script type="text/javascript" src="../../../includes/js/datatables.min.js"></script>
     
-<!--     <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script> -->
-
-
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
     <script src="../../../includes/js/data_tables_js/jquery.dataTables.min.js"></script>
     <script src="../../../includes/js/data_tables_js/dataTables.buttons.min.js"></script>
     <script src="../../../includes/js/data_tables_js/jszip.min.js"></script>
@@ -449,18 +310,9 @@
     <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
     <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>
 
+
     <script type="text/javascript">
-    <?php
-    if ($delete_mortero == 1) {
-        ?>
-        consultar();
-    <?php
-    }else{
-        ?>
-        consult();
-        <?php
-    }
-     ?>
+            consultar();
     </script>
 
     <script>

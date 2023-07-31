@@ -15,26 +15,16 @@
                   <div style="width: 50%;" class="form-floating mx-1">
                       <select class="form-control form-group-md" id="selectmaquinaedit" name="selectmaquinaedit">
                           <option selected="selected" value="0">[Seleccione una opción..]</option>
-                          <?php   
-                              $sql        = ModeloTiempoPerdido::showMaquina();
-
-                                  foreach ($sql as $value) {
-                                  echo '<option value="'.$value["cve_maq"].'">'.$value["cve_alterna"]." - ".$value["nombre_maq"].'</option>';
-                                  }
-                              ?>
+                          <option ng-repeat="(i, obj) in Maquinas" value="{{obj.cve_maq}}">{{obj.cve_alterna}} - {{obj.nombre_maq}}</option>
+                                </select>
                       </select>
                       <label>Máquina</label>
                   </div>
                   <div style="width: 50%;" class="form-floating mx-1">
                       <select class="form-control form-group-md" id="selectfalloedit" name="selectfalloedit">
                           <option selected="selected" value="0">[Seleccione una opción..]</option>
-                          <?php   
-                              $sql        = ModeloTiempoPerdido::showFallo();
-
-                                  foreach ($sql as $value) {
-                                  echo '<option value="'.$value["cve_fallo"].'">'.$value["cve_alterna"]." - ".$value["nombre_fallo"]." - ".$value["motivo_fallo"].'</option>';
-                                  }
-                              ?>
+                          <option ng-repeat="(i, obj) in Fallos" value="{{obj.cve_fallo}}">{{obj.cve_alterna}} - {{obj.nombre_fallo}} - {{obj.motivo_fallo}}</option>
+                                </select>
                       </select>
                       <label>Fallo</label>
                   </div>
@@ -47,7 +37,15 @@
                       <input type="text" id="inputmotivoedit" name="inputmotivoedit" class="form-control form-control-md UpperCase">
                       <label>Motivo de fallo</label>
                   </div>
-                  <div style="width: 25%;" class="form-floating mx-1"> 
+                  <div style="width: 25%;" class="form-floating mx-1">
+                      <input type="text" id="inputhorainicioedit" ng-keyup="checkTime('inputhorainicioedit');" name="inputhorainicioedit" class="form-control form-control-md">
+                      <label>Hora de inicio</label>
+                  </div>
+                  <div style="width: 25%;" class="form-floating mx-1">
+                      <input type="text" id="inputhorafinedit" ng-keyup="checkTime('inputhorafinedit');" name="inputhorafinedit" class="form-control form-control-md">
+                      <label>Hora de fin</label>
+                  </div>
+<!--                   <div style="width: 25%;" class="form-floating mx-1"> 
                       <div class="input-group clockpicker" id="datetimepicker3" data-autoclose="true">
                           <input type="text" class="form-control datetimepicker-input validanumericos" placeholder="Hora de inicio" id="inputhorainicioedit" name="inputhorainicioedit" onkeydown="noPuntoComa( event )">
                           <div class="input-group-append">
@@ -62,7 +60,7 @@
                               <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
                           </div>
                       </div>
-                  </div>
+                  </div> -->
               <div class="col-sm-2 text-left">
                   <span hidden id="spanusuario" name="spanusuario" class="form-control form-control-sm" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
               </div>

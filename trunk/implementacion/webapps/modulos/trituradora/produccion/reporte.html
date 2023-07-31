@@ -1,0 +1,57 @@
+<div class="container" style="display: none;">
+	<div class="row" id="reporteProd">
+		<table>
+			<tr>
+				<td colspan="3" style="text-align: right;">
+					{{fechaActual}}
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">
+					<img src="../../../includees/imagenes/Mayucsa.png" style="width: 80%">
+				</td>
+				<td style="width:30%; text-align: left; padding-top: 10px;"></td>
+				<td style="width:40%; text-align: left; padding-top: 10px;">
+					<h4>
+						<b>REPORTE PRODUCCION LINEA {{repoProduccionLinea.repo}}</b>
+						<br>
+						Reporte {{repoProduccionLinea.tipo}}
+						<br>
+						Fecha: {{repoProduccionLinea.fecha}}
+						<br>
+						Turno: {{repoProduccionLinea.turno}}
+					</h4>
+				</td>
+			</tr>
+		</table>
+		<div ng-repeat="(i, raw) in repoProduccionLinea.datos track by i" style="margin-top: 50px; margin-bottom: 40px;">
+			<table style="width:100%; border-collapse: collapse;">
+				<thead>
+					<tr>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Máquina</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">M3</th>
+                        <th style="border:solid 1px;font-size:10px;text-align:center">Material</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k, obj) in raw track by k">
+						<td style="border: solid 1px; font-size: 10px; text-align: center;">
+							{{obj.nombre_maq}}
+						</td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: right;">
+                        	{{obj.cant}}
+                        </td>
+                        <td style="border: solid 1px; font-size: 10px; text-align: center;">
+                        	{{obj.nombre_material}}
+                        </td>
+					</tr>
+					<tr>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">Total:</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;">{{repoProduccionLinea.total}}</td>
+						<td style="border: solid 1px; font-size: 10px; text-align: right;"></td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
+</div>

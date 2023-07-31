@@ -97,10 +97,26 @@ s0.parentNode.insertBefore(s1,s0);
             }, function(error){
                 console.log('error', error);
             });
+            $scope.cerrarsesion = function(){
+                Swal.fire({
+                  title: 'Cerrar sesión',
+                  text: '¿Realmente quiere finalizar su sesión?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: 'green',
+                  cancelButtonColor: 'red',
+                  confirmButtonText: 'Aceptar',
+                  cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href="../../logout.php";
+                    }
+                });
+            }
         })
         $(document).ready( function () {
-            // $(".UpperCase").on("keypress", function () {
-            $(".UpperCase").on("blur", function () {
+            $(".UpperCase").on("keypress", function () {
+            // $(".UpperCase").on("blur", function () {
                 $input=$(this);
                 setTimeout(function () {
                     $input.val($input.val().toUpperCase());

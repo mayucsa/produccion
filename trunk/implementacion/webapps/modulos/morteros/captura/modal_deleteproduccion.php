@@ -37,27 +37,43 @@
         </button>
       </div>
       <div class="modal-body">
-        <form novalidate id="tablaMatPrima" onsubmit="return false" autocomplete="off" method="POST">
+        <!-- <form novalidate id="tablaMatPrima" onsubmit="return false" autocomplete="off" method="POST"> -->
           <div class="form-group">
             <label hidden for="recipient-name " class="col-form-label">ID:</label>
             <!-- <input required type="text" class="form-control validanumericos" id="comb_id" name="comb_id"> -->
             <input hidden type="text" class="form-control validanumericos" id="comb_id" name="comb_id" required="" disabled>
           </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Nombre:</label>
-            <input required type="text" class="form-control validanumericos" id="comb_nombre" name="comb_nombre" disabled>
+          <div class="row form-group form-group-sm">
+            <div class="col-lg-12 d-lg-flex">
+              <div style="width: 100%;" class="form-floating mx-1">
+                <input required type="text" class="form-control validanumericos" id="comb_nombre" name="comb_nombre" disabled>
+                <label>Nombre:</label>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Presentación:</label>
-            <input required type="text" class="form-control validanumericos" id="comb_presentacion" name="comb_presentacion" disabled>
+          <div class="row form-group form-group-sm">
+            <div class="col-lg-12 d-lg-flex">
+              <div style="width: 100%;" class="form-floating mx-1">
+                <input required type="text" class="form-control validanumericos" id="comb_presentacion" name="comb_presentacion" disabled>
+                <label>Presentación:</label>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">KG ingresado:</label>
-            <input required type="text" class="form-control validanumericos" id="comb_kg" name="comb_kg" disabled>
+          <div class="row form-group form-group-sm">
+            <div class="col-lg-12 d-lg-flex">
+              <div style="width: 100%;" class="form-floating mx-1">
+                <input required type="text" class="form-control validanumericos" id="comb_kg" name="comb_kg" disabled>
+                <label>KG ingresado:</label>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Sacos Utilizados:</label>
-            <input required type="text" class="form-control validanumericos" id="comb_sacos" name="comb_sacos" disabled>
+          <div class="row form-group form-group-sm">
+            <div class="col-lg-12 d-lg-flex">
+              <div style="width: 100%;" class="form-floating mx-1">
+                <input required type="text" class="form-control validanumericos" id="comb_sacos" name="comb_sacos" disabled>
+                <label>Sacos Utilizados:</label>
+              </div>
+            </div>
           </div>
           <div class="form-group form-group-sm">
               <span hidden id="spanuser" name="spanuser" class="form-control" style="background-color: #E9ECEF;"><?php echo $nombre." ".$apellido?></span>
@@ -69,7 +85,7 @@
           <input type="button" value="Eliminar" onclick="eliminarCaptura()" class="btn btn-danger">
           <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
         </div>
-      </form>
+      <!-- </form> -->
     </div>
   </div>
 </div>

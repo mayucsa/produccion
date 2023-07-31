@@ -5,33 +5,10 @@
 ?>
         <head>
             <title>Inventario por estibas</title>
-            <style type="text/css">
-                body{
-                    background-color: #f7f6f6;
-                }
-                table thead{
-                    background-color: #1A4672;
-                    color:  white;
-                }
-            </style>
+                <link rel="stylesheet" type="text/css" href="../../../includes/css/adminlte.min.css">
+                <link rel="stylesheet" href="../../../includes/css/data_tables_css/jquery.dataTables.min.css">
+                <link rel="stylesheet" href="../../../includes/css/data_tables_css/buttons.dataTables.min.css">
         </head>
-
-<div class="modal fade" id="modalMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top:10%; overflow-y:visible;" >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header modal-danger">
-                <h5 class="modal-title" id="encabezadoModal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="cuerpoModal"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="modalEstiba" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -127,6 +104,51 @@
   </div>
 </div>
 
+<div ng-controller="vistaInventario">
+
+            <!-- MODAL DE ROTURA -->
+            <div class="row" style="position: fixed; z-index: 9; background-color: white; width: 70%; margin-left: 20%;  border-radius: 15px; padding: 5vH; border: solid;" ng-show="modalMisRequ == true">
+                <div class="col-lg-12 col-md-12" style="max-height: 50vH; overflow-y: auto;">
+                    <h3>Rotura del día</h3>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex" ng-show="false">
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="idproducto" id="inputidproducto" name="inputidproducto" class="form-control form-control-md validanumericos" disabled>
+                                <label>Producto</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="producto" id="inputproducto" name="inputproducto" class="form-control form-control-md validanumericos" disabled>
+                                <label>Producto</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group form-group-sm">
+                        <div class="col-lg-12 d-lg-flex">
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="estiba" id="inputestiba" name="inputestiba" class="form-control form-control-md validanumericos" disabled>
+                                <label>Numero de estiba</label>
+                            </div>
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="existencia" id="inputexistencia" name="inputexistencia" class="form-control form-control-md validanumericos" disabled>
+                                <label>Existencia</label>
+                            </div>
+                            <div style="width: 33%;" class="form-floating mx-1">
+                                <input type="text" ng-model="rotura" id="inputrotura" name="inputrotura" class="form-control form-control-md validanumericos" ng-blur="validaExistencia(rotura)">
+                                <label>Cantidad de rotura</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 text-right">
+                    <button class="btn btn-success" ng-click="roturadiaria()">Confirmar estiba</button>
+                    <button class="btn btn-danger" ng-click="setModalMisRequ()">Cerrar</button>
+                </div>
+            </div>
+
     <main class="app-content">
       <div class="app-title">
         <div>
@@ -134,11 +156,11 @@
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="vista_captura.php"> Inventario por estibas</a></li>
+          <li class="breadcrumb-item"><a href="inventario_bloquera.php"> Inventario por estibas</a></li>
         </ul>
       </div>
 
-      <div class="row">
+<!--       <div class="row">
         <div class="col-md-12">
           <div class="tile">
             <div class="card">
@@ -180,15 +202,57 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="card">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">INVENTARIO BLOQUERA</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped table-bordered table-hover" style="width: 100%;" id="tablaEstibas">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Area</th>
+                                        <th class="text-center">Producto</th>
+                                        <th class="text-center">Número de estiba</th>
+                                        <th class="text-center">Cantidad actual</th>
+                                        <th class="text-center">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(i, obj) in ssInventarioBloquera track by i">
+                                        <td class="text-center">{{obj.area}}</td>
+                                        <td class="text-center">{{obj.nombre_producto}} - {{obj.presentacion}} - {{obj.num_celdas}} CELDAS</td>
+                                        <td class="text-center">{{obj.numero_estiba}}</td>
+                                        <td class="text-center">{{obj.cantidad_estiba}}</td>
+                                        <td class="text-center">
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.inventario_almacenistas_rotura == 1" ng-click="setModalMisRequ(obj.numero_estiba)"><i class="fas fa-unlink"></i> </span>
+                                            <span class= "btn btn-danger btn-sm" ng-show="perfilUsu.inventario_almacenistas_rotura == 0" ng-click="sinacceso()" ng-show=""><i class="fas fa-unlink"></i> </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
       <?php include_once "../../footer.php" ?>
     </main>
+</div> 
 
+<script src="../../../includes/js/adminlte.min.js"></script>
 
-
-    
-
-<script src="inventario_bloquera.js"></script>
+<script src="inventario_bloquera_ajs.js"></script>
 
 <script src="../../../includes/js/jquery351.min.js"></script>
 
@@ -212,36 +276,10 @@
 
     <script type="text/javascript" src="../../../includes/js/datatables.min.js"></script>
 
-<!-- <script type="text/javascript">
-    <?php
-    /*if ($clave == 1 || $clave == 10) {
-        ?>
-        consultar();
-        consultarEstiba();
-    <?php
-    }else*/{
-        ?>
-        consult();
-        consultEstiba();
-        <?php
-    }
-     ?>
-</script> -->
-<!--     <script type="text/javascript">
-        consultarEstiba();
-    </script> -->
-
-    <script type="text/javascript">
-    <?php
-    if ($clave == 1 || $clave == 10) {
-        ?>
-        consultarEstiba();
-    <?php
-    }else{
-        ?>
-        consultar();
-        <?php
-    }
-     ?>
-    </script>
-
+    <script src="../../../includes/js/data_tables_js/jquery.dataTables.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/dataTables.buttons.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/jszip.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/pdfmake.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/vfs_fonts.js"></script>
+    <script src="../../../includes/js/data_tables_js/buttons.html5.min.js"></script>
+    <script src="../../../includes/js/data_tables_js/buttons.print.min.js"></script>

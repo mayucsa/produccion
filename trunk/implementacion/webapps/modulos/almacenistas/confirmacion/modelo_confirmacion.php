@@ -1,18 +1,18 @@
 <?php 
 include_once "../../../dbconexion/conexion.php";
 
-if (isset($_GET["consultar"])) {
-	$cve_desalojo = $_GET["consultar"];
+class ModeloProducto{
+	function showProducto(){
+		$sql = "	SELECT cve_bloquera, cod_producto, nombre_producto, presentacion, num_celdas
+					FROM seg_producto_bloquera
+					WHERE estatus_producto = 'VIG'";
 
-	$sql	= "	SELECT * FROM seg_desalojo WHERE cve_desalojo =" .$cve_desalojo;
-	// $sql	= "	SELECT * FROM seg_entradas ORDER BY fecha_registro DESC";
-
-	$vquery = Conexion::conectar()->prepare($sql);
-	$vquery ->execute();
-	$lista = $vquery->fetchAll(PDO::FETCH_ASSOC);
-	echo json_encode($lista);
-	exit();
-
+			 $vquery = Conexion::conectar()->prepare($sql);
+             $vquery->execute();
+			 return $vquery->fetchAll();
+			 $vquery->close();
+			 $vquery = null;
+	}
 }
 
 if (isset($_GET['actualizar']) ) {
@@ -45,6 +45,21 @@ if (isset($_GET['actualizar']) ) {
     echo json_encode(["success"=>1]);
     exit();
 
+}
+
+if (isset($_GET["consultar"])) {
+	$cve_desalojo = $_GET["consultar"];
+
+	$sql	= "	SELECT cve_desalojo, sd.cve_bloquera, nombre_producto, presentacion, num_celdas, cantidad_total, cantidad_despuntados, cantidad_rotura 
+				FROM seg_desalojo sd
+				INNER JOIN seg_producto_bloquera sb ON sb.cve_bloquera = sd.cve_bloquera
+				WHERE cve_desalojo =" .$cve_desalojo;
+
+	$vquery = Conexion::conectar()->prepare($sql);
+	$vquery ->execute();
+	$lista = $vquery->fetchAll(PDO::FETCH_ASSOC);
+	echo json_encode($lista);
+	exit();
 }
 	
  ?>
