@@ -15,15 +15,7 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 	$scope.tproducto = '';
 	$scope.tfecha = '';
 
-	$http.post('Controller.php', {
-		'task': 'getProducto'
-	}).then(function (response){
-		response = response.data;
-		console.log('getProducto', response);
-		$scope.prod = response;
-	},function(error){
-		console.log('error', error);
-	});
+	$scope.checkh = '';
 
 	$http.post('Controller.php', {
 		'task': 'getProduccion'
@@ -95,6 +87,7 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 	}
 
 	$scope.limpiarCampos = function(){
+		$scope.checkh = '';
 		$scope.producto = '';
 		$scope.tonelada = '';
 		$scope.presentacion = '';
@@ -106,6 +99,27 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 		$scope.diferencia = '';
 		$scope.sacosproduccion = '';
 		$scope.sacostotales = '';
+
+		$("#producto").attr("disabled", true);
+		$("#cantidad").attr("disabled", true);
+		$("#kgreal").attr("disabled", true);
+		$("#sacosrotos").attr("disabled", true);
+		$("#tarimas").attr("disabled", true);
+	}
+
+	$scope.habilitartipo = function(){
+		$("#producto").attr("disabled", false);
+
+		$http.post('Controller.php', {
+			'task': 'getProducto'
+		}).then(function (response){
+			response = response.data;
+			console.log('getProducto', response);
+			$scope.prod = response;
+		},function(error){
+			console.log('error', error);
+		});
+
 	}
 
 	$scope.habilitarinput = function () {
@@ -129,53 +143,58 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 
 	}
 
-	$scope.validaExistenciaMP = function(producto, cantidad, tonelada){
-		if (cantidad > 0) {
-			jsShowWindowLoad('Validando existencia...');
-			console.log('producto', producto);
-			console.log('cantidad', cantidad);
-			$http.post('Controller.php', {
-				'task': 'getMateriaPrima',
-				'producto': producto,
-				'cantidad': cantidad,
-			}).then(function (response) {
-				response = response.data;
-				// console.log('getExistenciaMP', response);
-				jsRemoveWindowLoad();
-				if (response != '') {
+	$scope.validaExistenciaMP = function(producto, cantidad, tonelada, inlineRadioOptions){
+		if (inlineRadioOptions == 1) {
+			if (cantidad > 0) {
+				jsShowWindowLoad('Validando existencia...');
+				console.log('producto', producto);
+				console.log('cantidad', cantidad);
+				console.log('check', inlineRadioOptions);
+				$http.post('Controller.php', {
+					'task': 'getMateriaPrima',
+					'producto': producto,
+					'cantidad': cantidad,
+				}).then(function (response) {
+					response = response.data;
+					// console.log('getExistenciaMP', response);
+					jsRemoveWindowLoad();
+					if (response != '') {
 
-					Swal.fire({
-					  title: 'Sin existencia de materia prima',
-					  html: '<div style="text-align:left; padding:20px; overflow-y:auto; max-height:200px;">'+response+'</div>',
-					  icon: 'warning',
-					  showCancelButton: false,
-					  confirmButtonColor: 'green',
-					  confirmButtonText: 'Aceptar'
-					}).then((result) => {
-						$scope.cantidad = '';
-						$("#cantidad").val('');
-						// if (result.isConfirmed) {
-						// 	$scope.cantidad = '';
-						// 	$("#cantidad").val('');
-						// }else{
-						// 	$scope.cantidad = '';
-						// 	$("#cantidad").val('');
-						// }
-					});
-				}else{
-					$scope.toneladaporbarcada(cantidad, tonelada);
-				}
-			}, function(error){
-				console.log('error', error);
-			})
+						Swal.fire({
+						  title: 'Sin existencia de materia prima',
+						  html: '<div style="text-align:left; padding:20px; overflow-y:auto; max-height:200px;">'+response+'</div>',
+						  icon: 'warning',
+						  showCancelButton: false,
+						  confirmButtonColor: 'green',
+						  confirmButtonText: 'Aceptar'
+						}).then((result) => {
+							$scope.cantidad = '';
+							$("#cantidad").val('');
+							// if (result.isConfirmed) {
+							// 	$scope.cantidad = '';
+							// 	$("#cantidad").val('');
+							// }else{
+							// 	$scope.cantidad = '';
+							// 	$("#cantidad").val('');
+							// }
+						});
+					}else{
+						$scope.toneladaporbarcada(cantidad, tonelada);
+					}
+				}, function(error){
+					console.log('error', error);
+				})
+			}else{
+		    	Swal.fire({
+		        // confirmButtonColor: '#3085d6',
+			        title: 'Cantidad no válida',
+			        text: 'Indique una cantidad mayor a cero (0)',
+			        icon: 'warning',
+			        confirmButtonColor: '#1A4672'
+		        });
+			}
 		}else{
-	    	Swal.fire({
-	        // confirmButtonColor: '#3085d6',
-		        title: 'Cantidad no válida',
-		        text: 'Indique una cantidad mayor a cero (0)',
-		        icon: 'warning',
-		        confirmButtonColor: '#1A4672'
-	        });
+			$scope.toneladaporbarcada(cantidad, tonelada);
 		}
 	}
 
@@ -300,6 +319,7 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 		diferencia = parseFloat($scope.diferencia);
 		sacosproduccion = parseFloat($scope.sacosproduccion);
 		sacostotales = parseFloat($scope.sacostotales);
+		check = parseFloat($scope.checkh);
 
 		// console.log('producto', producto);
 		// console.log('cantidad', cantidad);
@@ -310,7 +330,8 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 		// console.log('kgformula', kgformula);
 		// console.log('diferencia', diferencia);
 		// console.log('sacosproduccion', sacosproduccion);
-		// console.log('sacostotales', sacostotales);
+		console.log('check', check);
+
 
 		Swal.fire({
 			title: 'Estás a punto de capturar una producción.',
@@ -335,6 +356,7 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 					'sacosrotos': sacosrotos,
 					'sacostotales': sacostotales,
 					'tarimas': tarimas,
+					'check': $scope.checkh,
 					'id': ID,
 				}).then(function(response){
 					response = response.data;
@@ -462,6 +484,74 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 		}, function(error){
 			console.log('error', error);
 		})
+	}
+
+	$scope.obtenerfolio = function(cve_captura){
+		// console.log('cve_captura', cve_captura);
+		$scope.folioft = cve_captura;
+	}
+		$scope.editarFecha = function(){
+		$scope.fecha = $('#fecha').val();
+		console.log('Folio', $scope.folioft);
+		console.log('Fecha', $scope.fecha);
+		console.log('Turno', $scope.turno);
+		if ($scope.fecha == '' || $scope.fecha == null) {
+			Swal.fire(
+			  'Campo faltante',
+			  'Es necesario seleccionar una fecha',
+			  'warning'
+			);
+			return;
+		}if ($scope.turno == '' || $scope.turno == null) {
+			Swal.fire(
+			  'Campo faltante',
+			  'Es necesario seleccionar un turno',
+			  'warning'
+			);
+			return;
+		}
+		Swal.fire({
+			title: 'Estás a punto de editar fecha y turno.',
+		  	text: '¿Es correcta la información editada?',
+		  	icon: 'warning',
+		  	showCancelButton: true,
+		  	confirmButtonColor: 'green',
+		  	cancelButtonColor: 'red',
+		  	confirmButtonText: 'Aceptar',
+		  	cancelButtonText: 'Cancelar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				jsShowWindowLoad('Editando fecha y turno...');
+				$http.post('Controller.php', {
+					'task': 'editarFechaProduccion',
+					'folio': $scope.folioft,
+					'fecha': $scope.fecha,
+					'turno': $scope.turno,
+					'id': ID,
+				}).then(function(response){
+					response = response.data;
+					// console.log('response', response);
+					jsRemoveWindowLoad();
+						Swal.fire({
+						  title: '¡Éxito!',
+						  html: 'Se edito correctamente la fecha del <b>Folio: ' +$scope.folioft + '</b>',
+						  icon: 'success',
+						  showCancelButton: false,
+						  confirmButtonColor: 'green',
+						  confirmButtonText: 'Aceptar'
+						}).then((result) => {
+						  if (result.isConfirmed) {
+						  	location.reload();
+						  }else{
+						  	location.reload();
+						  }
+						});
+				}, function(error) {
+					console.log('error', error);
+					jsRemoveWindowLoad();
+				});
+			}
+		});
 	}
 
 });

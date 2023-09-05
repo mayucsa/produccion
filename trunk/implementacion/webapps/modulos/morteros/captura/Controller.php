@@ -9,7 +9,7 @@ function dd($var){
 }
 
 function getProduccion($dbcon){
-	$sql = "SELECT cp.cve_captura, cp.cve_mortero,spm.nombre_producto, cantidad_barcadas, kg_real, sacos_total, tarimas_enproduccion, cp.fecha_registro 
+	$sql = "SELECT cp.cve_captura, cp.cve_mortero,spm.nombre_producto, cantidad_barcadas, kg_real, sacos_total, tarimas_enproduccion, cp.fecha_registro, cp.tipo
 			FROM captura_produccionmorteros cp
 		    INNER JOIN seg_producto_morteros spm ON cp.cve_mortero = spm.cve_mortero
 		    WHERE cp.estatus_registro = 'vig'
@@ -114,7 +114,7 @@ function envioCorreo($dbcon, $materiasPrimas = ''){
 	$Body .= '<br><br>';
 	$Body .= '</body>';
 	$Body .= '</html>';
-	$claveRol2 = "SELECT correo FROM cat_usuarios WHERE cve_usuario = 2";
+	$claveRol2 = "SELECT correo FROM cat_usuarios WHERE cve_usuario IN (2)";
 	$correos = $dbcon->qBuilder($dbcon->conn(), 'all', $claveRol2);
 	// $correos = ['ilopez@lcdevelopers.com.mx'];
 	$email = $envioSMTP->correo($title, $Subject, $Body, $correos);
@@ -129,123 +129,223 @@ function envioCorreo($dbcon, $materiasPrimas = ''){
 function guardarProduccion($dbcon, $Datos){
 	$fecha = date('Y-m-d H:i:s');
 	$status = 'vig';
+	$tipo = 'R';
 	$conn = $dbcon->conn();
-	$sql = "INSERT INTO captura_produccionmorteros (cve_mortero, cantidad_barcadas, kg_porformula, kg_real, kg_diferencia, sacos_enproduccion, sacos_rotos, sacos_total, tarimas_enproduccion, usuario, estatus_registro, fecha_registro)
-			VALUES (".$Datos->producto.", ".$Datos->cantidad.", ".$Datos->kgformula.", ".$Datos->kgreal.", ".$Datos->diferencia.", ".$Datos->sacosproduccion.", ".$Datos->sacosrotos.", ".$Datos->sacostotales.", ".$Datos->tarimas.", ".$Datos->id.", '".$status."', '".$fecha."' )";
-	$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 
-	if ($qBuilder) {
-		$getId = "SELECT max(cve_captura) cve_captura FROM captura_produccionmorteros WHERE 
-		fecha_registro = '".$fecha."'
-		AND usuario = ".$Datos->id."
-		AND estatus_registro =  '".$status."'
-		AND cantidad_barcadas = ".$Datos->cantidad."
-		AND kg_real = ".$Datos->kgreal."
-		AND sacos_enproduccion = ".$Datos->sacosproduccion."
-		AND sacos_rotos = ".$Datos->sacosrotos."
-		AND tarimas_enproduccion = ".$Datos->tarimas." ";
-		$getId = $dbcon->qBuilder($conn, 'first', $getId);
+	if ($Datos->check == 1) {
+		$sql = "INSERT INTO captura_produccionmorteros (cve_mortero, cantidad_barcadas, kg_porformula, kg_real, kg_diferencia, sacos_enproduccion, sacos_rotos, sacos_total, tarimas_enproduccion, usuario, estatus_registro, fecha_registro)
+				VALUES (".$Datos->producto.", ".$Datos->cantidad.", ".$Datos->kgformula.", ".$Datos->kgreal.", ".$Datos->diferencia.", ".$Datos->sacosproduccion.", ".$Datos->sacosrotos.", ".$Datos->sacostotales.", ".$Datos->tarimas.", ".$Datos->id.", '".$status."', '".$fecha."' )";
+		$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
 
-		$sqlu = "UPDATE seg_producto_morteros SET cantidad = cantidad + ".$Datos->kgreal." WHERE cve_mortero = ".$Datos->producto." ";
-		$sqlu = $dbcon->qBuilder($conn, 'do', $sqlu);
-		// dd($sqlu);
-		$sqltarima = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->tarimas." WHERE cve_mpmorteros = 28 ";
-		$sqltarima = $dbcon->qBuilder($conn, 'do', $sqltarima);
-		// dd($sqltarima);
+		if ($qBuilder) {
+			$getId = "SELECT max(cve_captura) cve_captura FROM captura_produccionmorteros WHERE 
+			fecha_registro = '".$fecha."'
+			AND usuario = ".$Datos->id."
+			AND estatus_registro =  '".$status."'
+			AND cantidad_barcadas = ".$Datos->cantidad."
+			AND kg_real = ".$Datos->kgreal."
+			AND sacos_enproduccion = ".$Datos->sacosproduccion."
+			AND sacos_rotos = ".$Datos->sacosrotos."
+			AND tarimas_enproduccion = ".$Datos->tarimas." ";
+			$getId = $dbcon->qBuilder($conn, 'first', $getId);
 
-		/* 
-			Descontar la materia prima que se ocupa.
-			Obtenemos los materiales que ocupa cada mortero e itermaos para obtener la cantidad ocupada multiplicada por la cantidad pedida
-		*/
-		$mPrimaQry = "SELECT cve_mpmorteros, cantidad FROM materiaprima_usadapor_productomorteros WHERE cve_mortero = ".$Datos->producto;
-		$mPrimaQry = $dbcon->qBuilder($conn, 'ALL', $mPrimaQry);
-		foreach ($mPrimaQry as $i => $row) {
-			//cantidad de matería prima total
-			$cantidadMPT = floatval($Datos->cantidad) * floatval($row->cantidad);
-			$update = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$cantidadMPT." WHERE cve_mpmorteros = ".$row->cve_mpmorteros;
-			if (!$dbcon->qBuilder($conn, 'do', $update)) {
-				dd(['code'=>400,'msj'=>'Error al actualizar cantidad de materia prima', 'query'=>$update]);
+			$sqlu = "UPDATE seg_producto_morteros SET cantidad = cantidad + ".$Datos->kgreal." WHERE cve_mortero = ".$Datos->producto." ";
+			$sqlu = $dbcon->qBuilder($conn, 'do', $sqlu);
+			// dd($sqlu);
+			$sqltarima = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->tarimas." WHERE cve_mpmorteros = 28 ";
+			$sqltarima = $dbcon->qBuilder($conn, 'do', $sqltarima);
+			// dd($sqltarima);
+
+			/* 
+				Descontar la materia prima que se ocupa.
+				Obtenemos los materiales que ocupa cada mortero e itermaos para obtener la cantidad ocupada multiplicada por la cantidad pedida
+			*/
+			$mPrimaQry = "SELECT cve_mpmorteros, cantidad FROM materiaprima_usadapor_productomorteros WHERE cve_mortero = ".$Datos->producto;
+			$mPrimaQry = $dbcon->qBuilder($conn, 'ALL', $mPrimaQry);
+			foreach ($mPrimaQry as $i => $row) {
+				//cantidad de matería prima total
+				$cantidadMPT = floatval($Datos->cantidad) * floatval($row->cantidad);
+				$update = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$cantidadMPT." WHERE cve_mpmorteros = ".$row->cve_mpmorteros;
+				if (!$dbcon->qBuilder($conn, 'do', $update)) {
+					dd(['code'=>400,'msj'=>'Error al actualizar cantidad de materia prima', 'query'=>$update]);
+				}
+				$insert = "	INSERT INTO materiaprima_segun_produccion (cve_mortero, cve_mpmorteros, cantidad, estatus_registro) 
+							VALUES(".$getId->cve_captura.", ".$row->cve_mpmorteros.", ".$row->cantidad.", '".$status."' ) ";
+				if (!$dbcon->qBuilder($conn, 'do', $insert)) {
+					dd(['code'=>400,'msj'=>'Error al insertar cantidad de materia prima', 'query'=>$insert]);
+				}
 			}
-			$insert = "	INSERT INTO materiaprima_segun_produccion (cve_mortero, cve_mpmorteros, cantidad, estatus_registro) 
-						VALUES(".$getId->cve_captura.", ".$row->cve_mpmorteros.", ".$row->cantidad.", '".$status."' ) ";
-			if (!$dbcon->qBuilder($conn, 'do', $insert)) {
-				dd(['code'=>400,'msj'=>'Error al insertar cantidad de materia prima', 'query'=>$insert]);
+
+			$codsaco = "SELECT cve_sacos_morteros, presentacion FROM seg_producto_morteros WHERE cve_mortero = ".$Datos->producto." ";
+			$codsaco = $dbcon->qBuilder($conn, 'first', $codsaco);
+			$existenciasaco = "SELECT cantidad_materiaprima FROM seg_materiaprima_morteros WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+			$existenciasaco = $dbcon->qBuilder($conn, 'first', $existenciasaco);
+
+			// $existsaco = floatval($existenciasaco->cantidad_materiaprima);
+			// $sacostotales = floatval($Datos->sacostotales);
+
+			if ($existenciasaco->cantidad_materiaprima >= $Datos->sacostotales) {
+				$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+				$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+				$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+										VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
+				$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
 			}
-		}
-
-		$codsaco = "SELECT cve_sacos_morteros, presentacion FROM seg_producto_morteros WHERE cve_mortero = ".$Datos->producto." ";
-		$codsaco = $dbcon->qBuilder($conn, 'first', $codsaco);
-		$existenciasaco = "SELECT cantidad_materiaprima FROM seg_materiaprima_morteros WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
-		$existenciasaco = $dbcon->qBuilder($conn, 'first', $existenciasaco);
-
-		// $existsaco = floatval($existenciasaco->cantidad_materiaprima);
-		// $sacostotales = floatval($Datos->sacostotales);
-
-		if ($existenciasaco->cantidad_materiaprima >= $Datos->sacostotales) {
-			$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
-			$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
-			$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-									VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
-			$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
-		}
-		if ($existenciasaco->cantidad_materiaprima <= 0) {
-			switch($codsaco->presentacion){
-				case 20:
-					$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = 26 ";
-					$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
-					$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-											VALUES ($getId->cve_captura, 26, ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
-					$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
-				break;
-				case 40:
-					$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = 25 ";
-					$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
-					$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-											VALUES ($getId->cve_captura, 25, ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
-					$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
-				break;
+			if ($existenciasaco->cantidad_materiaprima <= 0) {
+				switch($codsaco->presentacion){
+					case 20:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = 26 ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 26, ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+					break;
+					case 40:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = 25 ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 25, ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+					break;
+				}
 			}
-		}
-		if ($existenciasaco->cantidad_materiaprima < $Datos->sacostotales AND $existenciasaco->cantidad_materiaprima > 0 ) {
-			$diferencia = $Datos->sacostotales - $existenciasaco->cantidad_materiaprima;
-			switch($codsaco->presentacion){
-				case 20:
-					$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = 0 WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
-					$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
-					$updatesaco20 = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - $diferencia  WHERE cve_mpmorteros = 26 ";
-					$updatesaco20 = $dbcon->qBuilder($conn, 'do', $updatesaco20);
+			if ($existenciasaco->cantidad_materiaprima < $Datos->sacostotales AND $existenciasaco->cantidad_materiaprima > 0 ) {
+				$diferencia = $Datos->sacostotales - $existenciasaco->cantidad_materiaprima;
+				switch($codsaco->presentacion){
+					case 20:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = 0 WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$updatesaco20 = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - $diferencia  WHERE cve_mpmorteros = 26 ";
+						$updatesaco20 = $dbcon->qBuilder($conn, 'do', $updatesaco20);
 
-					$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-											VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", $existenciasaco->cantidad_materiaprima, '".$status."', '".$fecha."' ) ";
-					$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
-					$insertctrlsacos20 = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-											VALUES ($getId->cve_captura, 26, $diferencia, '".$status."', '".$fecha."' ) ";
-					$insertctrlsacos20 = $dbcon->qBuilder($conn, 'do', $insertctrlsacos20);
-				break;
-				case 40:
-					$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = 0 WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
-					$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
-					$updatesaco40 = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - $diferencia WHERE cve_mpmorteros = 25 ";
-					$updatesaco40 = $dbcon->qBuilder($conn, 'do', $updatesaco40);
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", $existenciasaco->cantidad_materiaprima, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+						$insertctrlsacos20 = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 26, $diferencia, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos20 = $dbcon->qBuilder($conn, 'do', $insertctrlsacos20);
+					break;
+					case 40:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = 0 WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$updatesaco40 = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - $diferencia WHERE cve_mpmorteros = 25 ";
+						$updatesaco40 = $dbcon->qBuilder($conn, 'do', $updatesaco40);
 
-					$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-											VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", $existenciasaco->cantidad_materiaprima, '".$status."', '".$fecha."' ) ";
-					$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
-					$insertctrlsacos40 = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
-											VALUES ($getId->cve_captura, 25, $diferencia, '".$status."', '".$fecha."' ) ";
-					$insertctrlsacos40 = $dbcon->qBuilder($conn, 'do', $insertctrlsacos40);
-				break;
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", $existenciasaco->cantidad_materiaprima, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+						$insertctrlsacos40 = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 25, $diferencia, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos40 = $dbcon->qBuilder($conn, 'do', $insertctrlsacos40);
+					break;
+				}
 			}
-		}
 
-		// $getId = $dbcon->qBuilder($conn, 'first', $getId);
-		getMinimo($dbcon);
-		dd(['code'=>200,'msj'=>'Carga ok', 'folio'=>$getId->cve_captura]);
+$codsaco = "SELECT cve_sacos_morteros, presentacion FROM seg_producto_morteros WHERE cve_mortero = ".$Datos->producto." ";
+			$codsaco = $dbcon->qBuilder($conn, 'first', $codsaco);
+			$existenciasaco = "SELECT cantidad_materiaprima FROM seg_materiaprima_morteros WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+			$existenciasaco = $dbcon->qBuilder($conn, 'first', $existenciasaco);
+
+			// $existsaco = floatval($existenciasaco->cantidad_materiaprima);
+			// $sacostotales = floatval($Datos->sacostotales);
+
+			if ($existenciasaco->cantidad_materiaprima >= $Datos->sacostotales) {
+				$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+				$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+				$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+										VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
+				$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+			}
+			if ($existenciasaco->cantidad_materiaprima <= 0) {
+				switch($codsaco->presentacion){
+					case 20:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = 26 ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 26, ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+					break;
+					case 40:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->sacostotales." WHERE cve_mpmorteros = 25 ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 25, ".$Datos->sacostotales.", '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+					break;
+				}
+			}
+			if ($existenciasaco->cantidad_materiaprima < $Datos->sacostotales AND $existenciasaco->cantidad_materiaprima > 0 ) {
+				$diferencia = $Datos->sacostotales - $existenciasaco->cantidad_materiaprima;
+				switch($codsaco->presentacion){
+					case 20:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = 0 WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$updatesaco20 = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - $diferencia  WHERE cve_mpmorteros = 26 ";
+						$updatesaco20 = $dbcon->qBuilder($conn, 'do', $updatesaco20);
+
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", $existenciasaco->cantidad_materiaprima, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+						$insertctrlsacos20 = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 26, $diferencia, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos20 = $dbcon->qBuilder($conn, 'do', $insertctrlsacos20);
+					break;
+					case 40:
+						$updatesaco = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = 0 WHERE cve_mpmorteros = ".$codsaco->cve_sacos_morteros." ";
+						$updatesaco = $dbcon->qBuilder($conn, 'do', $updatesaco);
+						$updatesaco40 = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - $diferencia WHERE cve_mpmorteros = 25 ";
+						$updatesaco40 = $dbcon->qBuilder($conn, 'do', $updatesaco40);
+
+						$insertctrlsacos = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, ".$codsaco->cve_sacos_morteros.", $existenciasaco->cantidad_materiaprima, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos = $dbcon->qBuilder($conn, 'do', $insertctrlsacos);
+						$insertctrlsacos40 = " 	INSERT ctrl_mov_sacosmorteros (cve_captura, cve_segmatprima, cantidad, estatus_consumo, fecha_registro) 
+												VALUES ($getId->cve_captura, 25, $diferencia, '".$status."', '".$fecha."' ) ";
+						$insertctrlsacos40 = $dbcon->qBuilder($conn, 'do', $insertctrlsacos40);
+					break;
+				}
+			}
+
+			// $getId = $dbcon->qBuilder($conn, 'first', $getId);
+			getMinimo($dbcon);
+			dd(['code'=>200,'msj'=>'Carga ok', 'folio'=>$getId->cve_captura]);
+		}else{
+			dd(['code'=>300, 'msj'=>'error al crear folio.', 'sql'=>$sql]);
+		}
 	}else{
-		dd(['code'=>300, 'msj'=>'error al crear folio.', 'sql'=>$sql]);
+		$sql = "INSERT INTO captura_produccionmorteros (cve_mortero, cantidad_barcadas, kg_porformula, kg_real, kg_diferencia, sacos_enproduccion, sacos_rotos, sacos_total, tarimas_enproduccion, tipo, usuario, estatus_registro, fecha_registro)
+				VALUES (".$Datos->producto.", ".$Datos->cantidad.", ".$Datos->kgformula.", ".$Datos->kgreal.", ".$Datos->diferencia.", ".$Datos->sacosproduccion.", ".$Datos->sacosrotos.", ".$Datos->sacostotales.", ".$Datos->tarimas.", '".$tipo."', ".$Datos->id.", '".$status."', '".$fecha."' )";
+		$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+
+		if ($qBuilder) {
+			$getId = "SELECT max(cve_captura) cve_captura FROM captura_produccionmorteros WHERE 
+			fecha_registro = '".$fecha."'
+			AND usuario = ".$Datos->id."
+			AND estatus_registro =  '".$status."'
+			AND tipo =  '".$tipo."'
+			AND cantidad_barcadas = ".$Datos->cantidad."
+			AND kg_real = ".$Datos->kgreal."
+			AND sacos_enproduccion = ".$Datos->sacosproduccion."
+			AND sacos_rotos = ".$Datos->sacosrotos."
+			AND tarimas_enproduccion = ".$Datos->tarimas." ";
+			$getId = $dbcon->qBuilder($conn, 'first', $getId);
+
+			$sqlu = "UPDATE seg_producto_morteros SET cantidad = cantidad + ".$Datos->kgreal." WHERE cve_mortero = ".$Datos->producto." ";
+			$sqlu = $dbcon->qBuilder($conn, 'do', $sqlu);
+			// dd($sqlu);
+			$sqltarima = "UPDATE seg_materiaprima_morteros SET cantidad_materiaprima = cantidad_materiaprima - ".$Datos->tarimas." WHERE cve_mpmorteros = 28 ";
+			$sqltarima = $dbcon->qBuilder($conn, 'do', $sqltarima);
+			// dd($sqltarima);
+
+
+
+			dd(['code'=>200,'msj'=>'Carga ok', 'folio'=>$getId->cve_captura]);
+		}else{
+			dd(['code'=>300, 'msj'=>'error al crear folio.', 'sql'=>$sql]);
+		}
 	}
 }
-function getMinimo($dbcon, $Datos){
+function getMinimo($dbcon){
 	$conn = $dbcon->conn();
 	$sql = "SELECT nombre_materiaprima, cantidad_materiaprima, minimo_materiaprima FROM seg_materiaprima_morteros";
 	$sql = $dbcon->qBuilder($conn, 'ALL', $sql);
@@ -322,6 +422,34 @@ function tmpproducto($dbcon, $cve_captura){
 	$datos = $dbcon->qBuilder($dbcon->conn(), 'all', $sql);
 	dd($datos);
 }
+function editarFechaProduccion($dbcon, $Datos){
+	$fecha = date('Y-m-d H:i:s');
+	$status = 'VIG';
+	$datosfecha = $Datos->fecha;
+	$fechaSig = explode(' ', $datosfecha);
+	$fechaSig = new DateTime($fechaSig[0]);
+	$fechaSig->add(new DateInterval('P1D'));
+	$fechaSig = $fechaSig->format('Y-m-d');
+	$conn = $dbcon->conn();
+
+	switch($Datos->turno){
+		case 1:
+			$sql = "UPDATE captura_produccionmorteros SET fecha_registro = '".$Datos->fecha." 13:00:00' WHERE cve_captura = ".$Datos->folio."; ";
+			$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+			// dd($sql);
+		break;
+		case 2:
+			$sql = "UPDATE captura_produccionmorteros SET fecha_registro = '".$Datos->fecha." 21:00:00' WHERE cve_captura = ".$Datos->folio."; ";
+			$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+			// dd($sql);
+		break;
+		case 3:
+			$sql = "UPDATE captura_produccionmorteros SET fecha_registro = '".$fechaSig." 05:00:00' WHERE cve_captura = ".$Datos->folio."; ";
+			$qBuilder = $dbcon->qBuilder($conn, 'do', $sql);
+			// dd($sql);
+		break;
+	}
+}
 include_once "../../../dbconexion/conn.php";
 $dbcon	= 	new MysqlConn;
 $conn 	= 	$dbcon->conn();
@@ -362,6 +490,9 @@ switch ($tarea) {
 		break;
 	case 'tmpproducto':
 		tmpproducto($dbcon,  $objDatos->cve_captura);
+		break;
+	case 'editarFechaProduccion':
+		editarFechaProduccion($dbcon, $objDatos);
 		break;
 
 }
