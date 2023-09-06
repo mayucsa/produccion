@@ -138,6 +138,7 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 				'task': 'getMateriaPrima',
 				'producto': producto,
 				'cantidad': cantidad,
+				
 			}).then(function (response) {
 				response = response.data;
 				// console.log('getExistenciaMP', response);
@@ -154,13 +155,13 @@ app.controller('vistaProduccionMorteros', function (BASEURL, ID, $scope, $http) 
 					}).then((result) => {
 						$scope.cantidad = '';
 						$("#cantidad").val('');
-						// if (result.isConfirmed) {
-						// 	$scope.cantidad = '';
-						// 	$("#cantidad").val('');
-						// }else{
-						// 	$scope.cantidad = '';
-						// 	$("#cantidad").val('');
-						// }
+						if (result.isConfirmed) {
+							$scope.cantidad = '';
+							$("#cantidad").val('');
+						}else{
+							$scope.cantidad = '';
+							$("#cantidad").val('');
+						}
 					});
 				}else{
 					$scope.toneladaporbarcada(cantidad, tonelada);

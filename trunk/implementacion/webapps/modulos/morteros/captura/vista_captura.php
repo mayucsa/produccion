@@ -82,11 +82,11 @@
                                         <option selected="selected" value="" disabled>[Seleccione una opción..]</option>
                                         <option ng-repeat="(i, obj) in prod" value="{{obj.cve_mortero}}">{{obj.cod_producto}} - {{obj.nombre_producto}}</option>
                                     </select>
-                                    <label>Producto</label>
+                                    <label>Producto </label>
                                 </div>
                                 <div style="width: 100%;" class="form-floating mx-1">
                                     <input class="date-picker form-control validanumericos" ng-model="tonelada" id="tonelada" autocomplete="off" disabled>
-                                    <label>Tonelada</label>
+                                    <label>Tonelada </label>
                                 </div>
                                 <div style="width: 100%;" class="form-floating mx-1">
                                     <input class="date-picker form-control validanumericos" ng-model="presentacion" id="presentacion" autocomplete="off" disabled>
